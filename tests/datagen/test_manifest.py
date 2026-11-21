@@ -64,12 +64,13 @@ def test_files_are_sorted_listed_with_checksums_and_exclude_the_manifest(
     paths = [f["path"] for f in files]
     assert paths == sorted(paths)
     assert "manifest.json" not in paths
-    assert paths == [
+    assert [p for p in paths if p.startswith("exports/")] == [
         "exports/book_of_business/book_of_business.xlsx",
         "exports/crm/crm_contacts.csv",
         "exports/crm/crm_linked_accounts.csv",
         "exports/custodian/custodian_accounts.csv",
     ]
+    assert "truth/summary.json" in paths and "truth/discrepancies.csv" in paths
     for entry in files:
         data = (fresh.path / entry["path"]).read_bytes()
         assert entry["bytes"] == len(data)

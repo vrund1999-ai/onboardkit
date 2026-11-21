@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
+from onboardkit.datagen import GENERATOR_VERSION
 from onboardkit.datagen.cli import app
 from onboardkit.datagen.config import dataset_id, resolve_config
 from onboardkit.datagen.pipeline import generate_dataset
@@ -153,10 +154,12 @@ def test_show_prints_the_manifest_summary(tmp_path: Path) -> None:
     assert lines["dataset"] == result.dataset_id
     assert lines["preset"] == "nightmare"
     assert lines["seed"] == "9"
-    assert lines["generator version"] == "0.1.0"
+    assert lines["generator version"] == GENERATOR_VERSION
     assert lines["events.mess"] == str(result.mess_events)
     assert lines["events.coverage"] == str(result.coverage_events)
-    assert lines["files"] == "4"
+    assert lines["files"] == "16"
+    assert lines["exports (what a firm delivers)"] == "4 files"
+    assert lines["truth (INTERNAL, never part of a delivery)"] == "12 files"
 
 
 def test_presets_lists_each_preset_with_its_mess_summary() -> None:

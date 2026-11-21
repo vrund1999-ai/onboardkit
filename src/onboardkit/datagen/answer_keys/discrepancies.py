@@ -163,13 +163,14 @@ def _differs(group: str, authoritative: str, other: str) -> bool:
     return authoritative != other
 
 
-def _event_group(event: MessEvent) -> str | None:
+def event_group(subtype: str, concept: str | None) -> str | None:
+    """The fact group (balance, type, status, registration) a value-conflict event is about."""
     by_subtype = {
         "stale_value": "balance",
         "status_mismatch": "status",
         "registration_mismatch": "registration",
     }
-    return by_subtype.get(event.subtype) or GROUPS.get(event.concept or "")
+    return by_subtype.get(subtype) or GROUPS.get(concept or "")
 
 
 def _event_index(context: AnswerKeyContext) -> dict[Key, list[str]]:
@@ -210,7 +211,7 @@ def _event_index(context: AnswerKeyContext) -> dict[Key, list[str]]:
                 c.event_id for c in coverage if c.source == BOOK and c.refs.account_id in accounts
             ]
     for event in context.mess_events:
-        group = _event_group(event)
+        group = event_group(event.subtype, event.concept)
         if event.effect == "value_conflict" and event.refs.account_id and group:
             index[("value", event.refs.account_id, group)].append(event.event_id)
     return index

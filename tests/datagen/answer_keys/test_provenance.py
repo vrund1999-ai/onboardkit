@@ -156,7 +156,7 @@ def test_output_is_byte_identical_across_runs(tmp_path: Path) -> None:
 def test_provenance_exists_only_under_truth_and_exports_are_unchanged(tmp_path: Path) -> None:
     config = resolve_config("typical", "sample", 42)
     with_keys = generate_dataset(config, tmp_path / "a", answer_key_writers=WRITERS)
-    without = generate_dataset(config, tmp_path / "b")
+    without = generate_dataset(config, tmp_path / "b", answer_key_writers=())
     new = {
         p.relative_to(with_keys.path).as_posix() for p in with_keys.path.rglob("*") if p.is_file()
     } - {p.relative_to(without.path).as_posix() for p in without.path.rglob("*") if p.is_file()}

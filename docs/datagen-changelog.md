@@ -32,6 +32,16 @@ Linux and Windows in CI. When that test fails:
 Datasets made by different versions are not comparable: a result quoted against a dataset should
 name its `dataset_id` and `generator_version`.
 
+## 0.2.0
+
+Every dataset now carries its answer keys in `truth/` (E5). Exports are unchanged byte for byte.
+
+- New files under `truth/`: `README.txt`, `summary.json`, `firm.json`, `provenance.csv`,
+  `source_id_map.csv`, `entity_matches.csv`, `entity_groups.csv`, `entities_not_exported.csv`,
+  `column_mappings.csv`, `discrepancies.csv`, `mess_events.jsonl`, `coverage_events.jsonl`.
+- The manifest lists them, so `verify` covers them; `onboardkit-gen check` validates them.
+- `onboardkit-gen show` separates delivered (`exports/`) from internal (`truth/`) file counts.
+
 ## 0.1.0
 
 First version of the generator.

@@ -24,6 +24,18 @@ EXPECTED_FILES = [
     "exports/crm/crm_linked_accounts.csv",
     "exports/book_of_business/book_of_business.xlsx",
     "manifest.json",
+    "truth/README.txt",
+    "truth/column_mappings.csv",
+    "truth/coverage_events.jsonl",
+    "truth/discrepancies.csv",
+    "truth/entities_not_exported.csv",
+    "truth/entity_groups.csv",
+    "truth/entity_matches.csv",
+    "truth/firm.json",
+    "truth/mess_events.jsonl",
+    "truth/provenance.csv",
+    "truth/source_id_map.csv",
+    "truth/summary.json",
 ]
 
 
