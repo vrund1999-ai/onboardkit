@@ -16,7 +16,7 @@ Stories: [M0 story progress](stories/m0.md). Epic definitions: [M0 epics](../epi
 | [E4](../epics/m0-foundation-epics.md#e4-reproducible-datasets) | Reproducible datasets | 5 / 5 | Done | All stories done |
 | [E5](../epics/m0-foundation-epics.md#e5-ground-truth) | Ground truth | 5 / 5 | Done | All stories done |
 | [E6](../epics/m0-foundation-epics.md#e6-automated-quality-gate) | Automated quality gate | 4 / 5 | In progress | E6-S1 to E6-S4 done |
-| [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | Contributor experience | 2 / 4 | In progress | E7-S1 and E7-S2 done |
+| [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | Contributor experience | 3 / 4 | In progress | E7-S1 to E7-S3 done |
 
 ## M1 to M6
 
