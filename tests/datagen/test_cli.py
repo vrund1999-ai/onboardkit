@@ -1,4 +1,5 @@
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -11,6 +12,7 @@ from onboardkit.datagen.config import dataset_id, resolve_config
 from onboardkit.datagen.pipeline import generate_dataset
 
 runner = CliRunner()
+ANSI = re.compile(r"\[[0-9;]*m")  # CI may force colored help output
 
 
 def invoke(*args: str) -> object:
@@ -241,7 +243,7 @@ def test_help_documents_every_command_and_option(command: str | None) -> None:
     args = [command, "--help"] if command else ["--help"]
     result = runner.invoke(app, args)
     assert result.exit_code == 0
-    text = " ".join(result.stdout.split())
+    text = " ".join(ANSI.sub("", result.stdout).split())
     if command is None:
         for name in ("generate", "presets", "verify", "show"):
             assert name in text
