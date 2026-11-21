@@ -6,6 +6,7 @@ import csv
 from collections.abc import Iterable
 from decimal import Decimal
 from pathlib import Path
+from typing import Any, Literal, TextIO
 
 from onboardkit.datagen.sources.base import (
     RowLocator,
@@ -31,6 +32,15 @@ def format_row(table: TableSpec, row: SourceRow) -> list[str]:
     return cells
 
 
+def _write_note(handle: TextIO, writer: Any, line: str, ending: str) -> None:
+    """Write a preamble or trailer line: blank stays blank, text goes through the CSV writer so
+    commas cannot be mistaken for column breaks."""
+    if line:
+        writer.writerow([line])
+    else:
+        handle.write(ending)
+
+
 def write_csv(
     profile: SourceProfile,
     table: TableSpec,
@@ -47,10 +57,13 @@ def write_csv(
     locators: dict[str, RowLocator] = {}
     ending = profile.line_ending
     # newline="" stops the text layer translating line endings (double CRs on Windows).
+    quoting: Literal[0, 1] = csv.QUOTE_ALL if profile.quoting == "all" else csv.QUOTE_MINIMAL
     with path.open("w", encoding=profile.encoding, newline="") as handle:
+        writer = csv.writer(
+            handle, delimiter=profile.delimiter, lineterminator=ending, quoting=quoting
+        )
         for line in table.preamble:
-            handle.write(line + ending)
-        writer = csv.writer(handle, delimiter=profile.delimiter, lineterminator=ending)
+            _write_note(handle, writer, line, ending)
         writer.writerow([c.header for c in table.columns])
         line_number = table.header_line
         for row in ordered:
@@ -60,7 +73,7 @@ def write_csv(
                 file=table.file_name, sheet=None, row_number=line_number
             )
         for line in table.trailer:
-            handle.write(line + ending)
+            _write_note(handle, writer, line, ending)
     return locators
 
 

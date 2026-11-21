@@ -82,7 +82,7 @@ def test_duplicate_headers_and_concepts_rejected() -> None:
                 ColumnSpec(concept="account.type", header="x"),
             ],
         )
-    with pytest.raises(ValidationError, match="repeats a concept"):
+    with pytest.raises(ValidationError, match="repeats a concept with the same options"):
         TableSpec(
             name="t",
             file_name="t.csv",

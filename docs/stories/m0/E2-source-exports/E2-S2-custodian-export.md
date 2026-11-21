@@ -72,13 +72,13 @@ One `SourceRow` per `TruthAccount`. `refs` carries `account_id`, `household_id`,
 
 ## Acceptance criteria
 
-- [ ] Output file has the three preamble/header lines and a trailer whose count equals the number of data rows.
-- [ ] Every truth account appears exactly once before coverage is applied.
-- [ ] The first bytes of the file are a UTF-8 BOM, and every line ends `\r\n`.
-- [ ] Balances, dates, account types, and names appear in the formats in the table above.
-- [ ] Every column's concept exists in the catalogue.
-- [ ] Row locators from `write` point to the correct data lines (header line number accounted for).
-- [ ] The README's `Acct #` header example is present.
+- [x] Output file has the three preamble/header lines and a trailer whose count equals the number of data rows.
+- [x] Every truth account appears exactly once before coverage is applied.
+- [x] The first bytes of the file are a UTF-8 BOM, and every line ends `\r\n`.
+- [x] Balances, dates, account types, and names appear in the formats in the table above.
+- [x] Every column's concept exists in the catalogue.
+- [x] Row locators from `write` point to the correct data lines (header line number accounted for).
+- [x] The README's `Acct #` header example is present.
 
 ## Test plan
 
@@ -90,3 +90,11 @@ One `SourceRow` per `TruthAccount`. `refs` carries `account_id`, `household_id`,
 
 - Trailer and preamble lines must be ignorable by a CSV reader with `skiprows`; do not put commas in the title line in a way that creates misleading columns. Quote it.
 - Keep names in upper case; case variants are an E3 concern.
+
+## Notes
+
+- Account status (open, closed, restricted) is set in the truth (E1-S4, shares in the firm profile), not here; the export prints it in upper case.
+- `Mail Addr` is the first owner's whole address on one line (`street, city, state postal`), so the custodian carries the address concept only partially. The catalogue and `docs/source-systems.md` were brought in line with this story: the custodian has no city, state, or postal columns, and `person.full_name`, `account.custodian` and the custodian's use of `person.tax_id_last4` in the CRM were retired or removed because no export design carries them. The E3-S3 `touches` list was updated for the retired `person.full_name`.
+- Framework additions needed by this story (E2-S1 code): a `map` formatter, a `commas` money style, `index` selection for name formatters, a profile `quoting` setting (`all` quotes every field and also the preamble and trailer lines), and a rule that a concept may repeat in a table only with different options.
+- The exporter's `profile` attribute carries `Total records: 0` in its trailer; `write` rebuilds the profile with the real count.
+

@@ -97,3 +97,4 @@ For each source, record: file type, header style (for example `Acct #`, `account
 
 - Concept set grew from 24 rows in the outline to 29 ids: `person.full_name` is carried by the custodian's `Primary Owner` column, and names, addresses, and tax id are shared by custodian and CRM so reconciliation has overlap.
 - Source conventions in `docs/source-systems.md` describe the clean form; mess (E3) varies them.
+- Later change (E2-S2): the catalogue was reconciled with the detailed export stories. It now has 27 ids (`person.full_name` and `account.custodian` retired) and 6 concepts that appear in two or more sources.

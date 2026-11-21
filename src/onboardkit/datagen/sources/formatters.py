@@ -40,8 +40,8 @@ def format_date(value: Any, options: Options) -> Formatted:
 
 
 def format_money(value: Any, options: Options) -> Formatted:
-    """``style``: ``plain`` (1234.50), ``dollar_commas`` ($1,234.50), ``parens_negative``
-    (1,234.50 and (1,234.50)), or ``number`` (a quantized ``Decimal`` for numeric cells)."""
+    """``style``: ``plain`` (1234.50), ``commas`` (1,234.50), ``dollar_commas`` ($1,234.50),
+    ``parens_negative`` (1,234.50 and (1,234.50)), or ``number`` (a quantized ``Decimal``)."""
     if value is None:
         return ""
     if isinstance(value, float):
@@ -56,11 +56,21 @@ def format_money(value: Any, options: Options) -> Formatted:
         return amount
     if style == "plain":
         return f"{amount:.2f}"
+    if style == "commas":
+        return f"{'-' if negative else ''}{magnitude:,.2f}"
     if style == "dollar_commas":
         return f"{'-' if negative else ''}${magnitude:,.2f}"
     if style == "parens_negative":
         return f"({magnitude:,.2f})" if negative else f"{magnitude:,.2f}"
     raise ValueError(f"unknown money style {style!r}")
+
+
+def _select(value: Any, options: Options) -> Any:
+    """Pick ``options["index"]`` from a list of values (blank when out of range)."""
+    if isinstance(value, list | tuple):
+        index = int(options.get("index", 0))
+        return value[index] if index < len(value) else None
+    return value
 
 
 def _name_parts(value: Any) -> tuple[str, str | None, str, str | None]:
@@ -74,7 +84,8 @@ def _apply_case(text: str, options: Options) -> str:
 
 
 def format_name_first_last(value: Any, options: Options) -> Formatted:
-    """``John A Smith Jr.``; ``upper: true`` upper-cases the result."""
+    """``John A Smith Jr.``; ``upper: true`` upper-cases; ``index`` picks from a list."""
+    value = _select(value, options)
     if value is None:
         return ""
     first, middle, last, suffix = _name_parts(value)
@@ -82,7 +93,8 @@ def format_name_first_last(value: Any, options: Options) -> Formatted:
 
 
 def format_name_last_first(value: Any, options: Options) -> Formatted:
-    """``Smith, John A Jr.``; ``upper: true`` upper-cases the result."""
+    """``Smith, John A Jr.``; ``upper: true`` upper-cases; ``index`` picks from a list."""
+    value = _select(value, options)
     if value is None:
         return ""
     first, middle, last, suffix = _name_parts(value)
@@ -123,6 +135,17 @@ def format_boolean(value: Any, options: Options) -> Formatted:
     return str(options.get("true", "Y")) if value else str(options.get("false", "N"))
 
 
+def format_map(value: Any, options: Options) -> Formatted:
+    """Translate through ``mapping`` (keys compared as text); unmapped values are an error."""
+    if value is None:
+        return ""
+    mapping: Mapping[str, str] = options["mapping"]
+    key = str(value)
+    if key not in mapping:
+        raise ValueError(f"value {key!r} is not in the mapping {sorted(mapping)}")
+    return mapping[key]
+
+
 def format_upper(value: Any, options: Options) -> Formatted:
     return "" if value is None else str(value).upper()
 
@@ -142,6 +165,7 @@ FORMATTERS: dict[str, Formatter] = {
     "name_last_first": format_name_last_first,
     "phone": format_phone,
     "boolean": format_boolean,
+    "map": format_map,
     "upper": format_upper,
     "passthrough": format_passthrough,
 }
