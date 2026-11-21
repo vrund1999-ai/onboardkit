@@ -18,6 +18,22 @@ Stories: [M0 story progress](stories/m0.md). Epic definitions: [M0 epics](../epi
 | [E6](../epics/m0-foundation-epics.md#e6-automated-quality-gate) | Automated quality gate | 5 / 5 | Done | All stories done |
 | [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | Contributor experience | 4 / 4 | Done | All stories done |
 
-## M1 to M6
+## M1: Ingestion and a single clean data model
+
+Stories: not written yet. Epic definitions: [M1 epics](../epics/m1-ingestion-epics.md). Story counts show `0 / 0` until the stories are written; update them when a story is added.
+
+| Epic | Title | Stories done | Status | Notes |
+|---|---|---|---|---|
+| [E8](../epics/m1-ingestion-epics.md#e8-common-data-model) | Common data model | 0 / 0 | Not started | Stories not written yet |
+| [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Holdings in the test data | 0 / 0 | Not started | Stories not written yet |
+| [E10](../epics/m1-ingestion-epics.md#e10-file-intake) | File intake | 0 / 0 | Not started | Stories not written yet |
+| [E11](../epics/m1-ingestion-epics.md#e11-real-world-file-handling) | Real-world file handling | 0 / 0 | Not started | Stories not written yet |
+| [E12](../epics/m1-ingestion-epics.md#e12-standardized-values) | Standardized values | 0 / 0 | Not started | Stories not written yet |
+| [E13](../epics/m1-ingestion-epics.md#e13-lineage) | Lineage | 0 / 0 | Not started | Stories not written yet |
+| [E14](../epics/m1-ingestion-epics.md#e14-separate-firms) | Separate firms | 0 / 0 | Not started | Stories not written yet |
+| [E15](../epics/m1-ingestion-epics.md#e15-intake-quality-report) | Intake quality report | 0 / 0 | Not started | Stories not written yet |
+| [E16](../epics/m1-ingestion-epics.md#e16-measured-against-the-answer-key) | Measured against the answer key | 0 / 0 | Not started | Stories not written yet |
+
+## M2 to M6
 
 Epics have not been defined yet. Add a section here, a `docs/epics/mN-*.md` file, and a `stories/mN.md` progress file when a milestone is broken down.
