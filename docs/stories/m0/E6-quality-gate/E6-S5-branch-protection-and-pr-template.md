@@ -69,10 +69,10 @@ After applying, open a pull request with a deliberate failing check and confirm 
 
 ## Acceptance criteria
 
-- [ ] A pull request with a failing required check cannot be merged.
-- [ ] A pull request with all checks passing can be merged.
-- [ ] Direct pushes to `main` are rejected.
-- [ ] Force pushes and branch deletion on `main` are disabled.
+- [x] A pull request with a failing required check cannot be merged.
+- [x] A pull request with all checks passing can be merged.
+- [x] Direct pushes to `main` are rejected.
+- [x] Force pushes and branch deletion on `main` are disabled.
 - [x] The template appears automatically on new pull requests.
 - [x] `docs/repo-settings.md` lets someone else reapply the settings exactly.
 
@@ -88,6 +88,8 @@ After applying, open a pull request with a deliberate failing check and confirm 
 
 ## Notes
 
-- Not applied yet: the story says to confirm with the maintainer before changing repository settings, so this change adds the pull request template and `docs/repo-settings.md` (with the apply, check, and remove commands) but leaves `main` unprotected. The four unticked criteria depend on the settings being applied; the story stays In progress until then.
+- Applied on 2026-11-21 with the commands in `docs/repo-settings.md`, after the maintainer approved. Read back: required checks `lint`, `typecheck`, `test (ubuntu-latest)`, `test (windows-latest)`, `secrets scan`; strict (up to date) on; force pushes off; deletions off; administrators not enforced.
+- Verified with a deliberately failing pull request (#42, closed): three required checks failed and the merge state was `BLOCKED`; `gh pr merge` refused. All-green pull requests (#35 to #41) merged normally. Force pushes and deletion are covered by the read-back of the settings; I did not attempt them against `main`.
+- Because administrators are not enforced, the repository owner can still bypass protection (`--admin`, or a direct push). So "direct pushes to `main` are rejected" holds for everyone else, not for the owner; turn on `enforce_admins` once stable.
 - The secrets job is named `secrets scan` (with a space) in CI, and that is the name used in the required check list.
 
