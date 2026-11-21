@@ -12,6 +12,9 @@ dependencies = [
     "openpyxl",
 ]
 
+[project.scripts]
+onboardkit-gen = "onboardkit.datagen.cli:app"
+
 [dependency-groups]
 dev = [
     "pytest",

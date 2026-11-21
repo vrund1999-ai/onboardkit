@@ -71,13 +71,13 @@ Plain text, one fact per line, no color dependency; `--quiet` prints only the da
 
 ## Acceptance criteria
 
-- [ ] `onboardkit-gen generate` with no arguments produces the default `typical` dataset at seed 42.
-- [ ] `--size sample --preset clean --seed 7` produces a small clean dataset.
-- [ ] Unknown preset, mess name, or level gives exit code 2 and lists valid values.
-- [ ] Re-running without `--overwrite` exits 3 and changes nothing on disk.
-- [ ] `verify` exits 0 on a fresh dataset and 1 after tampering.
-- [ ] `--help` for each command documents every option.
-- [ ] Works from any working directory when `--out` is absolute.
+- [x] `onboardkit-gen generate` with no arguments produces the default `typical` dataset at seed 42.
+- [x] `--size sample --preset clean --seed 7` produces a small clean dataset.
+- [x] Unknown preset, mess name, or level gives exit code 2 and lists valid values.
+- [x] Re-running without `--overwrite` exits 3 and changes nothing on disk.
+- [x] `verify` exits 0 on a fresh dataset and 1 after tampering.
+- [x] `--help` for each command documents every option.
+- [x] Works from any working directory when `--out` is absolute.
 
 ## Test plan
 
@@ -89,3 +89,11 @@ Plain text, one fact per line, no color dependency; `--quiet` prints only the da
 
 - Keep the console script name and flags stable; the documentation depends on them.
 - Do not print absolute user paths into the manifest or dataset files; printing them on the terminal is fine.
+
+## Notes
+
+- `cli.py` is a Typer app with `generate`, `presets`, `verify`, `show`; `python -m onboardkit.datagen` runs the same app. Failures map to the documented exit codes through one `guarded` wrapper (usage errors from Typer are also exit 2).
+- `--config` accepts `preset`, `size.households`, `seed`, `as_of_date`, and the `coverage`, `book_of_business`, `mess`, `firm_profile` sections. Layering is defaults, then file, then flags; unknown keys are an error.
+- `counts` gained `events.coverage` and `events.mess`, so `show` can report event totals from the manifest.
+- `verify` on a folder without a manifest exits 1 (a manifest problem); a path that is not a directory exits 2.
+
