@@ -223,5 +223,42 @@ These are real-world cases that the fictional firm leaves out for now. They are 
 - **Trusts.** They introduce trustees, beneficiaries, and different registrations.
 - **Business accounts.** They change who an "owner" is and what a household means.
 - **Deceased clients.** They create inherited accounts and status changes that depend on more history.
-- **Other account types** such as annuities, custodial (UTMA) accounts, and holdings or transactions within accounts.
+- **Other account types** such as annuities, custodial (UTMA) accounts, and transactions within accounts. (Holdings are covered in section 10.)
 - **Multiple custodians.** M0 has one; a second, differently shaped one arrives in M2.
+
+## 10. Securities and holdings
+
+From generator 0.3.0 the fictional firm also owns investments. This is the minimum needed to reconcile to account balances: what is held, how much, what it is worth, and what kind of asset it is.
+
+### The security master
+
+- 41 fictional securities: one cash security (`CASH`, always priced at 1.0000) and 40 invested ones.
+- The 40 are split 50% equities (20), 20% bonds (8), and 30% funds (12). Names are invented from word lists (for example "Alder Dynamics Corp", "Harbor Income Fund", "Willow Municipal Bond 3.5% 2034"). Symbols are invented: four letters for equities, four letters plus `X` for funds, two letters and four digits for bonds. A short list of famous real tickers is refused.
+- Each security has one fixed price, as of the as-of date. Equities are priced between $10 and $400, funds between $10 and $150, and bonds between $95 and $105.
+
+### Holdings per account
+
+| Item | Rule |
+|---|---|
+| Closed accounts | Hold only cash |
+| Open and restricted accounts | 3 to 12 distinct securities, plus cash; accounts under $25,000 hold 2 to 5 |
+| Mix of asset classes | Depends on the account type (see below) |
+| Cash | 1% to 8% of the balance, and it absorbs any rounding so the holdings add up exactly |
+| Reconciliation | The values of an account's holdings always sum to its balance, to the cent |
+
+Asset class weights by account type (equities / bonds / funds):
+
+| Account type | Equities | Bonds | Funds |
+|---|---|---|---|
+| Individual | 55% | 15% | 30% |
+| Joint | 50% | 20% | 30% |
+| Traditional IRA | 40% | 30% | 30% |
+| Roth IRA | 60% | 10% | 30% |
+| Rollover IRA | 40% | 30% | 30% |
+| 529 | 15% | 15% | 70% |
+
+### Not modelled
+
+Later enhancements, deliberately left out: prices over time, cost basis and tax lots, transactions, income, realistic market behavior, holdings in the CRM or the book of business, and mess specific to holdings.
+
+The configuration is the `holdings` section of `firm_profile.yaml`. Change both together.

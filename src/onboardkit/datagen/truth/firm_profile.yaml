@@ -56,3 +56,27 @@ dates:
   adult_birth_years: [1945, 1995]
   retired_birth_year_max: 1960
   child_birth_years: [2005, 2022]
+holdings:
+  security_count: 40
+  class_shares: { equity: 0.50, fixed_income: 0.20, fund: 0.30 }
+  price_ranges:
+    equity: [10, 400]
+    fixed_income: [95, 105]
+    fund: [10, 150]
+  positions: [3, 12]
+  small_account_threshold: 25000
+  small_account_positions: [2, 5]
+  cash_share: [0.01, 0.08]
+  class_mix:
+    individual: { equity: 0.55, fixed_income: 0.15, fund: 0.30 }
+    joint: { equity: 0.50, fixed_income: 0.20, fund: 0.30 }
+    traditional_ira: { equity: 0.40, fixed_income: 0.30, fund: 0.30 }
+    roth_ira: { equity: 0.60, fixed_income: 0.10, fund: 0.30 }
+    rollover_ira: { equity: 0.40, fixed_income: 0.30, fund: 0.30 }
+    education_529: { equity: 0.15, fixed_income: 0.15, fund: 0.70 }
+  name_words:
+    first: [Alder, Birch, Cobalt, Delta, Ember, Falcon, Granite, Harbor, Indigo, Juniper, Keystone, Larkspur, Maple, Northwind, Orchard, Pinnacle, Quartz, Redwood, Sterling, Tamarack, Umber, Vantage, Willow, Yarrow, Zephyr, Beacon, Crestline, Driftwood, Evergreen, Foxglove]
+    second: [Dynamics, Logistics, Foods, Energy, Networks, Materials, Biotech, Software, Utilities, Labs, Mining, Retail, Marine, Aerospace, Pharma, Robotics, Textiles, Telecom, Paper, Steel]
+    equity_suffixes: [Corp, Inc, Holdings, Group]
+    fund_types: [Growth Fund, Income Fund, Index Fund, Balanced Fund, Value Fund]
+  forbidden_symbols: [AAPL, MSFT, AMZN, GOOG, GOOGL, META, TSLA, NVDA, JPM, XOM, JNJ, WMT, KO, PEP, DIS, INTC, IBM, CSCO, ORCL, NFLX, BAC, WFC, MRK, PFE, SPY, QQQ, VTI, VOO, VXUS, BND, AGG, VTSAX, VFIAX, FXAIX, SWPPX, VBTLX]
