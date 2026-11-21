@@ -27,6 +27,17 @@ class TruthRefs:
     account_id: str | None = None
 
 
+@dataclass(frozen=True)
+class RawText:
+    """A value already written as text. Writers emit ``text`` verbatim, skipping the formatter.
+
+    ``original`` is the typed value it replaced, so answer keys know the true value.
+    """
+
+    text: str
+    original: Any
+
+
 @dataclass
 class SourceRow:
     """One row of one table of one source, before formatting.

@@ -21,6 +21,7 @@ from onboardkit.datagen.config import BookOfBusinessConfig
 from onboardkit.datagen.rng import derive_rng
 from onboardkit.datagen.sources.base import (
     ColumnSpec,
+    RawText,
     RowLocator,
     SourceProfile,
     SourceRow,
@@ -28,7 +29,7 @@ from onboardkit.datagen.sources.base import (
     TruthRefs,
     WriteResult,
 )
-from onboardkit.datagen.sources.formatters import apply_formatter
+from onboardkit.datagen.sources.writers import format_cell
 from onboardkit.datagen.sources.xlsx_utils import save_deterministic, stamp_for
 from onboardkit.datagen.truth.model import HouseholdRole, TruthFirm, TruthHousehold, TruthPerson
 from onboardkit.datagen.truth.profile import AccountStatus, AccountType
@@ -269,14 +270,14 @@ class BookOfBusinessExporter:
             sheet.column_dimensions[letter].width = width
         for excel_row, row, first_in_block in self._layout(rows):
             for index, column in enumerate(table.columns, start=1):
-                value = apply_formatter(
-                    column.formatter, row.values.get(column.concept), column.options
-                )
+                value = format_cell(column, row)
                 if column.concept == "household.name" and not first_in_block:
                     value = ""
                 if value == "":
                     continue
                 cell = sheet.cell(row=excel_row, column=index, value=value)
+                if isinstance(row.values.get(column.concept), RawText):
+                    continue  # pre-formatted text keeps the cell's default format
                 if column.concept == "account.number":
                     cell.number_format = "@"
                 elif column.concept == "account.balance":
@@ -287,5 +288,7 @@ class BookOfBusinessExporter:
 
 def _balance(row: SourceRow) -> Decimal:
     value = row.values["account.balance"]
+    if isinstance(value, RawText):
+        value = value.original
     assert isinstance(value, Decimal)
     return value
