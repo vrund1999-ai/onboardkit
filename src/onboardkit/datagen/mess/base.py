@@ -55,6 +55,7 @@ class MessEvent:
     effect: Effect
     severity: Severity | None = None
     ambiguity: Ambiguity | None = None
+    detail: str | None = None  # extra facts a consumer needs, for example a tolerance
 
 
 @dataclass
@@ -89,6 +90,7 @@ class MessContext:
         after: str | None = None,
         severity: Severity | None = None,
         ambiguity: Ambiguity | None = None,
+        detail: str | None = None,
     ) -> MessEvent:
         """Create the next event with a sequential id for this type."""
         event = MessEvent(
@@ -105,6 +107,7 @@ class MessContext:
             effect=effect,
             severity=severity,
             ambiguity=ambiguity,
+            detail=detail,
         )
         self._next_event += 1
         return event

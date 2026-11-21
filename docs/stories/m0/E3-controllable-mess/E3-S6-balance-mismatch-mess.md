@@ -67,13 +67,13 @@ Weights favor immaterial cases (about 40 percent) so tolerance logic is exercise
 
 ## Acceptance criteria
 
-- [ ] At intensity 0, no values change.
-- [ ] Every subtype is producible and appears at high intensity on the 300-household dataset.
-- [ ] Every event has a severity, and `rounding_diff` and `small_drift` are always `immaterial`.
-- [ ] No balance becomes zero, negative, or non-numeric.
-- [ ] The custodian's balances are untouched, except where `stale_value` is applied by design and documented.
-- [ ] No account receives two balance-family events in the same source.
-- [ ] Tolerance constants are exposed in the module and recorded in events.
+- [x] At intensity 0, no values change.
+- [x] Every subtype is producible and appears at high intensity on the 300-household dataset.
+- [x] Every event has a severity, and `rounding_diff` and `small_drift` are always `immaterial`.
+- [x] No balance becomes zero, negative, or non-numeric.
+- [x] The custodian's balances are untouched, except where `stale_value` is applied by design and documented.
+- [x] No account receives two balance-family events in the same source.
+- [x] Tolerance constants are exposed in the module and recorded in events.
 
 ## Test plan
 
@@ -85,3 +85,16 @@ Weights favor immaterial cases (about 40 percent) so tolerance logic is exercise
 
 - `magnitude_error` can produce absurd values if unchecked; the under-$200,000 limit is deliberate.
 - Severity here is the generator's intention. Real reconciliation will apply the firm's own tolerance rules in M4.
+
+## Notes
+
+- Scope changes made while implementing, because the sources lack the columns the story assumed:
+  - The book of business has no status or registration column, so `status_mismatch` and `registration_mismatch` are written as a note in its `meta.notes` column (`Closed per client`, `Active, reopened`, `Sole owner: <name>`). `meta.notes` is therefore a touched concept, and rows that already have a note are skipped. Their events use `concept = None` because the changed cell is not the named concept.
+  - `stale_value` is applied to the custodian row (balance and `balance_as_of` move to the previous quarter end), the only place with an as-of date. This is the documented exception to "the custodian is untouched".
+  - `type_mismatch` applies to the book and to the CRM's linked-account table.
+- Added `MessEvent.detail` (free text, default `None`). Value events record `tolerance=max(1.00, 0.1%); within_tolerance=<bool>`; `stale_value` also records `prior_as_of`; note-based events record the note.
+- `tolerance()`, `within_tolerance()`, `TOLERANCE_ABS`, `TOLERANCE_REL` and `previous_quarter_end()` are exported from `mess/balances.py`.
+- Immaterial events are about 40 to 55 percent of the book's events, because status, type and registration need an eligible row (a free note, a joint account) and are filtered first.
+- Rows whose balance was already turned into text by the `formats` mess are skipped for value subtypes.
+- `rounding_diff` and `small_drift` replace the book balance with the custodian balance plus the difference, so they overwrite the book's background drift; `before` is the custodian value read before any change.
+
