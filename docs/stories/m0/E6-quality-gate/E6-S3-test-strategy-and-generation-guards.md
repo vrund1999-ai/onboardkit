@@ -69,13 +69,13 @@ CI runs everything. Developers run `pytest -m "not slow"` while iterating.
 
 ## Acceptance criteria
 
-- [ ] `docs/testing.md` explains the levels, markers, and fixtures.
-- [ ] `sample_dataset` is generated once per session and reused.
-- [ ] Renaming a CLI flag without updating the docs fails a guard test.
-- [ ] Removing a concept that a profile uses fails a guard test.
-- [ ] A broken relative link in `docs/` fails a guard test.
-- [ ] The story index guard fails if a story file is added without an index entry.
-- [ ] Coverage under 85 percent fails the build.
+- [x] `docs/testing.md` explains the levels, markers, and fixtures.
+- [x] `sample_dataset` is generated once per session and reused.
+- [x] Renaming a CLI flag without updating the docs fails a guard test.
+- [x] Removing a concept that a profile uses fails a guard test.
+- [x] A broken relative link in `docs/` fails a guard test.
+- [x] The story index guard fails if a story file is added without an index entry.
+- [x] Coverage under 85 percent fails the build.
 
 ## Test plan
 
@@ -85,3 +85,14 @@ CI runs everything. Developers run `pytest -m "not slow"` while iterating.
 
 - Guards that parse markdown should stay simple (fenced blocks and links only). Over-clever parsing makes them brittle.
 - Do not let guards reach the network.
+
+## Notes
+
+- `docs/getting-started.md` and `docs/demo-walkthrough.md` do not exist yet (E7). The documentation-command guard therefore scans fenced `bash` and `powershell` blocks in every markdown document (README, ROADMAP, CLAUDE.md, `docs/**`), so the new guides are covered automatically when they arrive. Commands are validated by parsing them with the real CLI (unknown flags, missing values and unknown subcommands fail) rather than by running them.
+- The generated-reference-docs guard is the existing `tests/datagen/test_mess_catalogue.py` (E3-S7); `docs/testing.md` lists it with the other guards.
+- Links are checked for every markdown document, not only the glossary, including heading anchors. Links to websites are never followed.
+- The story index guard also checks the epic roll-up rules in `docs/progress/epics.md` and the per-epic and overall done counts, using the statuses allowed by `docs/progress/README.md`.
+- Coverage threshold: `fail_under = 85` in `[tool.coverage.report]` (so `pytest --cov` fails below it, in CI too). Actual coverage is about 98 percent.
+- `INTENTIONALLY_UNUSED` in the catalogue guard is empty: every concept in the catalogue is used by a profile today.
+- Guard test layout: `tests/guards/` has a small `markdown.py` helper (fences, headings, links) and one test module per guard; `tests/conftest.py` holds the shared fixtures. Five long tests are marked `slow`.
+
