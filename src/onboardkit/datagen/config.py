@@ -9,10 +9,11 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
-from collections.abc import Mapping
+import math
+from collections.abc import Iterable, Mapping
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, RootModel, field_validator, model_validator
@@ -28,6 +29,8 @@ FIRM_PROFILES = ("lantern_ridge",)
 MESS_TYPE_NAMES = ("names", "households", "formats", "balances")
 
 _HASH_FLOAT_PLACES = 6
+
+LEVELS: dict[str, float] = {"off": 0.0, "light": 0.2, "moderate": 0.5, "heavy": 0.8, "max": 1.0}
 
 
 class _Frozen(BaseModel):
@@ -59,6 +62,70 @@ class MessConfig(RootModel[dict[str, MessSetting]]):
     @property
     def settings(self) -> dict[str, MessSetting]:
         return self.root
+
+    def is_active(self, name: str) -> bool:
+        """A type is active only when it is enabled and its intensity is above zero."""
+        setting = self.root.get(name)
+        return setting is not None and setting.enabled and setting.intensity > 0
+
+    def active_names(self) -> list[str]:
+        """Active type names in the canonical order."""
+        return [name for name in MESS_TYPE_NAMES if self.is_active(name)]
+
+
+class HasMaxRate(Protocol):
+    """What ``effective_rate`` needs from a mess type."""
+
+    name: str
+    max_rate: float
+
+
+def parse_level(value: str | float) -> float:
+    """Accept a level word (``off``, ``light``, ``moderate``, ``heavy``, ``max``) or a number.
+
+    Numbers must be between 0 and 1. Anything else is an error that lists what is accepted.
+    """
+    accepted = f"a number from 0 to 1 or one of {', '.join(LEVELS)}"
+    if isinstance(value, bool):
+        raise ValueError(f"invalid level {value!r}: use {accepted}")
+    if isinstance(value, str):
+        text = value.strip().lower()
+        if text in LEVELS:
+            return LEVELS[text]
+        try:
+            number = float(text)
+        except ValueError:
+            raise ValueError(f"invalid level {value!r}: use {accepted}") from None
+    else:
+        number = float(value)
+    if not math.isfinite(number) or not 0.0 <= number <= 1.0:
+        raise ValueError(f"invalid level {value!r}: use {accepted}")
+    return number
+
+
+def apply_overrides(config: MessConfig, overrides: Iterable[str]) -> MessConfig:
+    """Return a new config with ``name=level`` overrides applied; the original is unchanged.
+
+    A positive level enables the type; ``off`` or ``0`` disables it. Later items win.
+    """
+    settings = {name: setting.model_copy() for name, setting in config.settings.items()}
+    for item in overrides:
+        name, separator, level = item.partition("=")
+        name = name.strip()
+        if not separator or not name:
+            raise ValueError(f"invalid override {item!r}: use name=level, for example names=heavy")
+        if name not in MESS_TYPE_NAMES:
+            raise ValueError(f"unknown mess type {name!r}; valid: {list(MESS_TYPE_NAMES)}")
+        intensity = parse_level(level)
+        settings[name] = MessSetting(enabled=intensity > 0, intensity=intensity)
+    return MessConfig.model_validate(settings)
+
+
+def effective_rate(config: MessConfig, mess_type: HasMaxRate) -> float:
+    """Share of eligible rows a type affects: ``intensity * max_rate``, or 0 when inactive."""
+    if not config.is_active(mess_type.name):
+        return 0.0
+    return config.settings[mess_type.name].intensity * mess_type.max_rate
 
 
 class CustodianCoverage(_Frozen):
