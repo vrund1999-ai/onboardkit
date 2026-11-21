@@ -76,12 +76,12 @@ For each source, record: file type, header style (for example `Acct #`, `account
 
 ## Acceptance criteria
 
-- [ ] Every concept in the table has an id, description, and value type.
-- [ ] The matrix shows, for each concept, which sources carry it and under what header.
-- [ ] Each of the three sources has stated conventions for headers, dates, numbers, names, and encoding.
-- [ ] Every fact appears in at least one source, and at least five concepts appear in two or more sources, so reconciliation has something to compare.
-- [ ] `concepts.yaml` loads and validates with a Pydantic model (id pattern, unique ids).
-- [ ] The README examples of mess (`Acct #`, `account_number`, `AcctNo`) appear as headers for `account.number` in different sources.
+- [x] Every concept in the table has an id, description, and value type.
+- [x] The matrix shows, for each concept, which sources carry it and under what header.
+- [x] Each of the three sources has stated conventions for headers, dates, numbers, names, and encoding.
+- [x] Every fact appears in at least one source, and at least five concepts appear in two or more sources, so reconciliation has something to compare.
+- [x] `concepts.yaml` loads and validates with a Pydantic model (id pattern, unique ids).
+- [x] The README examples of mess (`Acct #`, `account_number`, `AcctNo`) appear as headers for `account.number` in different sources.
 
 ## Test plan
 
@@ -92,3 +92,8 @@ For each source, record: file type, header style (for example `Acct #`, `account
 
 - Adding a column to an exporter later requires adding its concept here first. State this in the document.
 - Keep concept ids stable once published; E5-S3 answer keys depend on them.
+
+## Notes
+
+- Concept set grew from 24 rows in the outline to 29 ids: `person.full_name` is carried by the custodian's `Primary Owner` column, and names, addresses, and tax id are shared by custodian and CRM so reconciliation has overlap.
+- Source conventions in `docs/source-systems.md` describe the clean form; mess (E3) varies them.

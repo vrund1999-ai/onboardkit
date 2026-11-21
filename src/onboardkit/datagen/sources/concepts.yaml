@@ -1,0 +1,89 @@
+# Concept vocabulary for evaluation. Ids are stable: answer keys depend on them.
+concepts:
+- id: household.name
+  description: Display name of the household
+  value_type: string
+- id: household.source_id
+  description: The source's own household key
+  value_type: string
+- id: household.advisor
+  description: Responsible advisor
+  value_type: string
+- id: person.source_id
+  description: The source's own person key
+  value_type: string
+- id: person.full_name
+  description: Whole name as written
+  value_type: string
+- id: person.first_name
+  description: Given name
+  value_type: string
+- id: person.last_name
+  description: Family name
+  value_type: string
+- id: person.suffix
+  description: Name suffix such as Jr. or III
+  value_type: string
+- id: person.date_of_birth
+  description: Date of birth
+  value_type: date
+- id: person.tax_id_last4
+  description: Last four digits of a synthetic tax identifier
+  value_type: string
+- id: person.email
+  description: Email address
+  value_type: string
+- id: person.phone
+  description: Phone number
+  value_type: string
+- id: person.address_line1
+  description: First line of the address
+  value_type: string
+- id: person.address_city
+  description: City
+  value_type: string
+- id: person.address_state
+  description: State
+  value_type: string
+- id: person.address_postal
+  description: Postal code
+  value_type: string
+- id: person.household_role
+  description: Primary, spouse, or dependent
+  value_type: enum
+- id: person.client_since
+  description: Date the relationship began
+  value_type: date
+- id: account.number
+  description: Account number
+  value_type: string
+- id: account.type
+  description: Account type
+  value_type: enum
+- id: account.registration
+  description: Legal title on the account
+  value_type: string
+- id: account.status
+  description: Open, closed, or restricted
+  value_type: enum
+- id: account.open_date
+  description: Date the account was opened
+  value_type: date
+- id: account.balance
+  description: Market value of the account
+  value_type: money
+- id: account.balance_as_of
+  description: Date of the market value
+  value_type: date
+- id: account.owner_names
+  description: Owner names as printed on the registration
+  value_type: string
+- id: account.custodian
+  description: Name of the custodian
+  value_type: string
+- id: meta.notes
+  description: Free text with no structured meaning
+  value_type: string
+- id: meta.review_date
+  description: Date of last internal review
+  value_type: date
