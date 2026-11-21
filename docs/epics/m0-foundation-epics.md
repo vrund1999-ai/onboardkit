@@ -1,6 +1,6 @@
 # M0: Foundation and realistic test data — Epics
 
-This document breaks the M0 milestone from the [roadmap](../ROADMAP.md) into epics. Like the roadmap, it describes business capabilities and outcomes, not implementation. Detailed stories and tasks will be written when each epic is picked up.
+This document breaks the M0 milestone from the [roadmap](../../ROADMAP.md) into epics. Like the roadmap, it describes business capabilities and outcomes, not implementation. Detailed stories and tasks will be written when each epic is picked up.
 
 All data is synthetic. No real client or firm data is used anywhere.
 
