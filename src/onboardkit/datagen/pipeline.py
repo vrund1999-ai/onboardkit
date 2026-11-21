@@ -135,6 +135,8 @@ def count_rows(built: BuiltRows) -> dict[str, int]:
         "households": len(built.firm.households),
         "persons": len(built.firm.people),
         "accounts": len(built.firm.accounts),
+        "events.coverage": len(built.coverage_events),
+        "events.mess": len(built.mess_events),
     }
     for source in SOURCE_ORDER:
         counts[f"rows.{source}"] = sum(len(rows) for rows in built.data[source].values())
