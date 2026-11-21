@@ -80,14 +80,14 @@ The CLI gains `onboardkit-gen check DATASET_DIR`, exit code 1 when problems exis
 
 ## Acceptance criteria
 
-- [ ] Every generated dataset contains the full `truth/` directory above and passes `check_truth`.
-- [ ] `summary.json` counts equal independent counts taken from the files.
-- [ ] A scan of `exports/` finds no truth identifiers.
-- [ ] The import-boundary test fails if export writers import from `answer_keys`.
-- [ ] Tampering with any answer key (removing a row, altering a truth id) is detected by `check`.
-- [ ] `truth/README.txt` exists and contains the notice.
-- [ ] For all presets, the three keys agree: group member rows exist in provenance; discrepancies reference real entities.
-- [ ] The manifest lists truth files and `verify` detects changes to them.
+- [x] Every generated dataset contains the full `truth/` directory above and passes `check_truth`.
+- [x] `summary.json` counts equal independent counts taken from the files.
+- [x] A scan of `exports/` finds no truth identifiers.
+- [x] The import-boundary test fails if export writers import from `answer_keys`.
+- [x] Tampering with any answer key (removing a row, altering a truth id) is detected by `check`.
+- [x] `truth/README.txt` exists and contains the notice.
+- [x] For all presets, the three keys agree: group member rows exist in provenance; discrepancies reference real entities.
+- [x] The manifest lists truth files and `verify` detects changes to them.
 
 ## Test plan
 
@@ -100,3 +100,16 @@ The CLI gains `onboardkit-gen check DATASET_DIR`, exit code 1 when problems exis
 
 - `firm.json` contains the whole truth, so it is also the easiest file to leak. Never place it in `exports/`, and keep the boundary test strict.
 - When new answer keys arrive in later milestones, they join this directory and these checks.
+
+## Notes
+
+- Generator version is now `0.2.0` (minor: new files under `truth/`; exports are byte-identical to 0.1.0). Changelog entry and the recorded standard checksums for 0.2.0 are included.
+- `generate_dataset(answer_key_writers=None)` now runs `answer_keys.DEFAULT_WRITERS` (imported lazily to avoid a cycle). Pass `()` for a dataset with an empty `truth/`.
+- New modules: `answer_keys/truth_files.py` (README notice, `firm.json`, the two event logs), `summary.py`, `checks.py`. `firm.json` holds people, households and accounts plus the firm name; the large firm profile is left out.
+- Deviation: the "every entity appears in a group" check also accepts an entity listed in `entities_not_exported.csv` (E5-S2 note) and fails if an entity is in both or neither.
+- Deviation: the "no value from `source_id_map`" rule is implemented as "no source id embeds its truth id". Source ids themselves (for example `C000123`) legitimately appear in exports.
+- The import-boundary test scans `sources/`, `mess/` and `truth/` and requires that only `pipeline.py` (lazy default hook) and `cli.py` import `answer_keys` outside the package.
+- `check_truth` also runs `verify_provenance` and `verify_column_mappings`, and checks event-based discrepancies from the files (coverage events all cited; value-conflict mess events cited, except a stale custodian balance on an account the book does not hold).
+- `onboardkit-gen show` prints delivered and internal file counts; `generate --help` says `truth/` is internal.
+- Older tests that listed every file of a dataset were updated to include the 12 truth files.
+

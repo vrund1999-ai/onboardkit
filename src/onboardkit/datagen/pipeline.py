@@ -168,13 +168,18 @@ def generate_dataset(
     out_root: Path = DEFAULT_OUT_ROOT,
     *,
     overwrite: bool = False,
-    answer_key_writers: Sequence[AnswerKeyWriter] = (),
+    answer_key_writers: Sequence[AnswerKeyWriter] | None = None,
 ) -> DatasetResult:
     """Write one complete dataset to ``out_root/<dataset_id>`` and return what was produced.
 
     The dataset is built in a sibling temporary directory and renamed into place only when every
-    stage succeeded, so a failed run leaves no partial dataset at the final path.
+    stage succeeded, so a failed run leaves no partial dataset at the final path. Unless
+    ``answer_key_writers`` is given, every answer key in ``answer_keys.DEFAULT_WRITERS`` is written.
     """
+    if answer_key_writers is None:
+        from onboardkit.datagen.answer_keys import DEFAULT_WRITERS
+
+        answer_key_writers = DEFAULT_WRITERS
     identifier = dataset_id(config)
     final = out_root / identifier
     if final.exists() and not overwrite:

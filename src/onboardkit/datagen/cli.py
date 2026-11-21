@@ -1,4 +1,4 @@
-"""The ``onboardkit-gen`` command line: generate, list, verify, and show datasets.
+"""The ``onboardkit-gen`` command line: generate, list, verify, check, and show datasets.
 
 Exit codes: 0 success, 1 verification problems, 2 invalid arguments or configuration,
 3 dataset already exists, 4 unexpected error. Output is plain text, one fact per line;
@@ -17,6 +17,7 @@ import typer
 import yaml
 from pydantic import ValidationError
 
+from onboardkit.datagen.answer_keys.checks import check_truth
 from onboardkit.datagen.config import (
     DatasetConfig,
     apply_overrides,
@@ -144,7 +145,10 @@ def generate(
     ] = False,
     quiet: Annotated[bool, typer.Option("--quiet", help="Print only the dataset path.")] = False,
 ) -> None:
-    """Generate one dataset: exports, truth folder, and manifest."""
+    """Generate one dataset: exports, truth folder, and manifest.
+
+    Only exports/ is what a firm would deliver; truth/ is internal answer material.
+    """
 
     def run() -> None:
         resolved = build_config(preset, size, seed, mess or [], as_of, config)
@@ -205,6 +209,25 @@ def verify(
 
 
 @app.command()
+def check(
+    dataset_dir: Annotated[Path, typer.Argument(help="A dataset folder with a truth/ folder.")],
+) -> None:
+    """Check the internal truth/ folder: completeness, consistency, and no leaks into exports/."""
+
+    def run() -> None:
+        problems = check_truth(_dataset_dir(dataset_dir))
+        if not problems:
+            typer.echo("ok: truth is complete, consistent, and separate from the exports")
+            return
+        for problem in problems:
+            typer.echo(str(problem))
+        typer.echo(f"{len(problems)} problem(s) found")
+        raise typer.Exit(EXIT_VERIFY)
+
+    guarded(run)
+
+
+@app.command()
 def show(
     dataset_dir: Annotated[Path, typer.Argument(help="A dataset folder with a manifest.json.")],
 ) -> None:
@@ -225,5 +248,10 @@ def show(
         for key, value in manifest["counts"].items():
             typer.echo(f"{key}: {value}")
         typer.echo(f"files: {len(manifest['files'])}")
+        listed = [f["path"] for f in manifest["files"]]
+        delivered = sum(1 for path in listed if path.startswith("exports/"))
+        internal = sum(1 for path in listed if path.startswith("truth/"))
+        typer.echo(f"exports (what a firm delivers): {delivered} files")
+        typer.echo(f"truth (INTERNAL, never part of a delivery): {internal} files")
 
     guarded(run)
