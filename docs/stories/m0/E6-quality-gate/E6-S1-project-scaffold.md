@@ -86,11 +86,11 @@ uv run pytest
 
 ## Acceptance criteria
 
-- [ ] `uv sync` on a clean checkout succeeds and creates the environment.
-- [ ] `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, and `uv run pytest` all pass.
-- [ ] `import onboardkit` works and exposes a version.
-- [ ] `uv.lock` is committed and `uv sync --locked` succeeds.
-- [ ] No tool configuration lives outside `pyproject.toml` except `.editorconfig` and `.gitattributes`.
+- [x] `uv sync` on a clean checkout succeeds and creates the environment.
+- [x] `uv run ruff check .`, `uv run ruff format --check .`, `uv run mypy`, and `uv run pytest` all pass.
+- [x] `import onboardkit` works and exposes a version.
+- [x] `uv.lock` is committed and `uv sync --locked` succeeds.
+- [x] No tool configuration lives outside `pyproject.toml` except `.editorconfig` and `.gitattributes`.
 - [ ] Windows and Linux checkouts produce identical file contents for text files (verified later by CI).
 
 ## Test plan
@@ -102,3 +102,4 @@ uv run pytest
 
 - Pinning is done through the lockfile; do not add upper bounds in `pyproject.toml` without a reason.
 - `strict` mypy with Pydantic needs the plugin; if friction is high, relax specific flags rather than turning strict off.
+- `ruff` is configured to skip `*.md` (`extend-exclude`), because recent ruff versions format Python code blocks inside markdown and the story documents contain illustrative sketches rather than real code.
