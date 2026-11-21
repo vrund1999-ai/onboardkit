@@ -70,12 +70,12 @@ Accept words as shorthand where a number is expected: `off` = 0, `light` = 0.2, 
 
 ## Acceptance criteria
 
-- [ ] An unknown mess name in YAML fails validation and lists valid names.
-- [ ] Intensity below 0 or above 1 fails validation.
-- [ ] `enabled: false` with nonzero intensity is treated as inactive.
-- [ ] `parse_level` accepts words and numbers and rejects anything else.
-- [ ] `apply_overrides` returns a new object and leaves the original unchanged.
-- [ ] The effective rate for each active type is available through one function, `effective_rate(config, mess_type)`.
+- [x] An unknown mess name in YAML fails validation and lists valid names.
+- [x] Intensity below 0 or above 1 fails validation.
+- [x] `enabled: false` with nonzero intensity is treated as inactive.
+- [x] `parse_level` accepts words and numbers and rejects anything else.
+- [x] `apply_overrides` returns a new object and leaves the original unchanged.
+- [x] The effective rate for each active type is available through one function, `effective_rate(config, mess_type)`.
 
 ## Test plan
 
@@ -86,3 +86,12 @@ Accept words as shorthand where a number is expected: `off` = 0, `light` = 0.2, 
 ## Risks and notes
 
 - `max_rate` values are first guesses. Tune them after viewing the `typical` dataset; changing them changes generated data, so record changes in a changelog note and bump the generator version (E4-S3).
+
+## Notes
+
+- `MessSetting`, `MessConfig`, and the unknown-name and range validation already existed from E4-S1. This story added `parse_level`, `apply_overrides`, `effective_rate`, `MessConfig.is_active`, and `MessConfig.active_names` (canonical order).
+- `effective_rate` takes anything with `name` and `max_rate` (a small protocol in `config.py`), so the config module does not import the mess package. The real `max_rate` values are declared by the types in E3-S3 to E3-S6; none exist yet.
+- An override with a positive level enables the type; `off` or `0` disables it (the story only said "enabled").
+- Valid names come from `MESS_TYPE_NAMES` in `config.py`, not from the registry, so a typo is caught when the config loads and before any mess code is imported. A test in E3-S7 or later should assert that the registry and this tuple agree.
+- Level words: `off` 0, `light` 0.2, `moderate` 0.5, `heavy` 0.8, `max` 1.0. Numbers must be finite and between 0 and 1.
+
