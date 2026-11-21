@@ -41,12 +41,13 @@ E8 and E9 can start immediately and in parallel. E10 is the critical path. E13 a
 - A clear rule for how the model relates to the source vocabulary already used by the project (the concept catalogue), so each source column has a place to land.
 - A clear distinction between facts the model keeps and facts that are source-specific notes.
 - Terms added to the glossary.
+- The model created in PostgreSQL through versioned database changes, with a local database that starts easily and tests that use a real one.
 
 **Done when**
 - A newcomer can read the model definition and say where any column from any of the three sources belongs.
 - Every concept in the catalogue maps to a place in the model or is explicitly marked as not carried over.
 
-**Out of scope:** matching variants of the same person (M2); how the model is stored.
+**Out of scope:** matching variants of the same person (M2).
 
 ---
 

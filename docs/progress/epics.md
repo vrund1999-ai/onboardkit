@@ -20,12 +20,12 @@ Stories: [M0 story progress](stories/m0.md). Epic definitions: [M0 epics](../epi
 
 ## M1: Ingestion and a single clean data model
 
-Stories: not written yet. Epic definitions: [M1 epics](../epics/m1-ingestion-epics.md). Story counts show `0 / 0` until the stories are written; update them when a story is added.
+Stories: [M1 story progress](stories/m1.md). Epic definitions: [M1 epics](../epics/m1-ingestion-epics.md). Stories are written per epic when work on it is about to start; E10 to E16 show `0 / 0` until then.
 
 | Epic | Title | Stories done | Status | Notes |
 |---|---|---|---|---|
-| [E8](../epics/m1-ingestion-epics.md#e8-common-data-model) | Common data model | 0 / 0 | Not started | Stories not written yet |
-| [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Holdings in the test data | 0 / 0 | Not started | Stories not written yet |
+| [E8](../epics/m1-ingestion-epics.md#e8-common-data-model) | Common data model | 0 / 4 | Not started | Stories written |
+| [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Holdings in the test data | 0 / 4 | Not started | Stories written |
 | [E10](../epics/m1-ingestion-epics.md#e10-file-intake) | File intake | 0 / 0 | Not started | Stories not written yet |
 | [E11](../epics/m1-ingestion-epics.md#e11-real-world-file-handling) | Real-world file handling | 0 / 0 | Not started | Stories not written yet |
 | [E12](../epics/m1-ingestion-epics.md#e12-standardized-values) | Standardized values | 0 / 0 | Not started | Stories not written yet |
