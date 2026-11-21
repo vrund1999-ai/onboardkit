@@ -56,11 +56,11 @@ Specific examples quoted in the document are taken from the `sample` dataset at 
 
 ## Acceptance criteria
 
-- [ ] A reader can run every command in order and reach the end without errors.
-- [ ] Each problem in the README's list has a row in the "find the mess" table with a concrete location.
-- [ ] Quoted example rows exist in a freshly generated `sample` dataset at the documented version.
-- [ ] The walkthrough clearly labels `truth/` as internal.
-- [ ] It can be presented in about 15 minutes.
+- [x] A reader can run every command in order and reach the end without errors.
+- [x] Each problem in the README's list has a row in the "find the mess" table with a concrete location.
+- [x] Quoted example rows exist in a freshly generated `sample` dataset at the documented version.
+- [x] The walkthrough clearly labels `truth/` as internal.
+- [x] It can be presented in about 15 minutes.
 
 ## Test plan
 
@@ -70,3 +70,10 @@ Specific examples quoted in the document are taken from the `sample` dataset at 
 ## Risks and notes
 
 - Any generator change that alters output can stale the quoted examples. The guard test turns that into a build failure with a pointer to the document, which is the intent.
+
+## Notes
+
+- Quoted lines are written as fenced blocks tagged `quote <file>`. `tests/guards/test_walkthrough_examples.py` checks each non-blank line is contained in a line of that file in a freshly generated `sample` dataset (workbook rows are rendered as cells joined by ` | `). It also checks the dataset id named in the page is the current one.
+- "Presented in about 15 minutes" is an estimate from the length (six short sections); a live read-through by someone who did not write it is still outstanding, as the test plan asks.
+- The "find the mess" table has a sixth row (identifier formats) beyond the README list, because it is the most visible kind of mess in the account numbers.
+
