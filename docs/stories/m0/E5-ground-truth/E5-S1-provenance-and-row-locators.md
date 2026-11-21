@@ -61,12 +61,12 @@ Written to `truth/provenance.csv`, sorted by `row_uid`, UTF-8, `\n` endings.
 
 ## Acceptance criteria
 
-- [ ] Every row in every export file (excluding header, preamble, trailer, and spacer rows) has exactly one provenance record, and vice versa.
-- [ ] Locators verify against the files for all three sources, including advisor sheets in the workbook.
-- [ ] Rows created by household mess carry `origin` of `duplicate` or `split`; stale extras carry `stale_extra` and an empty `account_id`.
-- [ ] `source_id_map.csv` contains every contact id and household id used by the CRM, including duplicates.
-- [ ] Output files are byte-identical across runs.
-- [ ] Provenance files are written only under `truth/`.
+- [x] Every row in every export file (excluding header, preamble, trailer, and spacer rows) has exactly one provenance record, and vice versa.
+- [x] Locators verify against the files for all three sources, including advisor sheets in the workbook.
+- [x] Rows created by household mess carry `origin` of `duplicate` or `split`; stale extras carry `stale_extra` and an empty `account_id`.
+- [x] `source_id_map.csv` contains every contact id and household id used by the CRM, including duplicates.
+- [x] Output files are byte-identical across runs.
+- [x] Provenance files are written only under `truth/`.
 
 ## Test plan
 
@@ -78,3 +78,14 @@ Written to `truth/provenance.csv`, sorted by `row_uid`, UTF-8, `\n` endings.
 
 - Row numbers shift if preamble or spacer behavior changes in exporters; the verification test is the safety net.
 - Keep `source_keys` as simple text pairs. This is an internal artifact, not a data model.
+
+## Notes
+
+- `answer_keys/provenance.py` has `build_provenance`, `write_provenance` (an answer key writer, opt-in until E5-S5 registers the default list), and `verify_provenance`; `answer_keys/writer.py` is the shared CSV helper (UTF-8, `
+`, rows sorted).
+- `AnswerKeyContext` gained `rows` (the rows as exported, after coverage and mess) and `profiles` (each source's file layout). `generate_dataset` fills both.
+- `source_keys` use the column header text as the name (for example `Acct #=...`, `contact_id=...`), which keeps the file self-describing and lets verification find the header row without the profile. Blank key cells are omitted.
+- `source_id_map.csv` is built from the rows as exported, so it covers duplicates, moved (split) contacts, and account numbers of all three sources. A contact whose household id was blanked by mess has no household mapping.
+- `verify_provenance` reports problem kinds `locator` (wrong cell, shared location, no header), `unrecorded` (a data row with keys but no record), and `missing`. The `unrecorded` check is the "and vice versa" half of the first criterion.
+- Because the writers are opt-in, standard dataset checksums and the generator version are unchanged.
+

@@ -31,7 +31,7 @@ from onboardkit.datagen.mess.base import (
     group_by_table,
 )
 from onboardkit.datagen.mess.engine import run_mess
-from onboardkit.datagen.sources.base import RowLocator, SourceExporter, SourceRow
+from onboardkit.datagen.sources.base import RowLocator, SourceExporter, SourceProfile, SourceRow
 from onboardkit.datagen.sources.book_of_business import BookOfBusinessExporter
 from onboardkit.datagen.sources.coverage import CoverageEvent, apply_coverage
 from onboardkit.datagen.sources.crm import CrmExporter
@@ -68,6 +68,8 @@ class AnswerKeyContext:
     config: DatasetConfig
     firm: TruthFirm
     locators: dict[str, dict[str, RowLocator]]  # source -> row uid -> where the row landed
+    rows: dict[str, list[SourceRow]]  # source -> the rows as exported (after coverage and mess)
+    profiles: dict[str, SourceProfile]  # source -> its file layout
     source_id_maps: dict[str, Any]  # source -> its truth-to-source id maps, when it has any
     coverage_events: list[CoverageEvent]
     mess_events: list[MessEvent]
@@ -189,6 +191,8 @@ def generate_dataset(
             config=config,
             firm=built.firm,
             locators=locators,
+            rows=flatten(built.data),
+            profiles={name: built.exporters[name].profile for name in SOURCE_ORDER},
             source_id_maps={"crm": getattr(built.exporters["crm"], "id_maps", None)},
             coverage_events=built.coverage_events,
             mess_events=built.mess_events,
