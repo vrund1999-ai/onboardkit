@@ -28,6 +28,11 @@ class CoverageEvent:
     row_uid: str | None  # None when the row was dropped before it existed
     refs: TruthRefs
 
+    @property
+    def event_id(self) -> str:
+        """A stable id for answer keys, for example ``cov:omitted:crm:contacts:000012``."""
+        return f"cov:{self.kind}:{self.row_uid}"
+
 
 def _table_rates(config: CoverageConfig) -> dict[tuple[str, str], float]:
     return {
