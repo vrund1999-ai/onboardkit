@@ -51,7 +51,7 @@ By the end of the roadmap, an onboarding specialist should be able to take a new
 |---|---|
 | Propose a mapping from each source column to the common model | Every column gets a suggested meaning with a confidence level and a short rationale |
 | Propose likely matches between records | Variants of the same person, household, or account are grouped, each with a confidence level |
-| Separate confident from uncertain suggestions | High-confidence items are applied; low-confidence items are routed to a person |
+| Separate confident from uncertain suggestions | Items above a firm-configurable threshold are applied; the rest are routed to a person. Mappings and merges have separate thresholds, with merges stricter by default |
 | Never silently merge uncertain records | Nothing below the confidence threshold changes data without human approval |
 | Reuse what has been learned | A mapping confirmed for one firm or source is offered again the next time it appears |
 | Keep numeric work out of the model | Balances, joins, and comparisons are computed by deterministic logic, with the model limited to interpretation and suggestion |
@@ -70,6 +70,7 @@ By the end of the roadmap, an onboarding specialist should be able to take a new
 | Resolve many similar items at once | Repeated patterns can be handled in bulk with a single decision |
 | Record every decision | Who decided what, when, and why is stored for every mapping, merge, split, and override |
 | Undo and revisit decisions | A past decision can be reversed, with downstream results updated |
+| Handle conflicting decisions | When reviewers disagree, the latest decision applies, the earlier one stays on record, and the item is flagged for a lead to confirm |
 | Track review progress | A user can see how much is resolved, what remains, and what is blocking completion |
 | Trace any output back to source | From any reported figure, a user can reach the original source rows and the decisions that shaped it |
 
@@ -84,7 +85,7 @@ By the end of the roadmap, an onboarding specialist should be able to take a new
 | Apply tolerances sensibly | Trivial differences such as rounding or timing are separated from material ones |
 | Classify and prioritize exceptions | Each exception has a type, severity, and the records involved |
 | Manage exception resolution | An exception can be assigned, explained, accepted, or marked fixed, with history kept |
-| Define which source wins | Per-firm rules state which system is trusted for each kind of data |
+| Define which source wins | Defaults trust the custodian for money data and the CRM for people data; per-firm rules can override them |
 | Summarize reconciliation health | A firm-level view shows how well the sources agree and how that is trending |
 | Re-run after corrections | Fixing data or decisions updates the exception list without starting over |
 
@@ -95,7 +96,8 @@ By the end of the roadmap, an onboarding specialist should be able to take a new
 | Capability | Outcome |
 |---|---|
 | Household summary workbook | Each household shows its members, accounts, and balances in a clear, consistent layout |
-| Exceptions view | Open discrepancies are listed with severity and context |
+| Client-ready minimum | A household summary, a data-status banner, and high-severity exceptions are enough for a first client conversation |
+| Exceptions view | All open discrepancies are listed with severity and context, for internal use |
 | "What changed" view | Differences between the original exports and the cleaned result are explained, including merges and corrections |
 | Professional presentation | Formatting, naming, and layout are polished enough to hand to a client without rework |
 | Firm-specific branding and labels | Terminology and presentation can be adjusted per firm |
@@ -135,9 +137,39 @@ These apply to every milestone rather than being a stage of their own.
 - Real client or firm data.
 - Billing, performance reporting, and portfolio analytics.
 
-## Open questions
+## Decisions
 
-- What confidence threshold separates auto-apply from review, and should it be configurable per firm?
-- Which source is authoritative for each data type by default?
-- How should conflicting human decisions from different reviewers be handled?
-- What is the minimum report content an advisor needs for a first conversation with a client?
+These were open questions in the first draft and are now resolved. They shape the milestones above and can be revisited if experience says otherwise.
+
+### Auto-apply versus review
+
+- Suggestions at or above a firm's confidence threshold are applied automatically; anything below goes to a person.
+- The threshold is configurable per firm, with a conservative default so that only high-confidence suggestions are applied without review.
+- Column mappings and entity merges have separate thresholds. A wrong merge is costlier and harder to spot than a wrong column mapping, so merges default to a stricter setting.
+
+### Authoritative source by default
+
+| Kind of data | Default source of truth |
+|---|---|
+| Balances, holdings, account status, registration | Custodian |
+| Client contact details, household relationships | CRM |
+| Anything else | Book of business, as the lowest-priority source |
+
+- Every default can be overridden per firm.
+- Disagreements are still reported as exceptions, even when a default says which source wins.
+
+### Conflicting reviewer decisions
+
+- The most recent decision takes effect.
+- The earlier decision stays in the audit trail, and the item is flagged so a lead can confirm which one should stand.
+- Assumption for now: most firms will have a single primary reviewer, so no approval workflow is planned beyond this flag.
+
+### Minimum client-ready report
+
+A report is ready for a first client conversation when it contains:
+
+- A household summary showing members, accounts, and balances.
+- A clear data-status banner stating whether any review items are still pending.
+- High-severity exceptions only.
+
+The full exceptions view and the "what changed" view are still produced, but they are internal working material and are not required for a report to count as client-ready.
