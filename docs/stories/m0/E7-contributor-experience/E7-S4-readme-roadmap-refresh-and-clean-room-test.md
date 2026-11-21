@@ -66,12 +66,12 @@ For each exit criterion in the epics document, record the evidence in the log: c
 
 ## Acceptance criteria
 
-- [ ] README no longer describes the project as scaffolding only.
-- [ ] README layout matches the real layout and all of its links resolve.
+- [x] README no longer describes the project as scaffolding only.
+- [x] README layout matches the real layout and all of its links resolve.
 - [ ] Roadmap shows M0 as delivered and links the epics document.
 - [ ] A clean-room run follows the guide with no deviations and finishes within 30 minutes.
-- [ ] The log lists evidence for every M0 exit criterion.
-- [ ] Link guard and story index guard pass.
+- [x] The log lists evidence for every M0 exit criterion.
+- [x] Link guard and story index guard pass.
 
 ## Test plan
 
@@ -82,3 +82,10 @@ For each exit criterion in the epics document, record the evidence in the log: c
 
 - Do the clean-room run last, after the other stories merge, otherwise it tests a moving target.
 - Someone other than the author running it gives a more honest result; if unavailable, follow the text exactly rather than from memory.
+
+## Notes
+
+- **Not finished.** Two criteria stay open: "Roadmap shows M0 as delivered" and "A clean-room run ... with no deviations". M0 is not declared delivered because branch protection (E6-S5) is not applied and the clean-room run has only been done by the author on the author's machine, not on a fresh machine by someone else. `docs/stories/m0/clean-room-log.md` records Run 1 and what remains.
+- **Scope change.** The story asks for status lines in the roadmap, the epics document, and a status column in the story index. The project rules (`CLAUDE.md`) keep status only in `docs/progress/`, so none were added; the README now points to the progress files instead. The roadmap needs no edit until M0 is delivered, because it carries no status.
+- README links to the getting started guide, walkthrough, contributing guide, architecture, testing, glossary, fictional firm profile and source systems; the link guard checks them.
+
