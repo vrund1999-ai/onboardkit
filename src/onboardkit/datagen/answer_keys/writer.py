@@ -3,13 +3,22 @@
 from __future__ import annotations
 
 import csv
-from collections.abc import Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
+from typing import Any
 
 
-def write_table(path: Path, header: Sequence[str], rows: Iterable[Sequence[str]]) -> int:
-    """Write ``header`` and the rows sorted by their cell values; return the number of rows."""
-    ordered = sorted(tuple(row) for row in rows)
+def write_table(
+    path: Path,
+    header: Sequence[str],
+    rows: Iterable[Sequence[str]],
+    key: Callable[[tuple[str, ...]], Any] | None = None,
+) -> int:
+    """Write ``header`` and the rows in a stable order; return the number of rows.
+
+    Rows are sorted by ``key`` when given, otherwise by their cell values.
+    """
+    ordered = sorted((tuple(row) for row in rows), key=key)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle, lineterminator="\n")

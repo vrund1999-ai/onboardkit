@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Literal, Protocol
+from typing import Any, Literal, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -60,6 +60,17 @@ class RowLocator:
     file: str
     sheet: str | None
     row_number: int
+
+
+@dataclass(frozen=True)
+class SheetInfo:
+    """One sheet of a workbook export. ``table`` is None for a sheet with no table (a summary);
+    ``headers`` then lists that sheet's own column headers."""
+
+    sheet: str
+    table: str | None
+    header_row: int
+    headers: tuple[str, ...] = ()
 
 
 @dataclass
@@ -141,6 +152,13 @@ class SourceProfile(_Frozen):
 @lru_cache(maxsize=1)
 def known_concepts() -> frozenset[str]:
     return frozenset(load_concepts().ids())
+
+
+@runtime_checkable
+class HasSheets(Protocol):
+    """A workbook exporter that can describe its sheets (needed for the column mapping key)."""
+
+    def sheets(self, rows: list[SourceRow]) -> list[SheetInfo]: ...
 
 
 class SourceExporter(Protocol):
