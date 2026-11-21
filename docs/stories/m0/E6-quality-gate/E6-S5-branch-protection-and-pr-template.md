@@ -55,7 +55,8 @@ Sections:
    - If generated output changed: generator version bumped and changelog updated.
    - Docs updated, including the glossary or catalogue if terms or columns changed.
    - No real data included.
-4. **How tested.**
+4. **E2E Local Testing Evidence.** Required section, as defined in the project `CLAUDE.md`: real commands, requests, logs, or screenshots mapped to the story's acceptance criteria. Unit test output does not count.
+5. **How tested.** Short note on automated tests added or updated.
 
 ### Verification
 

@@ -38,6 +38,47 @@ Rules:
 - When moving or renaming a document, fix every relative link to it (search the repo for the old name).
 - Story ids look like `E2-S2`; use them in branch names, commit messages, and PR descriptions where a story is involved.
 
+## Pull requests: E2E Local Testing Evidence (required)
+
+Every PR you open must contain a section titled **E2E Local Testing Evidence**. It shows that the story was implemented as specified, by running the real thing locally. Unit tests do not count as this evidence: they run in CI anyway. Do not paste pytest output as the evidence.
+
+What to include depends on the change:
+
+| Change type | Acceptable evidence |
+|---|---|
+| CLI or generator (`onboardkit-gen`, pipeline) | The exact commands run and their real output, plus excerpts of the files produced (first rows of an export, a few lines of an answer key, the manifest) |
+| Backend API (FastAPI, later milestones) | The REST calls made (for example `curl` commands) and the actual responses, including status codes and at least one error case |
+| UI (Streamlit review screen) | Screenshots of the relevant states, with a one-line caption saying what each shows |
+| Excel or other file output | A screenshot or a described cell-level excerpt of the opened file |
+| Logging, audit trail, or error handling | Log output captured during the run showing the behavior, including a failure path |
+| Reproducibility or determinism | Two runs and a hash or diff comparison showing the result |
+| Docs-only or config-only | State that no runtime behavior changed, and show the check that applies (for example the link check output, or the CI-equivalent command run locally) |
+
+Rules:
+
+- Map the evidence to the story's acceptance criteria. For each criterion, say what evidence demonstrates it, or say it is covered only by unit tests and why.
+- Run it for real, on the branch being submitted, after your final code change. Never fabricate, paraphrase, or hand-edit output. If something could not be run locally, say so and why rather than implying it was.
+- Include the environment used (OS, Python version, command working directory) and the dataset id or seed when data was generated.
+- Show a negative case where the story defines one (invalid input, unknown preset, tampered file, expected exit code).
+- Keep it readable: trim long output to the relevant lines and say where it was trimmed. Put images in the PR itself, not in the repository.
+- Evidence involves synthetic data only. Do not include real data, secrets, or absolute paths from the user's machine beyond what is needed.
+- If a PR touches several stories, give evidence per story.
+
+Suggested layout inside the PR description:
+
+```
+## E2E Local Testing Evidence
+
+**Environment:** Windows 11, Python 3.12, run from repo root on branch <branch>
+
+### <Story id>: <criterion or behavior>
+Command / request:
+    <command or curl>
+Output / response:
+    <trimmed real output>
+Shows: <one line linking it to the acceptance criterion>
+```
+
 ## Project rules
 
 - Synthetic data only. Never add real client, firm, or personal data anywhere in the repo.
