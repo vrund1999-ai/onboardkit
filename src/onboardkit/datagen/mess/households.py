@@ -67,6 +67,7 @@ class HouseholdsMess:
     touches = frozenset({HOUSEHOLD_ID, HOUSEHOLD_NAME, PERSON_ID, ROLE, ADVISOR})
     structural = True
     max_rate = 0.15
+    subtypes = frozenset(WEIGHTS)
 
     def apply(self, ctx: MessContext, data: SourceDataset) -> list[MessEvent]:
         if ctx.rate <= 0:

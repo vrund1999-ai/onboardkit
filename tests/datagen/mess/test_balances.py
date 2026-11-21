@@ -53,7 +53,10 @@ def test_registered_with_story_settings() -> None:
         "account.type",
         "account.registration",
     } <= mess.touches
-    assert sum(BOOK_WEIGHTS.values()) == pytest.approx(1.0)
+    non_joint = {k: v for k, v in BOOK_WEIGHTS.items() if k != "registration_mismatch"}
+    assert sum(v for k, v in non_joint.items() if k in IMMATERIAL) / sum(
+        non_joint.values()
+    ) == pytest.approx(0.43, abs=0.05)
 
 
 def test_zero_intensity_changes_nothing() -> None:

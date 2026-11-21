@@ -8,7 +8,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 
 | Milestone | Title | Capabilities done | Status | Breakdown |
 |---|---|---|---|---|
-| M0 | Foundation and realistic test data | 0 / 6 | In progress | Epics and stories defined |
+| M0 | Foundation and realistic test data | 1 / 6 | In progress | Epics and stories defined |
 | M1 | Ingestion and a single clean data model | 0 / 7 | Not started | Not broken down yet |
 | M2 | AI-assisted mapping and entity matching | 0 / 8 | Not started | Not broken down yet |
 | M3 | Human review and audit trail | 0 / 9 | Not started | Not broken down yet |
@@ -23,7 +23,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 | Capability | Delivered by | Status | Notes |
 |---|---|---|---|
 | Generate realistic, messy multi-source data for a fictional firm | [E1](../epics/m0-foundation-epics.md#e1-fictional-firm-and-shared-vocabulary), [E2](../epics/m0-foundation-epics.md#e2-multi-source-messy-exports) | In progress |  |
-| Control the kinds and amount of mess | [E3](../epics/m0-foundation-epics.md#e3-controllable-mess) | In progress | E3-S1 to E3-S6 done |
+| Control the kinds and amount of mess | [E3](../epics/m0-foundation-epics.md#e3-controllable-mess) | Done | E3 done |
 | Reproduce a dataset on demand | [E4](../epics/m0-foundation-epics.md#e4-reproducible-datasets) | In progress | E4-S1 done |
 | Know the "right answer" for each dataset | [E5](../epics/m0-foundation-epics.md#e5-ground-truth) | Not started |  |
 | Automated quality checks on every change | [E6](../epics/m0-foundation-epics.md#e6-automated-quality-gate) | In progress |  |

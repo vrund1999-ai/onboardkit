@@ -6,7 +6,7 @@ import random
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import date
-from typing import Literal, Protocol
+from typing import Literal, Protocol, runtime_checkable
 
 from onboardkit.datagen.rng import derive_rng
 from onboardkit.datagen.sources.base import SourceRow, TruthRefs
@@ -111,6 +111,13 @@ class MessContext:
         )
         self._next_event += 1
         return event
+
+
+@runtime_checkable
+class DescribesSubtypes(Protocol):
+    """A mess type that lists the subtypes it can emit, so coverage tests can expect them all."""
+
+    subtypes: frozenset[str]
 
 
 class MessType(Protocol):

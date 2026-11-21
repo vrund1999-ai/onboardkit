@@ -59,7 +59,8 @@ STALE_MATERIAL_SHARE = Decimal("0.02")
 MAGNITUDE_LIMIT = Decimal("200000")
 DETAIL_TOLERANCE = f"tolerance=max({TOLERANCE_ABS}, {TOLERANCE_REL * 100:.1f}%)"
 
-# Weights for the book of business; about 40 percent of its events are immaterial.
+# Relative weights for the book of business. Only the rows a subtype applies to compete for it;
+# about 40 percent of the events end up immaterial.
 BOOK_WEIGHTS = {
     "rounding_diff": 0.20,
     "small_drift": 0.18,
@@ -67,7 +68,7 @@ BOOK_WEIGHTS = {
     "magnitude_error": 0.10,
     "type_mismatch": 0.14,
     "status_mismatch": 0.14,
-    "registration_mismatch": 0.12,
+    "registration_mismatch": 0.40,  # only joint accounts qualify, so give them a real chance
 }
 STALE_SHARE = 0.12  # of custodian accounts, at the mess rate
 CRM_TYPE_SHARE = 0.15  # of accounts' first CRM link, at the mess rate
@@ -160,6 +161,7 @@ class BalancesMess:
     touches = frozenset({BALANCE, AS_OF, STATUS, TYPE, REGISTRATION, NOTES})
     structural = False
     max_rate = 0.25
+    subtypes = frozenset({*BOOK_WEIGHTS, "stale_value"})
 
     def apply(self, ctx: MessContext, data: SourceDataset) -> list[MessEvent]:
         if ctx.rate <= 0:
