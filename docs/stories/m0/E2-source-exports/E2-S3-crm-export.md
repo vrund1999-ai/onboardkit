@@ -73,13 +73,13 @@ Joint accounts produce one link row per owner.
 
 ## Acceptance criteria
 
-- [ ] Every truth person appears exactly once in `crm_contacts.csv` before coverage is applied.
-- [ ] Every account owner gets a link row for each account they own.
-- [ ] All emails use only `example.com` or `example.test`; all phones fall in the fictional 555-01XX range.
-- [ ] Source ids contain no truth id substring and are unique per source.
-- [ ] Dates are ISO formatted; roles use the capitalized values above.
-- [ ] Locators resolve for both files.
-- [ ] The README's `account_number` header example is present.
+- [x] Every truth person appears exactly once in `crm_contacts.csv` before coverage is applied.
+- [x] Every account owner gets a link row for each account they own.
+- [x] All emails use only `example.com` or `example.test`; all phones fall in the fictional 555-01XX range.
+- [x] Source ids contain no truth id substring and are unique per source.
+- [x] Dates are ISO formatted; roles use the capitalized values above.
+- [x] Locators resolve for both files.
+- [x] The README's `account_number` header example is present.
 
 ## Test plan
 
@@ -91,3 +91,11 @@ Joint accounts produce one link row per owner.
 
 - Linked-account completeness is deliberately weaker than the custodian's. That is applied through coverage (E2-S5), not here.
 - Keep the source-id map out of the export directory; it belongs to the truth files.
+
+## Notes
+
+- Phones keep the truth format `(NNN) 555-01NN`, which is inside the fictional 555-01XX range; the story's `(555) 010-NNNN` example was not used because it would not match the range rule in the acceptance criteria.
+- Dependents have no email or phone in the truth, so their CRM cells are blank.
+- Source ids come from one seeded stream per dataset. `CrmExporter.id_maps` holds the truth-to-CRM id maps for the answer key writer (E5-S2); nothing is written to the export directory.
+- Contact ids are sampled without replacement for the whole firm, so the ids of a 15-household dataset are not a prefix of those of a 300-household dataset. That is fine because ids are only compared within one dataset.
+
