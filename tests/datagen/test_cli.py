@@ -12,7 +12,7 @@ from onboardkit.datagen.config import dataset_id, resolve_config
 from onboardkit.datagen.pipeline import generate_dataset
 
 runner = CliRunner()
-ANSI = re.compile(r"\[[0-9;]*m")  # CI may force colored help output
+ANSI = re.compile(chr(27) + r"\[[0-9;]*m")  # CI may force colored help output
 
 
 def invoke(*args: str) -> object:
