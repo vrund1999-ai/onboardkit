@@ -62,11 +62,11 @@ Common model (already present: check and extend), client, household, account, ba
 
 ## Acceptance criteria
 
-- [ ] `docs/data-model.md` defines each entity in the table above with required and optional facts and its relationships.
-- [ ] The five rules above are written down in plain language.
-- [ ] A reader can say where each column of the demo dataset's three sources belongs (checked in E8-S2).
-- [ ] Every new term is in the glossary, and the link and anchor guards pass.
-- [ ] The document describes the model in business terms; no table or column types appear in it.
+- [x] `docs/data-model.md` defines each entity in the table above with required and optional facts and its relationships.
+- [x] The five rules above are written down in plain language.
+- [x] A reader can say where each column of the demo dataset's three sources belongs (checked in E8-S2).
+- [x] Every new term is in the glossary, and the link and anchor guards pass.
+- [x] The document describes the model in business terms; no table or column types appear in it.
 
 ## Test plan
 
@@ -77,3 +77,9 @@ Common model (already present: check and extend), client, household, account, ba
 
 - Resist modelling every possible source. The model covers the three simulated sources plus holdings; M2 will stretch it for a second custodian.
 - Joint accounts have several owners and clients can own several accounts: write the relationship as many-to-many.
+
+## Notes
+
+- The model page also carries a "where source columns land" section for the three sources and the planned positions file. E8-S2 turns the catalogue half of that into a generated, tested mapping.
+- Glossary additions: alias, firm, holding, security, source record, standardized value. "Common data model" now points at the page. Client was already defined in M0 and was kept.
+- The check that every column of the demo dataset has a home was run for real against a generated `typical-default-s42` dataset: every header of the custodian, CRM and workbook files appears on the page (0 missing).

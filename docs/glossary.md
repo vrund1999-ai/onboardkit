@@ -13,7 +13,7 @@ The words onboardkit uses, and what they mean. Definitions are in plain language
 
 **Adding terms.** Keep entries in alphabetical order. Add a term when a later milestone introduces it.
 
-Jump to: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [G](#g) · [H](#h) · [I](#i) · [L](#l) · [M](#m) · [N](#n) · [P](#p) · [R](#r) · [S](#s) · [T](#t)
+Jump to: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [F](#f) · [G](#g) · [H](#h) · [I](#i) · [L](#l) · [M](#m) · [N](#n) · [P](#p) · [R](#r) · [S](#s) · [T](#t)
 
 ## A
 
@@ -46,6 +46,12 @@ Jump to: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [G](#g) · [H](#
 **Also known as:** financial advisor, planner, rep, relationship manager.
 **Not to be confused with:** the reviewer, the person who checks suggestions during onboarding.
 **Code name:** `advisor`.
+
+### alias
+**Definition:** A source's own identifier for something in the common data model, kept so the same thing can be found by any source's name for it, for example a CRM contact id for a client.
+**Also known as:** source key, source id, external id.
+**Not to be confused with:** the model's own identifier, which no source ever uses.
+**Code name:** `alias`.
 
 ### answer key
 **Definition:** A file that records the correct answer to one onboarding question for a particular dataset: which rows are the same entity (entity match key), what each column means (column mapping key), or which discrepancies really exist (discrepancy key). Answer keys are used to score the product.
@@ -100,10 +106,10 @@ Jump to: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [G](#g) · [H](#
 **Code name:** `person`, `person_id`.
 
 ### common data model
-**Definition:** The single, clean structure that all sources are converted into: people, households, and accounts with consistent fields. It is defined in milestone M1.
+**Definition:** The single, clean structure that all sources are converted into: firms, households, clients, accounts, balances, securities, and holdings, with consistent facts. It is described in [data-model.md](data-model.md).
 **Also known as:** canonical model, target schema, unified model.
-**Not to be confused with:** the truth, which is the generator's private picture of the fictional firm.
-**Code name:** not yet defined (milestone M1).
+**Not to be confused with:** the truth, which is the generator's private picture of the fictional firm, or the concept catalogue, which describes source columns for scoring.
+**Code name:** `onboardkit.model` (milestone M1).
 
 ### concept
 **Definition:** A stable identifier for the meaning of a column, written as `entity.attribute`, for example `account.number` or `person.date_of_birth`. Different sources use different headers for the same concept.
@@ -181,12 +187,26 @@ Jump to: [A](#a) · [B](#b) · [C](#c) · [D](#d) · [E](#e) · [G](#g) · [H](#
 **Not to be confused with:** the common data model, which is what exports are converted into.
 **Code name:** files under `exports/`.
 
+## F
+
+### firm
+**Definition:** The advisor firm whose data is being onboarded. Everything in the common data model belongs to exactly one firm, and data from different firms is never mixed.
+**Also known as:** advisor firm, RIA, practice, tenant.
+**Not to be confused with:** the custodian or CRM vendor, which are source systems the firm uses.
+**Code name:** `firm`.
+
 ## G
 
 ### ground truth
 See [truth](#truth).
 
 ## H
+
+### holding
+**Definition:** An amount of one security held in one account on a date, as reported by one source, for example 120 shares of a fund.
+**Also known as:** position, `Positions`, security position, lot (a finer detail not modelled in M1).
+**Not to be confused with:** a balance, which is the value of the whole account.
+**Code name:** `holding`, `holding_id` (internal identifier).
 
 ### household
 **Definition:** The group of people the firm plans for together, such as a couple and their children. A household has one advisor and one or more clients.
@@ -304,6 +324,12 @@ See [truth](#truth).
 
 ## S
 
+### security
+**Definition:** Something that can be held in an account, such as a stock, a bond, a fund, or cash.
+**Also known as:** instrument, asset, investment, ticker (the short code).
+**Not to be confused with:** security in the sense of access control or secrets.
+**Code name:** `security`, `security_id` (internal identifier).
+
 ### seed
 **Definition:** The number that fixes the random choices in the generator, so the same seed and settings always produce the same data.
 **Also known as:** random seed.
@@ -321,6 +347,12 @@ See [truth](#truth).
 **Also known as:** worksheet, tab.
 **Not to be confused with:** a file.
 **Code name:** `sheet`.
+
+### source record
+**Definition:** The original row of a source file that a value in the common data model came from, identified by source, file, sheet, and row, with its original text.
+**Also known as:** source row, origin row.
+**Not to be confused with:** provenance, the generator's own record of where each exported row landed.
+**Code name:** `source_record`.
 
 ### source system
 **Definition:** A system or file that holds some of the firm's data: in this project the custodian, the CRM, and the book of business.
@@ -345,6 +377,12 @@ See [truth](#truth).
 **Also known as:** fake data, test data, mock data.
 **Not to be confused with:** anonymized real data, which is not used here.
 **Code name:** `datagen` (package).
+
+### standardized value
+**Definition:** A value after [normalization](#normalization): rewritten into the common form, and stored together with the original text it came from.
+**Also known as:** clean value, normalized value.
+**Not to be confused with:** a matched or merged value, which involves deciding that two records are the same.
+**Code name:** not yet defined (milestone M1).
 
 ## T
 
