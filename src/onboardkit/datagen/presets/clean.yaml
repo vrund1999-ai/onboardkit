@@ -1,0 +1,17 @@
+name: clean
+description: Every source is complete and nothing is messy. A baseline for plumbing tests.
+coverage:
+  custodian:
+    accounts: 1.0
+  crm:
+    persons: 1.0
+    account_links: 1.0
+  book_of_business:
+    households: 1.0
+    accounts: 1.0
+    stale_extra_rate: 0.0
+mess:
+  names: { enabled: false, intensity: 0.0 }
+  households: { enabled: false, intensity: 0.0 }
+  formats: { enabled: false, intensity: 0.0 }
+  balances: { enabled: false, intensity: 0.0 }
