@@ -51,7 +51,7 @@ A **household** is the unit the firm serves: one or more people who share financ
 Rules for the people in a household:
 
 - Adults in a couple are within eight years of age of each other.
-- A parent is at least 18 years older than each of their children.
+- A parent is at least 18 years older than each of their children, and parents in households with children are born in 1965 or later.
 - Most couples share a surname; about 15% of couples use different surnames.
 - A household's display name comes from its primary member (the first adult), for example "Smith Household".
 - The widowed or retired archetype exists so that older clients and larger balances are represented.
@@ -88,7 +88,7 @@ Further rules:
 - A person holds at most one traditional IRA, one Roth IRA, and one rollover IRA.
 - Each account has a status of `open` for almost all accounts. A small share (about 3%) are `closed` and a small share (about 1%) are `restricted`. Closed accounts appear in the custodian file and on the book of business's archive sheet.
 - Account numbers are eight characters: the fictional prefix `MC` followed by six digits. Numbers are unique across the firm.
-- The **registration title** (the legal name on the account) is built from the owners and type, for example `JOHN A SMITH & JANE B SMITH JTWROS` for a joint account or `JANE B SMITH ROTH IRA` for a Roth IRA.
+- The **registration title** (the legal name on the account) is built from the owners and type, for example `JOHN A SMITH INDIVIDUAL`, `JOHN A SMITH & JANE B SMITH JTWROS` for a joint account, `JANE B SMITH ROTH IRA` for a Roth IRA, or `JANE B SMITH FBO EMMA SMITH 529` for a 529.
 
 ### Account mix
 
@@ -136,7 +136,7 @@ Balances are in US dollars and always positive.
 | Client since | Spread over the 15 years before the as-of date, and never before the primary's 21st birthday |
 | Adult date of birth | Between 1945 and 1995 (retired and widowed archetype: 1960 or earlier) |
 | Child date of birth | Between 2005 and 2022 |
-| Account open date | On or after the household's client-since date, and on or before the as-of date (a 529 can be opened any time after the child's birth) |
+| Account open date | On or after the household's client-since date and every owner's 18th birthday (and for a 529, the beneficiary's birth), and on or before the as-of date |
 
 ## 7. The three source systems
 
@@ -179,6 +179,7 @@ people:
   couple_age_gap_max_years: 8
   parent_child_gap_min_years: 18
   couples_with_different_surnames: 0.15
+  dependents_parent_birth_year_min: 1965
 account_counts:
   - { accounts: [1, 1], share: 0.20 }
   - { accounts: [2, 2], share: 0.35 }

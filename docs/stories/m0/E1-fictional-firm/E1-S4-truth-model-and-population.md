@@ -76,13 +76,13 @@ Unique identifiers; every member id resolves; every owner belongs to the account
 
 ## Acceptance criteria
 
-- [ ] `build_firm(..., n_households=15)` and `n_households=300` both succeed and pass `validate_firm`.
-- [ ] Two calls with identical arguments return equal `TruthFirm` objects.
-- [ ] Changing the root seed changes the output; changing the household count does not change the first 15 households' people attributes (stream independence is documented and tested where promised).
-- [ ] Archetype shares in a 300-household build are within 5 percentage points of the profile.
-- [ ] All ownership rules from E1-S1 hold for every account.
-- [ ] No `float` is used for money; all balances are `Decimal` with two decimal places.
-- [ ] Module imports nothing that reads the clock or global random state.
+- [x] `build_firm(..., n_households=15)` and `n_households=300` both succeed and pass `validate_firm`.
+- [x] Two calls with identical arguments return equal `TruthFirm` objects.
+- [x] Changing the root seed changes the output; changing the household count does not change the first 15 households' people attributes (stream independence is documented and tested where promised).
+- [x] Archetype shares in a 300-household build are within 5 percentage points of the profile.
+- [x] All ownership rules from E1-S1 hold for every account.
+- [x] No `float` is used for money; all balances are `Decimal` with two decimal places.
+- [x] Module imports nothing that reads the clock or global random state.
 
 ## Test plan
 
@@ -96,3 +96,12 @@ Unique identifiers; every member id resolves; every owner belongs to the account
 
 - Faker output can change across versions. The lockfile pins it, and the manifest (E4-S3) records the version.
 - Keep the truth model minimal. If a field is not exported by some source, it does not belong here.
+
+## Notes
+
+- `TruthHousehold` also stores `archetype`, which the story outline did not list; the archetype share checks need it.
+- Added profile value `dependents_parent_birth_year_min` (1965) so that parents with children are young enough for a child born 2005 or later; recorded in `docs/fictional-firm.md`.
+- Account numbers come from a sequence scrambled by a fixed stride (coprime to the digit space) and a seed-derived offset, so they are unique, look random, and stay stable when more households are built.
+- Faker is created once per build and reseeded for each household, which keeps the "household i is the same whatever the firm size" guarantee without the cost of a new Faker per household.
+- Email addresses use `example.com`, a reserved domain; phone numbers use the fictional 555-01xx range.
+

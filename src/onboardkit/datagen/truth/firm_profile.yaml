@@ -1,0 +1,58 @@
+# Numbers from docs/fictional-firm.md. Change both together.
+firm:
+  name: Lantern Ridge Wealth Partners
+  custodian: Meridian Custody Services
+  crm: Cedarline CRM
+  spreadsheet: Book of Business
+  as_of_date: 2025-12-31
+sizes:
+  sample: 15
+  default: 300
+advisors:
+  - { name: Marcus Delgado, share: 0.40 }
+  - { name: Elena Whitfield, share: 0.25 }
+  - { name: Sam Okafor, share: 0.20 }
+  - { name: Hannah Brecker, share: 0.15 }
+archetypes:
+  single_adult: { share: 0.30, adults: 1, children: [0, 0] }
+  couple: { share: 0.45, adults: 2, children: [0, 0] }
+  couple_dependents: { share: 0.15, adults: 2, children: [1, 3] }
+  single_parent: { share: 0.05, adults: 1, children: [1, 2] }
+  retired_single: { share: 0.05, adults: 1, children: [0, 0], min_age: 65 }
+people:
+  couple_age_gap_max_years: 8
+  parent_child_gap_min_years: 18
+  couples_with_different_surnames: 0.15
+  dependents_parent_birth_year_min: 1965
+account_counts:
+  - { accounts: [1, 1], share: 0.20 }
+  - { accounts: [2, 2], share: 0.35 }
+  - { accounts: [3, 3], share: 0.30 }
+  - { accounts: [4, 6], share: 0.15 }
+account_types:
+  individual: { weight: 25, owners: 1 }
+  joint: { weight: 20, owners: 2 }
+  traditional_ira: { weight: 15, owners: 1 }
+  roth_ira: { weight: 15, owners: 1 }
+  rollover_ira: { weight: 15, owners: 1 }
+  education_529: { weight: 10, owners: 1, needs_child_beneficiary: true }
+account_status:
+  open: 0.96
+  closed: 0.03
+  restricted: 0.01
+account_number:
+  prefix: MC
+  digits: 6
+balances:
+  distribution: lognormal
+  median: 150000
+  p90: 900000
+  min: 2500
+  max: 10000000
+  type_scale: { education_529: 0.25 }
+dates:
+  client_since_years_back: 15
+  primary_min_age_at_client_since: 21
+  adult_birth_years: [1945, 1995]
+  retired_birth_year_max: 1960
+  child_birth_years: [2005, 2022]
