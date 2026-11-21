@@ -80,12 +80,12 @@ Project (E2-S2 to S4), then coverage, then mess (E3), then write. Because projec
 
 ## Acceptance criteria
 
-- [ ] With rates of 1.0 and no extras, output equals the projection exactly and no events are produced.
-- [ ] With the `typical` rates, omitted share per source is within 3 percentage points of the configured rate on the 300-household dataset.
-- [ ] Every truth account and household remains in at least one source after coverage.
-- [ ] Stale extra rows have no truth account reference and use account numbers that do not collide with any truth account.
-- [ ] Every omission and extra generates exactly one event.
-- [ ] The same seed and config produce identical omissions.
+- [x] With rates of 1.0 and no extras, output equals the projection exactly and no events are produced.
+- [x] With the `typical` rates, omitted share per source is within 3 percentage points of the configured rate on the 300-household dataset.
+- [x] Every truth account and household remains in at least one source after coverage.
+- [x] Stale extra rows have no truth account reference and use account numbers that do not collide with any truth account.
+- [x] Every omission and extra generates exactly one event.
+- [x] The same seed and config produce identical omissions.
 
 ## Test plan
 
@@ -98,3 +98,13 @@ Project (E2-S2 to S4), then coverage, then mess (E3), then write. Because projec
 
 - Overlap tuning is a judgment call. Start with the sample rates and adjust after viewing the data with the E7-S2 walkthrough.
 - Avoid making the spreadsheet so sparse that matching is impossible; at least a few households must appear in all three sources.
+
+## Notes
+
+- `apply_coverage` returns new row lists and the event list; it never changes its input. Rows that survive are the same objects as the projection's.
+- The spreadsheet's `households` rate removes whole households (both the `accounts` and `archive` tables); the `accounts` rate then applies per table to the remaining rows. The overall share of spreadsheet account rows kept is therefore about `households` times `accounts` (68 percent for 0.85 and 0.80), and a household can also disappear entirely when all its rows are dropped. Each rate is tested on its own against the 3 point tolerance.
+- Stale extras copy a spreadsheet row (so they keep its household and advisor), take a new account number with the firm's prefix that is not a truth number, have `account_id = None`, and always go to the `archive` table. Their uids look like `book_of_business:archive:stale-000001`.
+- The guarantee rule restores omitted rows for each uncovered account or household from the lowest-numbered source (custodian, CRM, spreadsheet), and the restored row's omission event is removed, so one event still means one real omission.
+- Omitting CRM contacts can leave linked-account rows pointing at contacts that no longer exist. This is a deliberate discrepancy; the contacts-to-links join is only clean when coverage is 1.0.
+- `CoverageConfig` already existed in `config.py` from E4-S1; this story added the logic only.
+
