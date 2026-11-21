@@ -13,7 +13,6 @@ is read from global state.
 from __future__ import annotations
 
 import copy
-import json
 import os
 import shutil
 from collections.abc import Callable, Sequence
@@ -23,6 +22,7 @@ from typing import Any
 
 from onboardkit.datagen import mess as _mess  # noqa: F401  (registers the mess types)
 from onboardkit.datagen.config import DatasetConfig, dataset_id, effective_rate
+from onboardkit.datagen.manifest import write_manifest
 from onboardkit.datagen.mess.base import (
     MessContext,
     MessEvent,
@@ -43,7 +43,6 @@ from onboardkit.datagen.truth.profile import load_profile
 DEFAULT_OUT_ROOT = Path("data") / "generated"
 EXPORTS = "exports"
 TRUTH = "truth"
-MANIFEST = "manifest.json"
 SOURCE_ORDER = ("custodian", "crm", "book_of_business")
 
 
@@ -142,12 +141,6 @@ def count_rows(built: BuiltRows) -> dict[str, int]:
     return counts
 
 
-def _write_manifest(path: Path, config: DatasetConfig, identifier: str) -> None:
-    # E4-S3 replaces this with the full manifest.
-    body = {"dataset_id": identifier, "config": config.model_dump(mode="json")}
-    path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
 def _publish(staging: Path, final: Path, overwrite: bool) -> None:
     if final.exists():
         if not overwrite:
@@ -201,7 +194,7 @@ def generate_dataset(
         )
         for writer in answer_key_writers:
             writer(context)
-        _write_manifest(staging / MANIFEST, config, identifier)
+        write_manifest(staging, config, count_rows(built))
         _publish(staging, final, overwrite)
     except BaseException:
         shutil.rmtree(staging, ignore_errors=True)
