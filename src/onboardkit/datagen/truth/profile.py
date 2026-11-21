@@ -37,6 +37,13 @@ class AccountStatus(StrEnum):
     RESTRICTED = "restricted"
 
 
+class AssetClass(StrEnum):
+    EQUITY = "equity"
+    FIXED_INCOME = "fixed_income"
+    FUND = "fund"
+    CASH = "cash"
+
+
 IRA_TYPES = frozenset({AccountType.TRADITIONAL_IRA, AccountType.ROTH_IRA, AccountType.ROLLOVER_IRA})
 
 
@@ -136,6 +143,56 @@ class DateRules(_Frozen):
     child_birth_years: tuple[int, int]
 
 
+INVESTED_CLASSES = (AssetClass.EQUITY, AssetClass.FIXED_INCOME, AssetClass.FUND)
+
+
+class NameWords(_Frozen):
+    first: tuple[str, ...] = Field(min_length=10)
+    second: tuple[str, ...] = Field(min_length=10)
+    equity_suffixes: tuple[str, ...] = Field(min_length=1)
+    fund_types: tuple[str, ...] = Field(min_length=1)
+
+
+class HoldingsRules(_Frozen):
+    """How securities and holdings are generated (docs/fictional-firm.md, section 10)."""
+
+    security_count: int = Field(ge=12)
+    class_shares: dict[AssetClass, float]
+    price_ranges: dict[AssetClass, tuple[float, float]]
+    positions: tuple[int, int]
+    small_account_threshold: int = Field(gt=0)
+    small_account_positions: tuple[int, int]
+    cash_share: tuple[float, float]
+    class_mix: dict[AccountType, dict[AssetClass, float]]
+    name_words: NameWords
+    forbidden_symbols: tuple[str, ...]
+
+    @model_validator(mode="after")
+    def _consistent(self) -> HoldingsRules:
+        if set(self.class_shares) != set(INVESTED_CLASSES):
+            raise ValueError("class_shares needs exactly equity, fixed_income and fund")
+        _sums_to_one("security class", list(self.class_shares.values()))
+        if set(self.price_ranges) != set(INVESTED_CLASSES):
+            raise ValueError("price_ranges needs exactly equity, fixed_income and fund")
+        for low, high in self.price_ranges.values():
+            if not 0 < low < high:
+                raise ValueError("price ranges need 0 < low < high")
+        for label, (low_n, high_n) in (
+            ("positions", self.positions),
+            ("small_account_positions", self.small_account_positions),
+        ):
+            if not 1 <= low_n <= high_n:
+                raise ValueError(f"{label} must be [low, high] with 1 <= low <= high")
+        if not 0 < self.cash_share[0] <= self.cash_share[1] < 1:
+            raise ValueError("cash_share must be [low, high] with 0 < low <= high < 1")
+        if set(self.class_mix) != set(AccountType):
+            raise ValueError("class_mix needs a mix for every account type")
+        for kind, mix in self.class_mix.items():
+            if set(mix) != set(INVESTED_CLASSES) or any(w <= 0 for w in mix.values()):
+                raise ValueError(f"class_mix for {kind} needs a positive weight per class")
+        return self
+
+
 def _sums_to_one(label: str, values: list[float]) -> None:
     if not math.isclose(sum(values), 1.0, abs_tol=1e-9):
         raise ValueError(f"{label} shares must sum to 1, got {sum(values)}")
@@ -153,6 +210,7 @@ class FirmProfile(_Frozen):
     account_number: AccountNumberFormat
     balances: BalanceRules
     dates: DateRules
+    holdings: HoldingsRules
 
     @model_validator(mode="after")
     def _consistent(self) -> FirmProfile:

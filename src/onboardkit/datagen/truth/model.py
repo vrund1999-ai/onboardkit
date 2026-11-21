@@ -12,7 +12,13 @@ from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from onboardkit.datagen.truth.profile import AccountStatus, AccountType, Archetype, FirmProfile
+from onboardkit.datagen.truth.profile import (
+    AccountStatus,
+    AccountType,
+    Archetype,
+    AssetClass,
+    FirmProfile,
+)
 
 
 class HouseholdRole(StrEnum):
@@ -81,6 +87,43 @@ class TruthAccount(_Frozen):
         return value
 
 
+class TruthSecurity(_Frozen):
+    security_id: str = Field(pattern=r"^SEC-\d{3,}$")
+    symbol: str
+    name: str
+    asset_class: AssetClass
+    price: Decimal = Field(gt=0)
+
+    @field_validator("price")
+    @classmethod
+    def _four_places(cls, value: Decimal) -> Decimal:
+        if value.as_tuple().exponent != -4:
+            raise ValueError("price must have exactly four decimal places")
+        return value
+
+
+class TruthHolding(_Frozen):
+    holding_id: str = Field(pattern=r"^HOLD-\d{6,}$")
+    account_id: str
+    security_id: str
+    quantity: Decimal = Field(gt=0)
+    value: Decimal = Field(gt=0)
+
+    @field_validator("quantity")
+    @classmethod
+    def _quantity_places(cls, value: Decimal) -> Decimal:
+        if value.as_tuple().exponent != -4:
+            raise ValueError("quantity must have exactly four decimal places")
+        return value
+
+    @field_validator("value")
+    @classmethod
+    def _value_places(cls, value: Decimal) -> Decimal:
+        if value.as_tuple().exponent != -2:
+            raise ValueError("value must have exactly two decimal places")
+        return value
+
+
 class TruthFirm(_Frozen):
     root_seed: int
     as_of_date: date
@@ -88,6 +131,11 @@ class TruthFirm(_Frozen):
     households: tuple[TruthHousehold, ...]
     people: tuple[TruthPerson, ...]
     accounts: tuple[TruthAccount, ...]
+    securities: tuple[TruthSecurity, ...] = ()
+    holdings: tuple[TruthHolding, ...] = ()
+
+    def holdings_of(self, account_id: str) -> tuple[TruthHolding, ...]:
+        return tuple(h for h in self.holdings if h.account_id == account_id)
 
     def people_by_id(self) -> dict[str, TruthPerson]:
         return {p.person_id: p for p in self.people}

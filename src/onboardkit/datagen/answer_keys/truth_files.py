@@ -59,7 +59,8 @@ def write_readme(context: AnswerKeyContext) -> None:
 
 def firm_record(context: AnswerKeyContext) -> dict[str, Any]:
     firm = context.firm
-    dumped = firm.model_dump(mode="json", exclude={"profile"})
+    # Securities and holdings are not part of the answer key yet (they are added with E9-S3).
+    dumped = firm.model_dump(mode="json", exclude={"profile", "securities", "holdings"})
     return {"firm_name": firm.profile.firm.name, **dumped}
 
 

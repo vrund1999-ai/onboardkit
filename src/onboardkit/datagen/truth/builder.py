@@ -17,6 +17,7 @@ from decimal import ROUND_HALF_EVEN, Decimal
 from faker import Faker
 
 from onboardkit.datagen.rng import derive_rng, derive_seed
+from onboardkit.datagen.truth.holdings import build_holdings, build_securities
 from onboardkit.datagen.truth.model import (
     HouseholdRole,
     TruthAccount,
@@ -328,6 +329,7 @@ def build_firm(
             )
         people.extend(members)
 
+    securities = build_securities(profile.holdings, root_seed)
     return TruthFirm(
         root_seed=root_seed,
         as_of_date=as_of,
@@ -335,4 +337,6 @@ def build_firm(
         households=tuple(households),
         people=tuple(people),
         accounts=tuple(accounts),
+        securities=securities,
+        holdings=build_holdings(profile.holdings, securities, tuple(accounts), root_seed),
     )

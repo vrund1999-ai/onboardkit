@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from decimal import Decimal
 
 from onboardkit.datagen.truth.builder import add_years
 from onboardkit.datagen.truth.model import HouseholdRole, TruthFirm
@@ -116,6 +117,49 @@ def find_problems(firm: TruthFirm) -> list[str]:
                 problems.append(f"{label}: 529 beneficiary not in household or born later")
         elif account.beneficiary_id is not None:
             problems.append(f"{label}: only a 529 has a beneficiary")
+    problems += _holding_problems(firm)
+    return problems
+
+
+def _holding_problems(firm: TruthFirm) -> list[str]:
+    """Holdings must belong to known accounts and securities, and add up to each balance."""
+    if not firm.securities and not firm.holdings:
+        return []
+    problems: list[str] = []
+    securities = {s.security_id: s for s in firm.securities}
+    if len(securities) != len(firm.securities):
+        problems.append("duplicate security ids")
+    if len({s.symbol for s in firm.securities}) != len(firm.securities):
+        problems.append("duplicate security symbols")
+    if len({h.holding_id for h in firm.holdings}) != len(firm.holdings):
+        problems.append("duplicate holding ids")
+    banned = {s.upper() for s in firm.profile.holdings.forbidden_symbols}
+    for security in firm.securities:
+        if security.symbol.upper() in banned:
+            problems.append(f"{security.security_id}: {security.symbol} is a real ticker")
+    totals: dict[str, Decimal] = {}
+    seen: set[tuple[str, str]] = set()
+    accounts = {a.account_id: a for a in firm.accounts}
+    for holding in firm.holdings:
+        label = holding.holding_id
+        if holding.account_id not in accounts:
+            problems.append(f"{label}: unknown account {holding.account_id}")
+            continue
+        if holding.security_id not in securities:
+            problems.append(f"{label}: unknown security {holding.security_id}")
+        key = (holding.account_id, holding.security_id)
+        if key in seen:
+            problems.append(f"{holding.account_id}: holds {holding.security_id} twice")
+        seen.add(key)
+        totals[holding.account_id] = totals.get(holding.account_id, Decimal("0.00")) + holding.value
+    for account in firm.accounts:
+        total = totals.get(account.account_id)
+        if total is None:
+            problems.append(f"{account.account_id}: has no holdings")
+        elif total != account.balance:
+            problems.append(
+                f"{account.account_id}: holdings sum to {total}, balance is {account.balance}"
+            )
     return problems
 
 
