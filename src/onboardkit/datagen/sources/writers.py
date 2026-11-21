@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 from collections.abc import Iterable
+from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from typing import Any, Literal, TextIO
@@ -15,20 +16,31 @@ from onboardkit.datagen.sources.base import (
     TableSpec,
     WriteResult,
 )
-from onboardkit.datagen.sources.formatters import apply_formatter
+from onboardkit.datagen.sources.formatters import Formatted, apply_formatter
+
+
+def format_row_native(table: TableSpec, row: SourceRow) -> list[Formatted]:
+    """Format one row's values in column order, keeping dates and decimals as real values."""
+    return [
+        apply_formatter(column.formatter, row.values.get(column.concept), column.options)
+        for column in table.columns
+    ]
+
+
+def to_text(value: Formatted) -> str:
+    if isinstance(value, Decimal):
+        return f"{value:f}"
+    if isinstance(value, date):
+        return value.isoformat()
+    return value
 
 
 def format_row(table: TableSpec, row: SourceRow) -> list[str]:
-    """Format one row's values in the table's column order. Missing concepts become empty."""
-    cells: list[str] = []
-    for column in table.columns:
-        formatted = apply_formatter(
-            column.formatter, row.values.get(column.concept), column.options
-        )
-        text = f"{formatted:f}" if isinstance(formatted, Decimal) else formatted
+    """Format one row as text for a CSV. Missing concepts become empty cells."""
+    cells = [to_text(value) for value in format_row_native(table, row)]
+    for column, text in zip(table.columns, cells, strict=True):
         if "\n" in text or "\r" in text:
             raise ValueError(f"{row.row_uid}: {column.header!r} contains a line break")
-        cells.append(text)
     return cells
 
 

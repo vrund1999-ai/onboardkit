@@ -84,6 +84,18 @@ class CoverageConfig(_Frozen):
     book_of_business: BookCoverage = Field(default_factory=BookCoverage)
 
 
+class BookOfBusinessConfig(_Frozen):
+    """Habits of the hand-kept spreadsheet that exist even in a "clean" world.
+
+    ``inherent_drift`` is the largest fraction a hand-typed balance may be off by, and
+    ``round_to`` is the amount balances are rounded to. Larger, deliberate mismatches belong to
+    the balances mess type.
+    """
+
+    inherent_drift: float = Field(default=0.12, ge=0.0, le=0.5)
+    round_to: float = Field(default=100.0, gt=0.0)
+
+
 class DatasetConfig(_Frozen):
     preset: str | None = None  # informational: resolved before use, excluded from the hash
     size: SizeConfig
@@ -91,6 +103,7 @@ class DatasetConfig(_Frozen):
     as_of_date: date = DEFAULT_AS_OF_DATE
     firm_profile: str = "lantern_ridge"
     coverage: CoverageConfig
+    book_of_business: BookOfBusinessConfig = Field(default_factory=BookOfBusinessConfig)
     mess: MessConfig
 
     @model_validator(mode="after")
@@ -161,6 +174,7 @@ def resolve_config(
         "size": {"households": households_for(size)},
         "seed": seed,
         "coverage": preset_data.get("coverage", {}),
+        "book_of_business": preset_data.get("book_of_business", {}),
         "mess": preset_data.get("mess", {}),
     }
     if as_of_date is not None:
