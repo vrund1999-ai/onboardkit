@@ -87,12 +87,12 @@ class DatasetResult:
 
 ## Acceptance criteria
 
-- [ ] `generate_dataset` produces the layout above for `sample` and `default` sizes.
-- [ ] A failure mid-run (injected in a test) leaves no directory at the final path.
-- [ ] Re-running without `overwrite` raises `DatasetExistsError`; with it, replaces the directory.
-- [ ] The result counts equal what is found on disk.
-- [ ] No export file contains a truth identifier (`P-`, `HH-`, `ACCT-` prefixes) anywhere.
-- [ ] Pipeline reads no global state beyond the config.
+- [x] `generate_dataset` produces the layout above for `sample` and `default` sizes.
+- [x] A failure mid-run (injected in a test) leaves no directory at the final path.
+- [x] Re-running without `overwrite` raises `DatasetExistsError`; with it, replaces the directory.
+- [x] The result counts equal what is found on disk.
+- [x] No export file contains a truth identifier (`P-`, `HH-`, `ACCT-` prefixes) anywhere.
+- [x] Pipeline reads no global state beyond the config.
 
 ## Test plan
 
@@ -104,3 +104,13 @@ class DatasetResult:
 
 - Atomic rename can fail on Windows if a file is open; close handles before renaming and test on Windows in CI.
 - Keep stages independently callable so tests can run any stage on hand-built input.
+
+## Notes
+
+- `build_rows(config)` (added in E3-S7) is the in-memory part: truth, projection, coverage, mess. `generate_dataset` writes around it. It now also returns the exporters used, so `generate_dataset` writes each source with the same exporter that projected it (the CRM's id maps depend on that).
+- The `manifest.json` written here is a placeholder with `dataset_id` and the resolved config; E4-S3 replaces it with the full manifest.
+- `truth/` is created empty for the answer key writers. Each writer gets an `AnswerKeyContext` (config, truth firm, row locators per source, source id maps, coverage and mess events, the `truth_dir`).
+- Overwrite swaps the old directory aside, renames the new one in, then deletes the old one, and puts the old one back if the rename fails.
+- The truth profile still loads from the packaged `lantern_ridge.yaml`; there is no other source of input than the config.
+- The default `out_root` is relative (`data/generated`); tests confirm nothing is written relative to the working directory when an `out_root` is given.
+
