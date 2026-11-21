@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E5: Ground truth](../../../m0-foundation-epics.md#e5-ground-truth) |
+| **Epic** | [E5: Ground truth](../../../epics/m0-foundation-epics.md#e5-ground-truth) |
 | **Size** | S |
 | **Depends on** | E1-S3, E2-S1 |
 | **Blocks** | E5-S5 |

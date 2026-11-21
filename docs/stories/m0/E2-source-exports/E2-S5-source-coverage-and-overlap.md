@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E2: Multi-source messy exports](../../../m0-foundation-epics.md#e2-multi-source-messy-exports) |
+| **Epic** | [E2: Multi-source messy exports](../../../epics/m0-foundation-epics.md#e2-multi-source-messy-exports) |
 | **Size** | M |
 | **Depends on** | E2-S2, E2-S3, E2-S4 |
 | **Blocks** | E4-S2 |

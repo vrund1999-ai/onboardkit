@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E7: Contributor experience](../../../m0-foundation-epics.md#e7-contributor-experience) |
+| **Epic** | [E7: Contributor experience](../../../epics/m0-foundation-epics.md#e7-contributor-experience) |
 | **Size** | S |
 | **Depends on** | E7-S1, E7-S2, E7-S3 (and all other M0 stories) |
 | **Blocks** | none |
@@ -39,7 +39,7 @@ The README still says "early scaffolding" and describes the generator under `dat
 ### Roadmap and epic documents
 
 - `ROADMAP.md`: mark M0 as delivered with the date and a link to the epic document; note any scope changes made during delivery.
-- `docs/m0-foundation-epics.md`: add a status line per epic and tick the exit criteria.
+- `docs/epics/m0-foundation-epics.md`: add a status line per epic and tick the exit criteria.
 - `docs/stories/m0/README.md`: add a status column to the story index.
 
 ### Clean-room test
@@ -61,7 +61,7 @@ For each exit criterion in the epics document, record the evidence in the log: c
 
 ## Files to create or change
 
-- `README.md`, `ROADMAP.md`, `docs/m0-foundation-epics.md`, `docs/stories/m0/README.md`
+- `README.md`, `ROADMAP.md`, `docs/epics/m0-foundation-epics.md`, `docs/stories/m0/README.md`
 - `docs/stories/m0/clean-room-log.md`
 
 ## Acceptance criteria

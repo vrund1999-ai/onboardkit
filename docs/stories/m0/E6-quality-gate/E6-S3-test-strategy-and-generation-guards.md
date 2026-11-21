@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E6: Automated quality gate](../../../m0-foundation-epics.md#e6-automated-quality-gate) |
+| **Epic** | [E6: Automated quality gate](../../../epics/m0-foundation-epics.md#e6-automated-quality-gate) |
 | **Size** | M |
 | **Depends on** | E6-S1, E4-S2 |
 | **Blocks** | none |
@@ -53,7 +53,7 @@ CI runs everything. Developers run `pytest -m "not slow"` while iterating.
 2. **Documentation commands.** Parse fenced code blocks tagged `bash` or `powershell` in `docs/getting-started.md` and `docs/demo-walkthrough.md`; for each `onboardkit-gen` invocation, run `--help` parsing (or the actual command with `--size sample` and a temp output) and assert it is valid. This catches renamed flags.
 3. **Generated reference docs.** `docs/mess-catalogue.md` equals the regenerated output (E3-S7).
 4. **Glossary links.** Relative links in `docs/` resolve to existing files and anchors.
-5. **Story index.** Every file in `docs/stories/m0/` appears in the index in its README and vice versa.
+5. **Story index and progress.** Every story file in `docs/stories/m0/` appears in the index in its README and as a row in `docs/progress/stories/m0.md`, and vice versa. Story counts in `docs/progress/epics.md` equal the number of rows per epic, and the `Done` count in each progress table matches the number of rows with status `Done`. Statuses must come from the allowed list.
 6. **Version guard.** If the sample checksums changed (E4-S5), the generator version differs from the last changelog entry.
 
 ### Coverage

@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E3: Controllable mess](../../../m0-foundation-epics.md#e3-controllable-mess) |
+| **Epic** | [E3: Controllable mess](../../../epics/m0-foundation-epics.md#e3-controllable-mess) |
 | **Size** | S |
 | **Depends on** | E3-S1, E4-S1 |
 | **Blocks** | E3-S3 to E3-S6 |

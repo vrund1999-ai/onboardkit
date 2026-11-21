@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E4: Reproducible datasets](../../../m0-foundation-epics.md#e4-reproducible-datasets) |
+| **Epic** | [E4: Reproducible datasets](../../../epics/m0-foundation-epics.md#e4-reproducible-datasets) |
 | **Size** | M |
 | **Depends on** | E4-S4, E3-S7 |
 | **Blocks** | E7-S2 |

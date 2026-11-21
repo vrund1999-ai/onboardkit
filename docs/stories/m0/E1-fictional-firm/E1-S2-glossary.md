@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E1: Fictional firm and shared vocabulary](../../../m0-foundation-epics.md#e1-fictional-firm-and-shared-vocabulary) |
+| **Epic** | [E1: Fictional firm and shared vocabulary](../../../epics/m0-foundation-epics.md#e1-fictional-firm-and-shared-vocabulary) |
 | **Size** | S |
 | **Depends on** | none |
 | **Blocks** | E1-S3 |

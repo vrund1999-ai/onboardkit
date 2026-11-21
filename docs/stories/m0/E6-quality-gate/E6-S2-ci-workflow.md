@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E6: Automated quality gate](../../../m0-foundation-epics.md#e6-automated-quality-gate) |
+| **Epic** | [E6: Automated quality gate](../../../epics/m0-foundation-epics.md#e6-automated-quality-gate) |
 | **Size** | S |
 | **Depends on** | E6-S1 |
 | **Blocks** | E6-S4, E6-S5 |

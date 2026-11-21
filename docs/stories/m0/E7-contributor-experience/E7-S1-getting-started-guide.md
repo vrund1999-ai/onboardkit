@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Epic** | [E7: Contributor experience](../../../m0-foundation-epics.md#e7-contributor-experience) |
+| **Epic** | [E7: Contributor experience](../../../epics/m0-foundation-epics.md#e7-contributor-experience) |
 | **Size** | S |
 | **Depends on** | E6-S1 (and E4-S4 for the generate step) |
 | **Blocks** | E7-S4 |

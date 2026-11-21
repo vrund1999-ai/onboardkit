@@ -1,6 +1,6 @@
 # M0 Stories
 
-Implementation-ready stories for the seven epics in [M0: Foundation and realistic test data](../../m0-foundation-epics.md). Each story is its own file and carries the technical detail needed to build it.
+Implementation-ready stories for the seven epics in [M0: Foundation and realistic test data](../../epics/m0-foundation-epics.md). Each story is its own file and carries the technical detail needed to build it.
 
 ## Story index
 
