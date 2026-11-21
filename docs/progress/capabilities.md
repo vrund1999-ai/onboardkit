@@ -8,7 +8,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 
 | Milestone | Title | Capabilities done | Status | Breakdown |
 |---|---|---|---|---|
-| M0 | Foundation and realistic test data | 5 / 6 | In progress | Epics and stories defined |
+| M0 | Foundation and realistic test data | 6 / 6 | Done | Epics and stories defined |
 | M1 | Ingestion and a single clean data model | 0 / 7 | Not started | Not broken down yet |
 | M2 | AI-assisted mapping and entity matching | 0 / 8 | Not started | Not broken down yet |
 | M3 | Human review and audit trail | 0 / 9 | Not started | Not broken down yet |
@@ -27,7 +27,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 | Reproduce a dataset on demand | [E4](../epics/m0-foundation-epics.md#e4-reproducible-datasets) | Done | E4 done |
 | Know the "right answer" for each dataset | [E5](../epics/m0-foundation-epics.md#e5-ground-truth) | Done | E5 done |
 | Automated quality checks on every change | [E6](../epics/m0-foundation-epics.md#e6-automated-quality-gate) | Done |  |
-| Clear contributor guidance | [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | In progress |  |
+| Clear contributor guidance | [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | Done |  |
 
 ## M1: Ingestion and a single clean data model
 

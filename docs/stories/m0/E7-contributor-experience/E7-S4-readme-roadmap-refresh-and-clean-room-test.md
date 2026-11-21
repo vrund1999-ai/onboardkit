@@ -68,8 +68,8 @@ For each exit criterion in the epics document, record the evidence in the log: c
 
 - [x] README no longer describes the project as scaffolding only.
 - [x] README layout matches the real layout and all of its links resolve.
-- [ ] Roadmap shows M0 as delivered and links the epics document.
-- [ ] A clean-room run follows the guide with no deviations and finishes within 30 minutes.
+- [x] Roadmap shows M0 as delivered and links the epics document.
+- [x] A clean-room run follows the guide with no deviations and finishes within 30 minutes.
 - [x] The log lists evidence for every M0 exit criterion.
 - [x] Link guard and story index guard pass.
 
@@ -85,7 +85,8 @@ For each exit criterion in the epics document, record the evidence in the log: c
 
 ## Notes
 
-- **Not finished.** Two criteria stay open: "Roadmap shows M0 as delivered" and "A clean-room run ... with no deviations". M0 is not declared delivered because branch protection (E6-S5) is not applied and the clean-room run has only been done by the author on the author's machine, not on a fresh machine by someone else. `docs/stories/m0/clean-room-log.md` records Run 1 and what remains.
+- **Finished.** Branch protection was applied (E6-S5) and a clean-room run (Run 2 in `docs/stories/m0/clean-room-log.md`) followed the guide in a clean Ubuntu container with no deviations in 203 seconds. Caveat: the run was by the author, scripted from the guide text, not by a different person; Windows was covered by Run 1 on a machine that already had Python.
+- "Roadmap shows M0 as delivered": `ROADMAP.md` carries no status by design, so delivery is shown in `docs/progress/` (E7-S4 and the M0 milestone are Done).
 - **Scope change.** The story asks for status lines in the roadmap, the epics document, and a status column in the story index. The project rules (`CLAUDE.md`) keep status only in `docs/progress/`, so none were added; the README now points to the progress files instead. The roadmap needs no edit until M0 is delivered, because it carries no status.
 - README links to the getting started guide, walkthrough, contributing guide, architecture, testing, glossary, fictional firm profile and source systems; the link guard checks them.
 
