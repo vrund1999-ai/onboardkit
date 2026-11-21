@@ -1,0 +1,92 @@
+# Generic formal-name to nickname mappings. Common English usage only; no real records.
+nicknames:
+  Robert: [Bob, Rob, Bobby]
+  William: [Bill, Will, Billy]
+  James: [Jim, Jimmy]
+  John: [Johnny, Jack]
+  Michael: [Mike, Mikey]
+  Christopher: [Chris, Topher]
+  Anthony: [Tony]
+  Matthew: [Matt]
+  Joseph: [Joe, Joey]
+  Joshua: [Josh]
+  David: [Dave, Davey]
+  Charles: [Charlie, Chuck]
+  Thomas: [Tom, Tommy]
+  Richard: [Rick, Rich, Dick]
+  Daniel: [Dan, Danny]
+  Steven: [Steve]
+  Jeffrey: [Jeff]
+  Timothy: [Tim, Timmy]
+  Kenneth: [Ken, Kenny]
+  Andrew: [Andy, Drew]
+  Edward: [Ed, Eddie, Ted]
+  Benjamin: [Ben, Benny]
+  Samuel: [Sam, Sammy]
+  Alexander: [Alex]
+  Jonathan: [Jon, Jonny]
+  Nathan: [Nate]
+  Gregory: [Greg]
+  Patrick: [Pat, Paddy]
+  Ronald: [Ron, Ronnie]
+  Donald: [Don, Donnie]
+  Nicholas: [Nick, Nicky]
+  Lawrence: [Larry]
+  Raymond: [Ray]
+  Gerald: [Gerry, Jerry]
+  Jennifer: [Jen, Jenny]
+  Elizabeth: [Liz, Beth, Betty, Lizzie]
+  Margaret: [Maggie, Peggy, Meg]
+  Katherine: [Kate, Katie, Kathy]
+  Kathleen: [Kathy, Katie]
+  Patricia: [Pat, Patty, Trish]
+  Jessica: [Jess, Jessie]
+  Susan: [Sue, Susie]
+  Deborah: [Deb, Debbie]
+  Rebecca: [Becky, Becca]
+  Stephanie: [Steph]
+  Kimberly: [Kim, Kimmy]
+  Barbara: [Barb, Babs]
+  Sandra: [Sandy]
+  Cynthia: [Cindy]
+  Christina: [Chris, Tina]
+  Melissa: [Missy, Mel]
+  Victoria: [Vicky, Tori]
+  Amanda: [Mandy]
+  Jacqueline: [Jackie]
+  Theresa: [Terri, Tess]
+  Christine: [Chris, Chrissy]
+  Alexandra: [Alex, Lexi]
+  Abigail: [Abby]
+  Nancy: [Nan]
+  Dorothy: [Dot, Dottie]
+  Rachel: [Rach]
+  Michelle: [Shelly, Mich]
+  Samantha: [Sam, Sammy]
+  Allison: [Allie]
+  Angela: [Angie]
+  Pamela: [Pam]
+  Cheryl: [Cher]
+
+# Surnames used for hyphenated or maiden-name variants.
+other_surnames:
+  - Miller
+  - Carter
+  - Bennett
+  - Hayes
+  - Foster
+  - Reed
+  - Brooks
+  - Hughes
+  - Parker
+  - Sullivan
+  - Ward
+  - Collins
+  - Murphy
+  - Cooper
+  - Bailey
+  - Rivera
+  - Cox
+  - Howard
+  - Price
+  - Bell

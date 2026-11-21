@@ -67,14 +67,14 @@ Rules:
 
 ## Acceptance criteria
 
-- [ ] At intensity 0 the type changes nothing and emits no events.
-- [ ] At the configured rate, the share of affected eligible rows is within 5 percentage points of `intensity * max_rate` on the 300-household dataset.
-- [ ] Every subtype in the table is producible and appears in a test dataset at high intensity.
-- [ ] No variant equals the original value.
-- [ ] `typo` never changes the first letter of a surname.
-- [ ] Only concepts in `touches` change (enforced by the engine).
-- [ ] Each event includes the before and after text and an ambiguity label.
-- [ ] README example pair `J. Smith` and `John Smith Jr.` can be produced.
+- [x] At intensity 0 the type changes nothing and emits no events.
+- [x] At the configured rate, the share of affected eligible rows is within 5 percentage points of `intensity * max_rate` on the 300-household dataset.
+- [x] Every subtype in the table is producible and appears in a test dataset at high intensity.
+- [x] No variant equals the original value.
+- [x] `typo` never changes the first letter of a surname.
+- [x] Only concepts in `touches` change (enforced by the engine).
+- [x] Each event includes the before and after text and an ambiguity label.
+- [x] README example pair `J. Smith` and `John Smith Jr.` can be produced.
 
 ## Test plan
 
@@ -87,3 +87,14 @@ Rules:
 
 - Nickname data must be generic and not derived from any real person's records.
 - Over-aggressive typos make matching impossible rather than hard; the rule above keeps most variants recoverable.
+
+## Notes
+
+- The catalogue no longer has `person.full_name` (retired in E2-S2), so the "keep the full name in step" rule has nothing to update. Name parts that sit in one row stay consistent through `order_swap`, which changes `first_name` and `last_name` together and emits one event for each.
+- How subtypes are chosen: each selected row tries the subtypes in a weighted random order (weights from the table) until one applies, so `initial_only` is somewhat more common than its weight because a missing nickname falls back to it, as the story asks. Fallback events report `initial_only` as their subtype.
+- Case changes are not made to `account.owner_names` or `account.registration`: the custodian upper-cases those when it writes, so a change would never be visible. The documented consequence is that case variants only appear in the CRM name parts and the spreadsheet's household name.
+- `suffix_change` adds `Jr.` when there is no suffix and drops it otherwise. `hyphen_or_maiden` applies to surnames only, using a generic surname list in `data/nicknames.yaml` (together with 67 nickname entries).
+- Names inside free text (`account.registration`, `household.name`) are found by matching the words of the people the row and its household refer to. `ambiguity = high` is set when an initial could also be another member of the same household with the same surname, as well as for every hyphenated or maiden-name variant.
+- `typo` keeps the first letter of every word it edits, not only surnames.
+- The type registers itself in the default registry when `onboardkit.datagen.mess.names` is imported; the pipeline (E4-S2) imports each type explicitly.
+
