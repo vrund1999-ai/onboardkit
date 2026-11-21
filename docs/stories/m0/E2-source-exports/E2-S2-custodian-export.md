@@ -94,7 +94,7 @@ One `SourceRow` per `TruthAccount`. `refs` carries `account_id`, `household_id`,
 ## Notes
 
 - Account status (open, closed, restricted) is set in the truth (E1-S4, shares in the firm profile), not here; the export prints it in upper case.
-- `Mail Addr` is the first owner's whole address on one line (`street, city, state postal`), so the custodian carries the address concept only partially. The catalogue and `docs/source-systems.md` were brought in line with this story: the custodian has no city, state, or postal columns, and `person.full_name`, `account.custodian` and the custodian's use of `person.tax_id_last4` in the CRM were retired or removed because no export design carries them. The E3-S3 `touches` list was updated for the retired `person.full_name`.
+- `Mail Addr` is the first owner's whole address on one line (`street, city, state postal`), so the custodian carries the address concept only partially. The catalogue and `docs/source-systems.md` were brought in line with this story: the custodian has no city, state, or postal columns, and `person.full_name` and `account.custodian` were retired because no export design carries them, and the CRM no longer lists `person.tax_id_last4`. The E3-S3 `touches` list was updated for the retired `person.full_name`.
 - Framework additions needed by this story (E2-S1 code): a `map` formatter, a `commas` money style, `index` selection for name formatters, a profile `quoting` setting (`all` quotes every field and also the preamble and trailer lines), and a rule that a concept may repeat in a table only with different options.
 - The exporter's `profile` attribute carries `Total records: 0` in its trailer; `write` rebuilds the profile with the real count.
 
