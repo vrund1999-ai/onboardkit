@@ -71,13 +71,13 @@ Constants from `balances.py` (E3-S6): immaterial if the absolute difference is a
 
 ## Acceptance criteria
 
-- [ ] A `clean` dataset has zero discrepancies, apart from the book of business's documented inherent drift (if the `clean` preset disables drift, zero).
-- [ ] Every coverage omission and stale extra appears as a discrepancy.
-- [ ] Every mess event with `effect = "value_conflict"` appears as a discrepancy with matching severity.
-- [ ] State-based and event-based derivations agree (event set is a subset of the state set) on all presets.
-- [ ] Format-only variants never appear as discrepancies.
-- [ ] `authoritative_source` follows the roadmap defaults for every concept.
-- [ ] Output is byte-identical across runs.
+- [x] A `clean` dataset has zero discrepancies, apart from the book of business's documented inherent drift (if the `clean` preset disables drift, zero).
+- [x] Every coverage omission and stale extra appears as a discrepancy.
+- [x] Every mess event with `effect = "value_conflict"` appears as a discrepancy with matching severity.
+- [x] State-based and event-based derivations agree (event set is a subset of the state set) on all presets.
+- [x] Format-only variants never appear as discrepancies.
+- [x] `authoritative_source` follows the roadmap defaults for every concept.
+- [x] Output is byte-identical across runs.
 
 ## Test plan
 
@@ -89,3 +89,15 @@ Constants from `balances.py` (E3-S6): immaterial if the absolute difference is a
 
 - State-based derivation is the safeguard against incomplete event logging. If the two disagree, fix the event emitter rather than relaxing the check.
 - Decide in E2-S4 whether `clean` turns off the spreadsheet's inherent drift; if it does not, this key will list immaterial differences even for `clean`, and the test above must be adjusted. Prefer making `clean` truly clean.
+
+## Notes
+
+- `answer_keys/discrepancies.py` has `build_discrepancies` (the state-based list), `check_consistency` (event-based entries missing from it), `inherent_count`, `write_discrepancies` (opt-in until E5-S5 registers the defaults) and `authority`.
+- `CoverageEvent` gained an `event_id` property (`cov:<kind>:<row uid>`) so coverage events can be cited in `origin_events` next to mess event ids.
+- Value conflicts cover four account facts: balance, type, status and registration. The book of business has no status or registration column, so its status is read from the sheet (`Archive` means closed) and from the status-mismatch note, and its registration from the registration-mismatch note. People and households appear only as `missing_in_source` (the CRM is the only source of person detail).
+- Deviation: the CRM is expected to hold a link for each owner of **every** account, not only open ones, because that is what the generator writes for closed accounts too.
+- Deviation: when events explain a value conflict, its severity is the events' label (a `small_drift` of up to 0.5 percent is labelled immaterial by the balances mess type, although it can exceed the 0.1 percent tolerance). Conflicts with no event use the tolerance rule for balances and are `material` for the other facts.
+- A custodian balance made stale can only be seen against another source's balance. A stale event on an account that the book of business lacks is therefore not reported as an inconsistency.
+- The consistency check found a real defect while writing the key: stale-extra detection must unwrap `RawText.original`, otherwise a format variant on an account number looks like a stale extra.
+- With the default book-of-business drift the `typical` and `nightmare` presets list many `inherent` balance differences (hundreds on `typical/default`). `clean` has none, because it disables drift.
+
