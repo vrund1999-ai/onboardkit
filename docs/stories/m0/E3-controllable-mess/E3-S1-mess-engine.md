@@ -93,13 +93,13 @@ A simple dictionary populated by an `@register` decorator. `get(name)` raises wi
 
 ## Acceptance criteria
 
-- [ ] A registered type can be run and its events are returned in a stable order.
-- [ ] A test type that modifies an undeclared concept makes the engine fail with a clear message.
-- [ ] A test type that changes a value without emitting an event makes the engine fail.
-- [ ] A non-structural type that removes a row makes the engine fail.
-- [ ] Event ids are sequential and unique per mess type.
-- [ ] Two mess types draw from independent random streams (verified by enabling one, then both, and comparing the first type's events).
-- [ ] The engine never mutates truth objects.
+- [x] A registered type can be run and its events are returned in a stable order.
+- [x] A test type that modifies an undeclared concept makes the engine fail with a clear message.
+- [x] A test type that changes a value without emitting an event makes the engine fail.
+- [x] A non-structural type that removes a row makes the engine fail.
+- [x] Event ids are sequential and unique per mess type.
+- [x] Two mess types draw from independent random streams (verified by enabling one, then both, and comparing the first type's events).
+- [x] The engine never mutates truth objects.
 
 ## Test plan
 
@@ -111,3 +111,13 @@ A simple dictionary populated by an `@register` decorator. `get(name)` raises wi
 
 - Rule 1 and 2 give the isolation guarantee a mechanical backing, so later mess types stay honest. Keep the diff fast: compare only rows that the type declared in its events plus a hash of the untouched rows.
 - `before` and `after` are text renderings so events serialize cleanly to the answer key files.
+
+## Notes
+
+- Files added: `mess/base.py`, `registry.py`, `engine.py`, `noop.py`. `MessRegistry` is a class so tests can use a private registry; `register` and `get` are bound to the default one, and the no-op type is deliberately not registered.
+- `MessContext.rng(source)` gives the stream `derive_rng(seed, "mess", name, source)`, and `MessContext.event(...)` creates events with sequential ids, so a type cannot get the ids wrong by hand; the engine still checks them.
+- The engine mutates the dataset it is given. The pipeline (E4-S2) passes a copy of the projection when the original rows must stay untouched.
+- Contract checks added beyond the story text: a structural type must also explain every added or removed row with an event, and an event with `concept=None` covers any declared concept on its rows.
+- Execution order: structural types first, then `households, names, formats, balances` (the canonical order), then any other registered type in registration order.
+- `group_by_table` and `flatten` convert between the flat per-source lists of projection and coverage and the `SourceDataset` shape.
+
