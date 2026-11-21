@@ -1,9 +1,9 @@
 import copy
 import random
 from datetime import date
-from functools import cache
 
 import pytest
+from mess_helpers import firm_of, projection
 
 import onboardkit.datagen.mess.names as names_module
 from onboardkit.datagen.mess.base import MessContext, MessEvent, SourceDataset, group_by_table
@@ -22,28 +22,10 @@ from onboardkit.datagen.mess.names import (
 )
 from onboardkit.datagen.mess.registry import DEFAULT_REGISTRY
 from onboardkit.datagen.sources.base import SourceRow, TruthRefs
-from onboardkit.datagen.sources.book_of_business import BookOfBusinessExporter
-from onboardkit.datagen.sources.crm import CrmExporter
-from onboardkit.datagen.sources.custodian import CustodianExporter
 from onboardkit.datagen.sources.formatters import NameParts, apply_formatter
-from onboardkit.datagen.truth.builder import build_firm
 from onboardkit.datagen.truth.model import TruthFirm
-from onboardkit.datagen.truth.profile import load_profile
 
 AS_OF = date(2025, 12, 31)
-
-
-@cache
-def firm_of(households: int, seed: int = 42) -> TruthFirm:
-    return build_firm(load_profile(), households, seed)
-
-
-def projection(firm: TruthFirm) -> dict[str, list[SourceRow]]:
-    return {
-        "custodian": CustodianExporter.for_firm(firm).project(firm),
-        "crm": CrmExporter().project(firm),
-        "book_of_business": BookOfBusinessExporter().project(firm),
-    }
 
 
 def run(firm: TruthFirm, rate: float, seed: int = 42) -> tuple[SourceDataset, list[MessEvent]]:

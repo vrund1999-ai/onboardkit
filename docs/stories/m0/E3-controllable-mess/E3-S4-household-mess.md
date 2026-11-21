@@ -60,14 +60,14 @@ Eligible households: those present in the CRM (for `duplicate` and `split`) and 
 
 ## Acceptance criteria
 
-- [ ] At intensity 0, no rows are added, changed, or removed.
-- [ ] `duplicate` produces a second household in the CRM with the same members' truth refs and different source ids.
-- [ ] `split` yields two CRM households whose members' truth refs share one truth household id.
-- [ ] `missing` produces contact rows with blank household fields but unchanged person data.
-- [ ] No household receives more than one event.
-- [ ] Contact and household source ids remain unique per source after mess.
-- [ ] Linked-account rows stay consistent with the moved or duplicated contacts (no orphan links).
-- [ ] The engine's change-versus-event check passes.
+- [x] At intensity 0, no rows are added, changed, or removed.
+- [x] `duplicate` produces a second household in the CRM with the same members' truth refs and different source ids.
+- [x] `split` yields two CRM households whose members' truth refs share one truth household id.
+- [x] `missing` produces contact rows with blank household fields but unchanged person data.
+- [x] No household receives more than one event.
+- [x] Contact and household source ids remain unique per source after mess.
+- [x] Linked-account rows stay consistent with the moved or duplicated contacts (no orphan links).
+- [x] The engine's change-versus-event check passes.
 
 ## Test plan
 
@@ -80,3 +80,13 @@ Eligible households: those present in the CRM (for `duplicate` and `split`) and 
 
 - This is the most intricate mess type because it adds rows and must keep two files consistent. Build and test the CRM side first, then the spreadsheet.
 - Keep the truth untouched. Correct merge groups are derived, not stored on the rows.
+
+## Notes
+
+- Each truth household gets at most one event, and each event covers one source table: `duplicate` and `split` and the CRM form of `missing` write to the CRM `contacts` table, the spreadsheet form to its sheet's table. Whether `missing` hits the CRM or the spreadsheet is chosen at random when a household is in both.
+- Eligible households are those with CRM contacts or a spreadsheet block with a household name; the selection probability is the effective rate. At 0.075 on the 300-household dataset that gave 17 of 300 households in one run.
+- A moved contact keeps its contact id, so its linked-account rows stay valid without being rewritten. Duplicated contacts get new contact ids and do not get copies of the link rows, so no link ever points at a missing contact.
+- Duplicate rows use the original row's uid plus `-dup`, so they sit next to the original in the written file. New ids copy the format of the CRM ids already present rather than drawing from the exporter's own stream, which the mess type cannot see.
+- In the CRM the missing fields are written as empty cells (values `None`); in the spreadsheet the household cell of the first row of the block becomes an empty string, which leaves the cell blank in the workbook.
+- A split household is named `<First> <Last> Household`, after the CRM's own convention. A duplicate's name varies to `Last, First & First` or `The Lasts`.
+
