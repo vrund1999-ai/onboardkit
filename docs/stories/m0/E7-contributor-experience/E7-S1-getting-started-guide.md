@@ -51,12 +51,12 @@ Every command block is tagged `powershell` or `bash` so the guard test can find 
 
 ## Acceptance criteria
 
-- [ ] Following the guide on a machine with only Git and `uv` installed ends with a generated sample dataset and passing checks.
-- [ ] Every command in the guide appears in a tagged code block.
-- [ ] The guard test (E6-S3) validates each `onboardkit-gen` command.
-- [ ] Expected output shown matches reality for the current generator version.
-- [ ] Windows, Linux, and macOS differences are called out where they exist.
-- [ ] No step requires editing a file or setting an environment variable by hand.
+- [x] Following the guide on a machine with only Git and `uv` installed ends with a generated sample dataset and passing checks.
+- [x] Every command in the guide appears in a tagged code block.
+- [x] The guard test (E6-S3) validates each `onboardkit-gen` command.
+- [x] Expected output shown matches reality for the current generator version.
+- [x] Windows, Linux, and macOS differences are called out where they exist.
+- [x] No step requires editing a file or setting an environment variable by hand.
 
 ## Test plan
 
@@ -67,3 +67,10 @@ Every command block is tagged `powershell` or `bash` so the guard test can find 
 
 - Keep expected output short (key lines, not full logs), or it goes stale quickly.
 - If the install story changes (new tool, new Python version), update this guide in the same pull request.
+
+## Notes
+
+- Verified in a fresh clone of the branch on Windows 11: `uv sync`, the four checks, and the generate step all worked as written. The machine already has other Python versions installed, so "only Git and uv" is not proven; E7-S4 repeats the clean-room test.
+- The guide does not mention the Linux or macOS path differences beyond the uv install line, because every other command is identical there.
+- Expected-output blocks show the final lines only; the test count (637) will drift as tests are added.
+

@@ -27,7 +27,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 | Reproduce a dataset on demand | [E4](../epics/m0-foundation-epics.md#e4-reproducible-datasets) | Done | E4 done |
 | Know the "right answer" for each dataset | [E5](../epics/m0-foundation-epics.md#e5-ground-truth) | Done | E5 done |
 | Automated quality checks on every change | [E6](../epics/m0-foundation-epics.md#e6-automated-quality-gate) | In progress |  |
-| Clear contributor guidance | [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | Not started |  |
+| Clear contributor guidance | [E7](../epics/m0-foundation-epics.md#e7-contributor-experience) | In progress |  |
 
 ## M1: Ingestion and a single clean data model
 
