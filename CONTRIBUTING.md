@@ -60,10 +60,11 @@ Mess types are small classes in `src/onboardkit/datagen/mess/`; `names.py` and `
 2. Make `apply` return one `MessEvent` for every change, created with `ctx.event(...)`, carrying before and after values, the effect, and (where it applies) severity and ambiguity.
 3. Register it with `@register` and import the module in `mess/__init__.py`.
 4. Add the name to `MESS_TYPE_NAMES` in `config.py` and to `CANONICAL_ORDER` in `mess/registry.py` (the order is part of the dataset definition).
-5. Give it an intensity in each preset under `src/onboardkit/datagen/presets/`.
+5. Give it an intensity in each preset under `src/onboardkit/datagen/presets/`. The `clean` preset must keep every mess type disabled (`enabled: false, intensity: 0.0`); a test requires `clean` datasets to have no mess.
 6. Add tests next to the existing ones in `tests/datagen/mess/`: what it changes, that it leaves untouched rows alone (see `test_mess_isolation.py`), and that every subtype appears at the `nightmare` preset (`test_mess_coverage.py` checks this for all types).
 7. Regenerate the catalogue: `python scripts/mess_catalogue.py` (a test fails if `docs/mess-catalogue.md` is stale).
-8. Bump the generator version, update the changelog and checksums (section 6), and add a glossary entry if you introduced a new term.
+8. Update the tests that pin the configuration on purpose: `test_hash_is_pinned` in `tests/datagen/test_config.py` and `test_preset_values_match_the_story` in `tests/datagen/test_presets.py`.
+9. Bump the generator version, update the changelog and checksums (section 6), and add a glossary entry if you introduced a new term. If the sample dataset id changed, update it in [docs/demo-walkthrough.md](docs/demo-walkthrough.md); a test names the stale id.
 
 ## 8. How to add a source column
 

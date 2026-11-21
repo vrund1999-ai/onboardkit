@@ -69,11 +69,11 @@ config -> truth firm -> per-source rows -> coverage -> mess -> exports
 
 ## Acceptance criteria
 
-- [ ] `CONTRIBUTING.md` covers all nine sections.
-- [ ] A contributor can follow the "add a mess type" recipe and reach a passing build; verified by walking through it once on a throwaway branch.
-- [ ] `docs/architecture.md` contains the pipeline diagram and module map, and the module map matches the real package list (guard test compares directory names).
-- [ ] Links between the guides, glossary, stories, and README resolve (link guard).
-- [ ] The branch naming rules match the pull request template.
+- [x] `CONTRIBUTING.md` covers all nine sections.
+- [x] A contributor can follow the "add a mess type" recipe and reach a passing build; verified by walking through it once on a throwaway branch.
+- [x] `docs/architecture.md` contains the pipeline diagram and module map, and the module map matches the real package list (guard test compares directory names).
+- [x] Links between the guides, glossary, stories, and README resolve (link guard).
+- [x] The branch naming rules match the pull request template.
 
 ## Test plan
 
@@ -84,3 +84,11 @@ config -> truth firm -> per-source rows -> coverage -> mess -> exports
 
 - Keep the architecture document to what exists, not what is planned; the roadmap covers plans.
 - Update both documents in any pull request that changes structure.
+
+## Notes
+
+- Dependency: this story depends on E6-S5, which is only partly done (template and settings guide merged; branch protection not yet applied). The guides only link to `docs/repo-settings.md`, so nothing here relies on protection being active.
+- The "add a mess type" recipe was walked through once on a throwaway branch with a trivial type (CRM first names in capitals). It reached a passing build only after five fixes to the recipe, now included: the `clean` preset must keep the type disabled; `test_hash_is_pinned` and `test_preset_values_match_the_story` must be updated deliberately; the changelog, version and checksums; the regenerated catalogue; and the sample dataset id in the demo walkthrough. The "add a source column" recipe was written from the code but not walked through; treat it as unverified.
+- The module-map guard compares the table in `docs/architecture.md` with the folders and modules in `src/onboardkit/datagen/`. `CONTRIBUTING.md` is now among the documents scanned by the link, command and anchor guards.
+- The pull request template gained a checklist line pointing at the branch naming rules.
+

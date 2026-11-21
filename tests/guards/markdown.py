@@ -20,7 +20,9 @@ class Block:
 
 def documents() -> list[Path]:
     """Every markdown file a reader of the repository would open (not tool caches)."""
-    found = [REPO_ROOT / "README.md", REPO_ROOT / "ROADMAP.md", REPO_ROOT / "CLAUDE.md"]
+    found = [
+        REPO_ROOT / name for name in ("README.md", "ROADMAP.md", "CLAUDE.md", "CONTRIBUTING.md")
+    ]
     found += sorted((REPO_ROOT / "docs").rglob("*.md"))
     return [p for p in found if p.is_file()]
 
