@@ -1,0 +1,20 @@
+name: typical
+description: A believable firm. Sources are mostly complete and every kind of mess shows up at a moderate level. The default demo.
+coverage:
+  custodian:
+    accounts: 1.0
+  crm:
+    persons: 0.97
+    account_links: 0.90
+  book_of_business:
+    households: 0.85
+    accounts: 0.80
+    stale_extra_rate: 0.03
+book_of_business:
+  inherent_drift: 0.12
+  round_to: 100
+mess:
+  names: { enabled: true, intensity: 0.5 }
+  households: { enabled: true, intensity: 0.3 }
+  formats: { enabled: true, intensity: 0.5 }
+  balances: { enabled: true, intensity: 0.4 }

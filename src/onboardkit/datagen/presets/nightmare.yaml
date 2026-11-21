@@ -1,0 +1,20 @@
+name: nightmare
+description: Gaps in every source and heavy mess of every kind. For stress testing.
+coverage:
+  custodian:
+    accounts: 0.98
+  crm:
+    persons: 0.90
+    account_links: 0.75
+  book_of_business:
+    households: 0.70
+    accounts: 0.60
+    stale_extra_rate: 0.08
+book_of_business:
+  inherent_drift: 0.12
+  round_to: 100
+mess:
+  names: { enabled: true, intensity: 0.9 }
+  households: { enabled: true, intensity: 0.9 }
+  formats: { enabled: true, intensity: 0.9 }
+  balances: { enabled: true, intensity: 0.9 }

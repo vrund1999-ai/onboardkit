@@ -216,6 +216,7 @@ class FormatsMess:
     touches = frozenset({*DATES, ACCOUNT, PHONE, STATE, BALANCE})
     structural = False
     max_rate = 0.40
+    subtypes = frozenset(AMBIGUITY)
 
     def apply(self, ctx: MessContext, data: SourceDataset) -> list[MessEvent]:
         rate = min(ctx.rate, MAX_COLUMN_SHARE)

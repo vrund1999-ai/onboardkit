@@ -65,12 +65,12 @@ A small script `scripts/mess_catalogue.py` (or CLI subcommand later) renders `do
 
 ## Acceptance criteria
 
-- [ ] `clean` output equals the projection exactly (no events, nothing omitted).
-- [ ] `typical` and `nightmare` load and validate.
-- [ ] The isolation test passes for every registered mess type.
-- [ ] The coverage test passes: every subtype has at least one event at `nightmare`.
-- [ ] `docs/mess-catalogue.md` is generated from the registry and the staleness test passes.
-- [ ] The same seed yields a clean dataset and a heavily messy dataset of the same underlying firm (identical truth, different exports).
+- [x] `clean` output equals the projection exactly (no events, nothing omitted).
+- [x] `typical` and `nightmare` load and validate.
+- [x] The isolation test passes for every registered mess type.
+- [x] The coverage test passes: every subtype has at least one event at `nightmare`.
+- [x] `docs/mess-catalogue.md` is generated from the registry and the staleness test passes.
+- [x] The same seed yields a clean dataset and a heavily messy dataset of the same underlying firm (identical truth, different exports).
 
 ## Test plan
 
@@ -81,3 +81,13 @@ A small script `scripts/mess_catalogue.py` (or CLI subcommand later) renders `do
 
 - Isolation tests are slower than unit tests. Run them on the 15-household sample for each type, and on 300 households only in the coverage test.
 - Treat intensity values in the presets as tunable; record changes in the changelog because they alter generated data.
+
+## Notes
+
+- `typical` and `nightmare` are new preset files; `clean` is unchanged, so the pinned `clean-default-s42` id still holds. The preset loader (`load_preset`, `available_presets`, `resolve_config`) already lived in `config.py` from E3-S2 and is used as is, so no separate `presets/__init__.py` was added.
+- Added `src/onboardkit/datagen/pipeline.py` with `build_rows(config)`: truth, projection, coverage, and mess in memory. The tests need these stages together now. E4-S2 builds `generate_dataset` (writing, layout, safe overwrite) around it. The story's `run_pipeline_with` helper is therefore `build_rows(resolve_config(...overrides))`.
+- Each mess type now declares `subtypes`, and `DescribesSubtypes` (a runtime-checkable protocol in `mess/base.py`) lets the coverage test read it. Importing `onboardkit.datagen.mess` registers all four types.
+- The isolation test runs each type alone at 0.8 on 100 households against the `clean` baseline: every difference must be explained by an event of that type, within its `touches`, and row-set changes only for structural types. It also checks that sources a type reports no events on are unchanged.
+- `balances`: the weight of `registration_mismatch` was raised to 0.40, because only joint accounts qualify and it otherwise had almost no chance at `nightmare`. Even so it appears once there (the fewest of any subtype); the coverage test is deterministic for seed 42 but a change to eligibility could make it fail, which is the intended alarm.
+- The catalogue (`docs/mess-catalogue.md`) is rendered by `scripts/mess_catalogue.py`, with one example event per subtype from `nightmare`, 300 households, seed 42. `tests/datagen/test_mess_catalogue.py` regenerates it and fails when the committed file differs.
+
