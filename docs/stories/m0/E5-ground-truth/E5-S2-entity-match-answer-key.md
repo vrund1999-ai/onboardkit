@@ -70,13 +70,13 @@ A helper `expected_pairs(entity_type)` yields every unordered pair of rows in th
 
 ## Acceptance criteria
 
-- [ ] Every provenance row with at least one truth reference appears in `entity_matches.csv` for each entity type it references.
-- [ ] Stale extra rows (no account reference) do not appear in account groups.
-- [ ] Duplicate and split households from mess produce one household group each, spanning both CRM household ids.
-- [ ] Difficulty values follow the rules above and are unit tested for each category.
-- [ ] A dataset generated with `clean` has every group `easy`.
-- [ ] Group counts agree with the truth firm: persons seen equals persons in truth for fully covered datasets.
-- [ ] Files are byte-identical across runs.
+- [x] Every provenance row with at least one truth reference appears in `entity_matches.csv` for each entity type it references.
+- [x] Stale extra rows (no account reference) do not appear in account groups.
+- [x] Duplicate and split households from mess produce one household group each, spanning both CRM household ids.
+- [x] Difficulty values follow the rules above and are unit tested for each category.
+- [x] A dataset generated with `clean` has every group `easy`.
+- [x] Group counts agree with the truth firm: persons seen equals persons in truth for fully covered datasets.
+- [x] Files are byte-identical across runs.
 
 ## Test plan
 
@@ -88,3 +88,16 @@ A helper `expected_pairs(entity_type)` yields every unordered pair of rows in th
 
 - Difficulty is the generator's view. Later evaluation may add its own measures; do not treat the labels as a model of matcher difficulty, only of constructed variation.
 - Keep pair expansion out of the file format; it grows quadratically.
+
+## Notes
+
+Changes to the specified design, made while implementing:
+
+- **Entities not visible in any source no longer raise an error.** Persons can legitimately be absent from every export (for example a dependent with no account whom the CRM omitted, which happens at `typical` and `nightmare`). They are listed in a new file, `truth/entities_not_exported.csv` (`entity_type`, `truth_id`), so evaluation knows they cannot be matched. `seen + not exported` equals the truth for every type, and the file is empty for fully covered datasets such as `clean`.
+- **The "same first initial and surname" rule only makes a row `hard` when a name on that row was varied** (an `entity_variant` event on a name concept). Without this gate, a `clean` dataset of 300 households contained `hard` groups, which contradicts the criterion that `clean` is all easy.
+- A household `missing` event (household id blanked) counts as `moderate`; the story did not classify it. `split` and `duplicate` are `hard`.
+- Only events on identifying concepts add difficulty: a day/month swap on `client_since` or an account open date does not vary an identifying value, so it adds none. Balance and status conflicts add none.
+- `variant_events` lists exactly the events that contributed difficulty to the row, so a row has no listed events if and only if it is `easy`.
+- The hand-built mini dataset in the tests drives `derive_memberships` with a stubbed provenance table and hand-made events (joint account, duplicate household, split, nickname, confusable pair, stale extra).
+- `write_entity_matches` is opt-in alongside `write_provenance` until E5-S5 registers the default writers; it computes provenance itself, so it does not depend on `provenance.csv` having been written first.
+
