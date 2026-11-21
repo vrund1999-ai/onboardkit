@@ -58,6 +58,17 @@ Rules for the people in a household:
 
 **Role names** used for people in a household: `primary`, `spouse`, `dependent`.
 
+### Firm sizes
+
+The same firm exists in two sizes.
+
+| Size | Households | Used for |
+|---|---|---|
+| `sample` | 15 | Fast tests, demonstrations, and reviewing by eye |
+| `default` | 300 | A realistic firm that also exposes scale problems |
+
+The 15 households of the sample are the first 15 households of the default firm.
+
 ## 4. Account types and ownership rules
 
 Six account types are in scope for M0.
