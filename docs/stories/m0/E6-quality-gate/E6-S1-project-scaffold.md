@@ -91,7 +91,7 @@ uv run pytest
 - [x] `import onboardkit` works and exposes a version.
 - [x] `uv.lock` is committed and `uv sync --locked` succeeds.
 - [x] No tool configuration lives outside `pyproject.toml` except `.editorconfig` and `.gitattributes`.
-- [ ] Windows and Linux checkouts produce identical file contents for text files (verified later by CI).
+- [x] Windows and Linux checkouts produce identical file contents for text files (verified later by CI).
 
 ## Test plan
 

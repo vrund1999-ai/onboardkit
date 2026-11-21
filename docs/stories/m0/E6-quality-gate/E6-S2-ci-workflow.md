@@ -62,13 +62,13 @@ Failed steps show in the PR checks list. Coverage summary written to the job sum
 
 ## Acceptance criteria
 
-- [ ] Opening a pull request runs all four checks.
-- [ ] A deliberately failing lint, type error, and failing test each turn the right check red (verified once on a throwaway branch).
-- [ ] A good change goes green with no manual steps.
-- [ ] Windows and Linux test jobs both run.
-- [ ] A change that edits `pyproject.toml` without updating `uv.lock` fails.
-- [ ] Workflow permissions are read-only for contents.
-- [ ] A second push to the same pull request cancels the earlier run.
+- [x] Opening a pull request runs all four checks.
+- [x] A deliberately failing lint, type error, and failing test each turn the right check red (verified once on a throwaway branch).
+- [x] A good change goes green with no manual steps.
+- [x] Windows and Linux test jobs both run.
+- [x] A change that edits `pyproject.toml` without updating `uv.lock` fails.
+- [x] Workflow permissions are read-only for contents.
+- [x] A second push to the same pull request cancels the earlier run.
 
 ## Test plan
 
@@ -79,3 +79,5 @@ Failed steps show in the PR checks list. Coverage summary written to the job sum
 
 - Windows jobs are slower; keep slow tests behind the `slow` marker and decide which run in CI as the suite grows.
 - Pin actions by SHA to limit supply chain risk; unpinned tags can change underneath you.
+- Cache hit behavior on a second run was not confirmed from the logs; caching is enabled with `uv.lock` as the key. Re-check when runs become slow.
+- Verification used a throwaway pull request (closed, branch deleted); results are recorded in the E6-S2 pull request description.
