@@ -22,7 +22,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 
 | Capability | Delivered by | Status | Notes |
 |---|---|---|---|
-| Generate realistic, messy multi-source data for a fictional firm | [E1](../epics/m0-foundation-epics.md#e1-fictional-firm-and-shared-vocabulary), [E2](../epics/m0-foundation-epics.md#e2-multi-source-messy-exports) | Not started |  |
+| Generate realistic, messy multi-source data for a fictional firm | [E1](../epics/m0-foundation-epics.md#e1-fictional-firm-and-shared-vocabulary), [E2](../epics/m0-foundation-epics.md#e2-multi-source-messy-exports) | In progress |  |
 | Control the kinds and amount of mess | [E3](../epics/m0-foundation-epics.md#e3-controllable-mess) | Not started |  |
 | Reproduce a dataset on demand | [E4](../epics/m0-foundation-epics.md#e4-reproducible-datasets) | Not started |  |
 | Know the "right answer" for each dataset | [E5](../epics/m0-foundation-epics.md#e5-ground-truth) | Not started |  |

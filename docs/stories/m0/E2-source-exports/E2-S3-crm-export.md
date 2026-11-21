@@ -13,7 +13,7 @@ As a contributor, I want a CRM-style export of people, households, and linked ac
 
 ## Context
 
-The CRM is the default source of truth for people data and household relationships. It stores contacts and a household grouping, with only a loose list of linked account numbers and no balances. Its style is machine-friendly (`snake_case`, ISO dates), which contrasts with the custodian and the spreadsheet. The fictional product is `ClientHub`.
+The CRM is the default source of truth for people data and household relationships. It stores contacts and a household grouping, with only a loose list of linked account numbers and no balances. Its style is machine-friendly (`snake_case`, ISO dates), which contrasts with the custodian and the spreadsheet. The fictional product is `Cedarline CRM` (see [the firm profile](../../../fictional-firm.md)); the original name ClientHub was dropped because it is a real product.
 
 ## Scope
 

@@ -30,7 +30,7 @@ The generator needs concrete numbers (how many households, what mix of household
 
 The document contains these sections, in order:
 
-1. **Identity.** Fictional firm name (`Lantern Ridge Wealth Partners`), a fictional custodian (`Meridian Custody Services`), a fictional CRM (`ClientHub`), and the internal spreadsheet (`Book of Business`). Names must not match any real firm; do a quick web check and record the date.
+1. **Identity.** Fictional firm name (`Lantern Ridge Wealth Partners`), a fictional custodian (`Meridian Custody Services`), a fictional CRM (`Cedarline CRM`), and the internal spreadsheet (`Book of Business`). Names must not match any real firm; do a quick web check and record the date.
 2. **Staffing.** Four advisors (fictional names), used as the `advisor` attribute on households. Roughly even spread with one advisor carrying about 40 percent of households.
 3. **Household archetypes.** Each archetype has a target share of households:
 
@@ -57,11 +57,11 @@ The document contains these sections, in order:
 
 ## Acceptance criteria
 
-- [ ] `docs/fictional-firm.md` exists and covers all ten sections.
-- [ ] Archetype shares sum to 100 percent and account-count shares sum to 100 percent.
-- [ ] Every account type has an ownership rule stated.
-- [ ] Firm, custodian, and CRM names are fictional and the check is recorded.
-- [ ] A reader unfamiliar with the project can say what the firm is and what its data looks like after one read.
+- [x] `docs/fictional-firm.md` exists and covers all ten sections.
+- [x] Archetype shares sum to 100 percent and account-count shares sum to 100 percent.
+- [x] Every account type has an ownership rule stated.
+- [x] Firm, custodian, and CRM names are fictional and the check is recorded.
+- [x] A reader unfamiliar with the project can say what the firm is and what its data looks like after one read.
 
 ## Test plan
 
@@ -71,3 +71,6 @@ Documentation review only. A second person reads the page and answers: how many 
 
 - Numbers here become configuration in E1-S4. If the numbers change later, change this page and the configuration together.
 - Keep the page short enough to read in a few minutes.
+- The CRM name `ClientHub` was replaced by `Cedarline CRM` after the name check showed ClientHub is a real product. Related stories (E2-S3) were updated.
+- The parameter table also records account status shares, account number format, and per-type balance scaling, which the story outline did not list but E1-S4 needs.
+- The "newcomer can understand it in one read" criterion was checked by a self read-through only; a second reader should confirm and report anything unanswered.
