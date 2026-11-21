@@ -1,0 +1,13 @@
+# Default gitleaks rules plus an allowance for the fictional values the generator and tests use.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fictional, reserved-range values used by the synthetic data generator and tests"
+regexes = [
+  '''[A-Za-z0-9._%+-]+@example\.(com|test)''',
+  '''555-?01\d\d''',
+]
+paths = [
+  '''uv\.lock''',
+]

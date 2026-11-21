@@ -63,12 +63,12 @@ Scan every file in the `sample_dataset` fixture:
 
 ## Acceptance criteria
 
-- [ ] Staging a file under `data/generated/` makes the hygiene test fail (verified once, then reverted).
-- [ ] Adding a 2 MB file makes the size test fail.
-- [ ] A real-looking email, phone, or nine-digit tax id in generated output makes the synthetic test fail.
-- [ ] The secrets scan runs on pull requests and passes on the current repository.
-- [ ] Dependabot opens update pull requests for `uv` and `github-actions`.
-- [ ] The allow-lists are short, commented, and live in the tests that use them.
+- [x] Staging a file under `data/generated/` makes the hygiene test fail (verified once, then reverted).
+- [x] Adding a 2 MB file makes the size test fail.
+- [x] A real-looking email, phone, or nine-digit tax id in generated output makes the synthetic test fail.
+- [x] The secrets scan runs on pull requests and passes on the current repository.
+- [x] Dependabot opens update pull requests for `uv` and `github-actions`.
+- [x] The allow-lists are short, commented, and live in the tests that use them.
 
 ## Test plan
 
@@ -79,3 +79,11 @@ Scan every file in the `sample_dataset` fixture:
 
 - The deny list is a courtesy check, not a guarantee. The real protection is that the generator only produces values from controlled ranges.
 - Keep allow-lists tight; every entry should have a reason.
+
+## Notes
+
+- The Dependabot criterion ("opens update pull requests") can only be observed after this merges to `main`; the configuration covers `uv` and `github-actions`, weekly, with grouped minor and patch updates.
+- The secrets scan job (`secrets scan`) runs on pull requests only, using `gitleaks/gitleaks-action` pinned to the v3.0.0 commit, with the config in `.gitleaks.toml`. It is not added to branch protection until E6-S5 decides the required checks.
+- Account-number prefix check reads the exported values through `truth/provenance.csv` and the column mappings, so formatting variants (spaces, dashes, case) are tolerated.
+- Allow-lists (`ALLOW_LARGE`, `ALLOW_DATA`) live in `tests/guards/test_repo_hygiene.py`, each entry with a reason. The firm deny list is `tests/guards/data/real_firm_denylist.txt`.
+
