@@ -1,0 +1,22 @@
+# Names of real firms that must never appear in generated data (case-insensitive, whole words).
+# This is a courtesy check, not a guarantee: the real protection is that the generator only
+# builds values from controlled ranges. One name per line; extend it freely.
+Ameriprise
+Baird
+Cetera
+Charles Schwab
+Commonwealth Financial
+Edward Jones
+Envestnet
+Fidelity
+LPL Financial
+Merrill Lynch
+Morgan Stanley
+Northwestern Mutual
+Orion Advisor
+Pershing
+Raymond James
+Stifel
+TD Ameritrade
+Vanguard
+Wells Fargo
