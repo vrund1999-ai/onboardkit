@@ -5,6 +5,7 @@
 <!-- Link to the story file, for example docs/stories/m0/E2-source-exports/E2-S2-custodian-export.md -->
 
 ## Checklist
+- [ ] Branch name follows CONTRIBUTING.md (`feat/<story-id>-<slug>`, `docs/<topic>`, `fix/<slug>`)
 - [ ] Acceptance criteria in the story are met
 - [ ] Tests added or updated
 - [ ] If generated output changed: generator version bumped and `docs/datagen-changelog.md` updated
