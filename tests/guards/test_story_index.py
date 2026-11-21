@@ -4,18 +4,19 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+import pytest
+
 from tests.guards.markdown import REPO_ROOT
 
-STORIES = REPO_ROOT / "docs" / "stories" / "m0"
-INDEX = STORIES / "README.md"
-PROGRESS = REPO_ROOT / "docs" / "progress" / "stories" / "m0.md"
+MILESTONES = ("m0", "m1")
+MINIMUM_STORIES = {"m0": 35, "m1": 8}
 EPICS = REPO_ROOT / "docs" / "progress" / "epics.md"
 STATUSES = ("Not started", "In progress", "Blocked", "Done", "Dropped")
 ID = r"E\d+-S\d+"
 ROW = re.compile(rf"^\|\s*\[({ID})\]\(([^)]+)\)\s*\|(.*)\|\s*$")
 
 
-def story_files(root: Path = STORIES) -> dict[str, Path]:
+def story_files(root: Path) -> dict[str, Path]:
     return {
         re.match(ID, p.name).group(0): p  # type: ignore[union-attr]
         for p in sorted(root.glob("E*/E*-S*.md"))
@@ -68,26 +69,41 @@ def index_problems(files: dict[str, Path], index: dict[str, str], root: Path) ->
     return problems
 
 
-def test_every_story_file_is_in_the_index_and_the_index_has_no_ghosts() -> None:
-    files = story_files()
-    assert len(files) >= 35
-    assert index_problems(files, indexed(INDEX.read_text(encoding="utf-8")), STORIES) == []
+def paths(milestone: str) -> tuple[Path, Path, Path]:
+    """(stories folder, story index, progress table) for a milestone."""
+    stories = REPO_ROOT / "docs" / "stories" / milestone
+    progress = REPO_ROOT / "docs" / "progress" / "stories" / f"{milestone}.md"
+    return stories, stories / "README.md", progress
 
 
-def test_every_story_file_has_a_progress_row_and_vice_versa() -> None:
-    rows = progress_rows(PROGRESS.read_text(encoding="utf-8"))
+@pytest.mark.parametrize("milestone", MILESTONES)
+def test_every_story_file_is_in_the_index_and_the_index_has_no_ghosts(milestone: str) -> None:
+    stories, index, _ = paths(milestone)
+    files = story_files(stories)
+    assert len(files) >= MINIMUM_STORIES[milestone]
+    assert index_problems(files, indexed(index.read_text(encoding="utf-8")), stories) == []
+
+
+@pytest.mark.parametrize("milestone", MILESTONES)
+def test_every_story_file_has_a_progress_row_and_vice_versa(milestone: str) -> None:
+    stories, _, progress = paths(milestone)
+    rows = progress_rows(progress.read_text(encoding="utf-8"))
     ids = [r[0] for r in rows]
     assert len(ids) == len(set(ids)), "a story appears twice in the progress table"
-    assert set(ids) == set(story_files())
+    assert set(ids) == set(story_files(stories))
 
 
-def test_statuses_come_from_the_allowed_list() -> None:
-    for story_id, _, status in progress_rows(PROGRESS.read_text(encoding="utf-8")):
+@pytest.mark.parametrize("milestone", MILESTONES)
+def test_statuses_come_from_the_allowed_list(milestone: str) -> None:
+    _, _, progress = paths(milestone)
+    for story_id, _, status in progress_rows(progress.read_text(encoding="utf-8")):
         assert status in STATUSES, f"{story_id}: {status!r}"
 
 
-def test_progress_counts_match_the_rows() -> None:
-    text = PROGRESS.read_text(encoding="utf-8")
+@pytest.mark.parametrize("milestone", MILESTONES)
+def test_progress_counts_match_the_rows(milestone: str) -> None:
+    _, _, progress = paths(milestone)
+    text = progress.read_text(encoding="utf-8")
     rows = progress_rows(text)
     per_epic: dict[str, list[str]] = defaultdict(list)
     for _, epic, status in rows:
@@ -109,8 +125,10 @@ def test_progress_counts_match_the_rows() -> None:
 
 def test_epic_rows_equal_the_story_rows_and_roll_up_correctly() -> None:
     per_epic: dict[str, list[str]] = defaultdict(list)
-    for _, epic, status in progress_rows(PROGRESS.read_text(encoding="utf-8")):
-        per_epic[epic].append(status)
+    for milestone in MILESTONES:
+        _, _, progress = paths(milestone)
+        for _, epic, status in progress_rows(progress.read_text(encoding="utf-8")):
+            per_epic[epic].append(status)
     seen = set()
     for line in EPICS.read_text(encoding="utf-8").splitlines():
         match = re.match(
@@ -125,10 +143,11 @@ def test_epic_rows_equal_the_story_rows_and_roll_up_correctly() -> None:
             match.group(4),
         )
         seen.add(epic)
-        statuses = per_epic[epic]
+        statuses = per_epic.get(epic, [])
         assert (done, total) == (statuses.count("Done"), len(statuses)), epic
         assert status in STATUSES and status == rolled_up(statuses), f"{epic}: {status}"
-    assert seen == set(per_epic)
+    assert {e for e in per_epic} <= seen
+    assert {"E1", "E7", "E8", "E9"} <= seen
 
 
 def test_a_story_file_without_an_index_entry_fails_the_guard(tmp_path: Path) -> None:

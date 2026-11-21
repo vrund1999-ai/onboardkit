@@ -63,4 +63,5 @@ docs/progress/
   epics.md           epics, with story counts
   stories/
     m0.md            every M0 story
+    m1.md            every written M1 story
 ```

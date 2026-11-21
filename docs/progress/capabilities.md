@@ -9,7 +9,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 | Milestone | Title | Capabilities done | Status | Breakdown |
 |---|---|---|---|---|
 | M0 | Foundation and realistic test data | 6 / 6 | Done | Epics and stories defined |
-| M1 | Ingestion and a single clean data model | 0 / 7 | Not started | Epics defined (E8 to E16); stories not written |
+| M1 | Ingestion and a single clean data model | 0 / 7 | Not started | Epics defined (E8 to E16); stories written for E8 and E9 |
 | M2 | AI-assisted mapping and entity matching | 0 / 8 | Not started | Not broken down yet |
 | M3 | Human review and audit trail | 0 / 9 | Not started | Not broken down yet |
 | M4 | Reconciliation and exceptions | 0 / 8 | Not started | Not broken down yet |
