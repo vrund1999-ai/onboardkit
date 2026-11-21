@@ -21,7 +21,10 @@ REPO = Path(__file__).resolve().parents[2]
 SECONDS = {"sample": 5, "demo": 60}
 
 
-@pytest.mark.parametrize("name", list(STANDARD_DATASETS))
+@pytest.mark.parametrize(
+    "name",
+    [pytest.param(n, marks=pytest.mark.slow) if n == "demo" else n for n in STANDARD_DATASETS],
+)
 def test_standard_dataset_matches_the_recorded_checksums(name: str, tmp_path: Path) -> None:
     started = time.perf_counter()
     result = generate_dataset(standard_config(name), tmp_path)

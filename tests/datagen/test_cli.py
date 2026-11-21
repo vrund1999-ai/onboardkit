@@ -24,6 +24,7 @@ def dataset_dirs(root: Path) -> list[str]:
     return sorted(p.name for p in root.iterdir())
 
 
+@pytest.mark.slow
 def test_generate_with_no_arguments_makes_the_default_typical_dataset(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -263,6 +264,7 @@ def test_no_arguments_prints_help() -> None:
     assert "generate" in result.output
 
 
+@pytest.mark.slow
 def test_runs_as_a_module_from_any_directory(tmp_path: Path) -> None:
     out = tmp_path / "o"
     completed = subprocess.run(

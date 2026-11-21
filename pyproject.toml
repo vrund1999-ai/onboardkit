@@ -55,6 +55,10 @@ markers = [
 [tool.coverage.run]
 source = ["onboardkit"]
 
+[tool.coverage.report]
+# Never lower this silently; raise it deliberately. Documented in docs/testing.md.
+fail_under = 85
+
 [[tool.mypy.overrides]]
 module = ["openpyxl", "openpyxl.*"]
 ignore_missing_imports = true

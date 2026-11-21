@@ -35,6 +35,7 @@ def run_cli(out: Path, hashseed: str, cwd: Path) -> Path:
     return Path(completed.stdout.strip())
 
 
+@pytest.mark.slow
 def test_separate_processes_with_different_hash_seeds_agree(tmp_path: Path) -> None:
     (tmp_path / "cwd1").mkdir()
     (tmp_path / "cwd2").mkdir()

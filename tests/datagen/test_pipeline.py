@@ -85,6 +85,7 @@ def test_layout_for_the_sample_size_of_every_preset(preset: str, tmp_path: Path)
     assert manifest["dataset_id"] == result.dataset_id
 
 
+@pytest.mark.slow
 def test_layout_for_the_default_size(tmp_path: Path) -> None:
     result = generate_dataset(resolve_config("typical", "default", 42), tmp_path)
     assert files_under(result.path) == sorted(EXPECTED_FILES)
