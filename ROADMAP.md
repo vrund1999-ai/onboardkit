@@ -173,3 +173,9 @@ A report is ready for a first client conversation when it contains:
 - High-severity exceptions only.
 
 The full exceptions view and the "what changed" view are still produced, but they are internal working material and are not required for a report to count as client-ready.
+
+### Interface by milestone
+
+- M1 to M2 work from the command line only.
+- A backend API (FastAPI) and review screens (Streamlit) arrive with the human review work in M3; earlier milestones keep their logic separate from the command line so the API can call it unchanged.
+- Data is stored in PostgreSQL from M1 onward.

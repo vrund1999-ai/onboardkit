@@ -59,6 +59,7 @@ E8 and E9 can start immediately and in parallel. E10 is the critical path. E13 a
 - At least one source exports holdings, in its own style and with its own quirks.
 - Holdings are covered by the controllable mess and by the answer key, like every other kind of data.
 - The generator version and standard datasets are updated through the existing change process.
+- Detail is kept to the minimum that reconciles to balances (security, quantity, value, asset class). Richer holdings are listed as later enhancements in the decisions below.
 
 **Done when**
 - A generated dataset contains holdings that reconcile to the account balances in the truth.
@@ -77,7 +78,8 @@ E8 and E9 can start immediately and in parallel. E10 is the critical path. E13 a
 - Recognize which source each file comes from, or let the user say so.
 - Load each file's content as-is, before any cleaning, so nothing is lost.
 - Show what was submitted and the outcome for each file.
-- A single entry point that can be run repeatedly on the same submission with the same result.
+- A single entry point, run from the command line, that can be repeated on the same submission with the same result.
+- Loaded data is kept in a database, so later steps and reports can use it without reloading.
 
 **Done when**
 - The standard demo dataset's `exports/` folder can be submitted and every file is accounted for.
@@ -214,11 +216,11 @@ M1 is complete when:
 - The intake report explains what was loaded, skipped, and changed.
 - Scores against the answer key are recorded and guarded by automated tests.
 
-## Open questions
+## Decisions
 
-These need a decision before the stories are written.
+These were open questions when the epics were first drafted. They are resolved and shape the stories.
 
-- **Storage.** The README lists PostgreSQL as the planned store. Should M1 start with files or an embedded database and move to PostgreSQL when the API arrives, or use PostgreSQL from the start? This affects E10, E13 and E14.
-- **Holdings scope.** How detailed should holdings be (security, quantity, price, value, asset class)? E9 assumes the minimum that reconciles to balances.
-- **Ambiguous dates.** Should `03/04/1980` follow a fixed rule per source (the custodian is American), be flagged for a person, or both? E12 assumes a per-source rule plus a flag.
-- **Interface.** Is a command line enough for submitting files in M1, with the API and screens left to later milestones? E10 assumes yes.
+- **Storage: PostgreSQL from the start.** Loaded data, lineage, and reports live in a PostgreSQL database, the store the project plans to use throughout. This avoids building on a temporary store and migrating later. Consequences: the database must be easy to start locally, tests need a real database, and the common model needs a database layout. The details belong in the stories for E8, E10, E13 and E14.
+- **Holdings: the minimum, with enhancements noted.** M1 holds what is needed to reconcile to account balances: the security, the quantity, the value, and an asset class. Possible later enhancements, deliberately not in M1: prices over time, cost basis and tax lots, transactions, income, and realistic market behavior.
+- **Ambiguous dates: both.** Each source has a documented rule (the custodian is American, so `03/04/1980` is March 4), and a value that could be read two ways is also flagged for a person, so a rule never hides an uncertainty.
+- **Interface: command line only in M1.** Submitting files, viewing the intake report, and running the checks happen from the command line. An API (FastAPI) and review screens (Streamlit) are planned for later milestones and are recorded in the [roadmap](../../ROADMAP.md#interface-by-milestone); nothing in M1 should prevent them, so the intake logic is kept separate from the command line that calls it.
