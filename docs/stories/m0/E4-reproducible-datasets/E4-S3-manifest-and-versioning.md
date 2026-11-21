@@ -73,12 +73,12 @@ Any change that alters output requires a version bump and a line in `docs/datage
 
 ## Acceptance criteria
 
-- [ ] Every generated dataset contains a `manifest.json` with the fields above.
-- [ ] The manifest contains no timestamp, username, hostname, or absolute path.
-- [ ] Generating the same config twice yields byte-identical manifests.
-- [ ] `verify_manifest` passes on a fresh dataset and reports a problem after a file is edited, deleted, or added.
-- [ ] Dependency versions recorded match the installed ones.
-- [ ] The changelog exists and explains version rules.
+- [x] Every generated dataset contains a `manifest.json` with the fields above.
+- [x] The manifest contains no timestamp, username, hostname, or absolute path.
+- [x] Generating the same config twice yields byte-identical manifests.
+- [x] `verify_manifest` passes on a fresh dataset and reports a problem after a file is edited, deleted, or added.
+- [x] Dependency versions recorded match the installed ones.
+- [x] The changelog exists and explains version rules.
 
 ## Test plan
 
@@ -90,3 +90,12 @@ Any change that alters output requires a version bump and a line in `docs/datage
 
 - Recording dependency versions in the manifest makes the manifest differ across environments with different Faker versions, which is the point: it signals why output might differ.
 - Keep the manifest small; it should be readable by eye.
+
+## Notes
+
+- `manifest.py` has `build_manifest`, `write_manifest`, `dumps`, `files_digest`, and `verify_manifest`; `generate_dataset` writes the manifest last, after the answer keys, so truth files are listed too (everything under the dataset except `manifest.json`).
+- `counts` is the pipeline's full count mapping: `households`, `persons`, `accounts`, and `rows.<source>`.
+- `verify_manifest` returns `Problem(kind, path, detail)` values with kinds `manifest` (unreadable, wrong version, bad `files_digest`), `missing`, `changed` (size or checksum), and `extra` (any unlisted file, anywhere under the dataset).
+- Dependencies recorded are Python, Faker, openpyxl, and pydantic, read from the installed package metadata.
+- The enforcement of the standard dataset checksums per version belongs to E4-S5.
+
