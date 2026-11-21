@@ -104,12 +104,12 @@ Rows are written in a stable order (sorted by `row_uid` unless a profile specifi
 
 ## Acceptance criteria
 
-- [ ] A profile referencing an unknown concept fails validation with a clear message.
-- [ ] Every formatter has tests including edge values (zero, negative, `None`).
-- [ ] `write_csv` writes the header on the profile-declared line and returns correct locators when a preamble or trailer is configured.
-- [ ] CSV output honors encoding, delimiter, and line ending from the profile (verified by reading bytes).
-- [ ] Row order in output is stable across runs.
-- [ ] No source-specific logic lives in `base.py`, `formatters.py`, or `writers.py`.
+- [x] A profile referencing an unknown concept fails validation with a clear message.
+- [x] Every formatter has tests including edge values (zero, negative, `None`).
+- [x] `write_csv` writes the header on the profile-declared line and returns correct locators when a preamble or trailer is configured.
+- [x] CSV output honors encoding, delimiter, and line ending from the profile (verified by reading bytes).
+- [x] Row order in output is stable across runs.
+- [x] No source-specific logic lives in `base.py`, `formatters.py`, or `writers.py`.
 
 ## Test plan
 
@@ -121,3 +121,12 @@ Rows are written in a stable order (sorted by `row_uid` unless a profile specifi
 
 - `csv` in text mode on Windows can double carriage returns. Open files with `newline=""`.
 - Keep `values` typed until formatting so that mess types can reason about real dates and amounts.
+
+## Notes
+
+- `NameParts` (first, last, optional middle and suffix) lives in `formatters.py`; exporters put it in `values` for name concepts so formatters can write any name order.
+- Profiles also validate that every formatter name is registered and that a table has no repeated header or concept, so the column-mapping answer key can rely on header and concept each being unique within a table.
+- `TableSpec` gained `preamble` and `trailer` (raw lines) to carry report-style headers and footers; `header_line` is derived. Cells containing line breaks are rejected, so locator line numbers always match what an editor shows.
+- `write_csv(profile, table, rows, path)` takes the profile as well as the table because encoding, delimiter and line ending belong to the profile. `write_csv_tables` writes every table of a CSV profile; spreadsheet profiles raise `NotImplementedError` until E2-S4.
+- Money style `number` returns a quantized `Decimal` so spreadsheet cells can stay numeric; CSV writes it as plain text.
+
