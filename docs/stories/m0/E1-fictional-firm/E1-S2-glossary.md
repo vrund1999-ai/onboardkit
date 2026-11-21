@@ -52,11 +52,11 @@ Cross-link rule: the first mention of a glossary term in other docs links to its
 
 ## Acceptance criteria
 
-- [ ] Every term in the minimum list has an entry with a definition.
-- [ ] Entries for `account number`, `client`, and `balance` list at least three real-world spellings or synonyms.
-- [ ] `truth` and `answer key` are defined precisely and distinguished from each other.
-- [ ] Every term used in the README, `ROADMAP.md`, and the M0 epics file either appears in the glossary or is plain English.
-- [ ] Entries are alphabetical and each has a stable anchor so other documents can link to it.
+- [x] Every term in the minimum list has an entry with a definition.
+- [x] Entries for `account number`, `client`, and `balance` list at least three real-world spellings or synonyms.
+- [x] `truth` and `answer key` are defined precisely and distinguished from each other.
+- [x] Every term used in the README, `ROADMAP.md`, and the M0 epics file either appears in the glossary or is plain English.
+- [x] Entries are alphabetical and each has a stable anchor so other documents can link to it.
 
 ## Test plan
 
@@ -66,3 +66,7 @@ Documentation review. As a check, search the README, roadmap, and epics for doma
 
 - Keep definitions business-facing. Resist describing implementation here.
 - Add terms as later milestones introduce them.
+
+## Notes
+
+- Added terms beyond the minimum list that the README, roadmap, and epics use: archetype, audit trail, common data model, concept, confidence, coverage, normalization, severity, source of truth.
