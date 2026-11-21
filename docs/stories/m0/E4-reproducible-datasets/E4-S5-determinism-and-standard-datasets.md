@@ -65,13 +65,13 @@ A test generates both standard datasets and compares file checksums with `standa
 
 ## Acceptance criteria
 
-- [ ] Two runs in one process yield byte-identical directories.
-- [ ] Two runs in separate processes with different `PYTHONHASHSEED` values yield byte-identical directories.
-- [ ] Output is identical regardless of working directory and output root.
-- [ ] Standard dataset checksums match on both Linux and Windows CI.
-- [ ] Changing a generator behavior without bumping the version fails the checksum test with the guidance message.
-- [ ] Both standard datasets generate in one command each and finish within 60 seconds on a typical laptop (sample within 5 seconds).
-- [ ] Generated files are not tracked by git.
+- [x] Two runs in one process yield byte-identical directories.
+- [x] Two runs in separate processes with different `PYTHONHASHSEED` values yield byte-identical directories.
+- [x] Output is identical regardless of working directory and output root.
+- [x] Standard dataset checksums match on both Linux and Windows CI.
+- [x] Changing a generator behavior without bumping the version fails the checksum test with the guidance message.
+- [x] Both standard datasets generate in one command each and finish within 60 seconds on a typical laptop (sample within 5 seconds).
+- [x] Generated files are not tracked by git.
 
 ## Test plan
 
@@ -82,3 +82,11 @@ A test generates both standard datasets and compares file checksums with `standa
 
 - This is the story most likely to fail when a dependency is upgraded. That is intended: investigate, bump the version if the change is acceptable, update the expected checksums.
 - Cross-platform byte equality depends on writing CSVs with explicit line endings and `newline=""`.
+
+## Notes
+
+- `src/onboardkit/datagen/standard.py` holds the two standard dataset definitions, `file_checksums`, and `compare_checksums` (which appends the guidance message); `scripts/update_expected_checksums.py` rewrites the entry for the current generator version. The manifest is excluded from the recorded checksums because it contains the Python version, which differs between CI machines.
+- The CSV line endings are deliberately different per source (custodian CRLF, CRM LF) and pinned by a test, rather than forced to one value.
+- The cross-platform criterion is enforced by the existing CI matrix running `test_standard_datasets.py` against one expected file.
+- The timing test allows 3x the stated limits because CI machines are slower than a laptop; the figures on a laptop are in the PR.
+

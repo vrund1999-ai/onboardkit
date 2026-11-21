@@ -1,0 +1,16 @@
+{
+  "0.1.0": {
+    "demo": {
+      "exports/book_of_business/book_of_business.xlsx": "8ad26297537fcad0a544939b861496ef9d0b733da6894672c33a300f58203ecd",
+      "exports/crm/crm_contacts.csv": "55da4bfc87de4ac29f4b0bea2b51a9fa967a391bf0fcb3b1fb20ef42c52cfed4",
+      "exports/crm/crm_linked_accounts.csv": "ac05f9c0130fcf066ed13acdc4ea997e30641c340c9524a1ebf9cd8852035e74",
+      "exports/custodian/custodian_accounts.csv": "0606d4ec56659924c0e38acac3ce39c32050b024e824b143a8c6a782bfc9546d"
+    },
+    "sample": {
+      "exports/book_of_business/book_of_business.xlsx": "0da4340bd87985f7d92e51e7f75c642dc398bce91417ef88dbd13a27b380f169",
+      "exports/crm/crm_contacts.csv": "4d0a5d72361eb6399f16669d938aa993e8cdfa5ad85b5b02e780e78f6e8c603a",
+      "exports/crm/crm_linked_accounts.csv": "12b8cf9c235eb661d2af579eda73c4d21d4bb235884bef7821a1c79bbd265f7a",
+      "exports/custodian/custodian_accounts.csv": "55ff943b8f58d6631192eb5afe54348470adce7f1fe22ab2b97bfea555327b70"
+    }
+  }
+}
