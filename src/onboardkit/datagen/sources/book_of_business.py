@@ -23,6 +23,7 @@ from onboardkit.datagen.sources.base import (
     ColumnSpec,
     RawText,
     RowLocator,
+    SheetInfo,
     SourceProfile,
     SourceRow,
     TableSpec,
@@ -41,6 +42,7 @@ FILE_NAME = "book_of_business.xlsx"
 SUMMARY_SHEET = "Summary"
 ARCHIVE_SHEET = "Archive"
 HEADER_ROW = 5
+SUMMARY_HEADERS = ("Advisor", "Households", "Total Balance")
 FIRST_DATA_ROW = 6
 
 TYPE_LABELS = {
@@ -192,8 +194,7 @@ class BookOfBusinessExporter:
                 archived.append(row)
             else:
                 by_advisor[str(row.values["household.advisor"])].append(row)
-        extra = sorted(set(by_advisor) - set(self.advisors))
-        advisors = [*self.advisors, *extra]
+        advisors = self._advisor_names(rows)
 
         totals: list[tuple[str, int, Decimal]] = []
         for advisor in advisors:
@@ -220,6 +221,20 @@ class BookOfBusinessExporter:
         save_deterministic(workbook, path, stamp_for(self.as_of_date))
         return WriteResult(files=[path], locators=locators)
 
+    def _advisor_names(self, rows: list[SourceRow]) -> list[str]:
+        """The firm's advisors in profile order, then any other advisor found on a row."""
+        found = {str(r.values["household.advisor"]) for r in rows if r.table != ARCHIVE}
+        return [*self.advisors, *sorted(found - set(self.advisors))]
+
+    def sheets(self, rows: list[SourceRow]) -> list[SheetInfo]:
+        """Every sheet of the workbook, in tab order, with where its header sits."""
+        layout = [SheetInfo(SUMMARY_SHEET, None, HEADER_ROW, SUMMARY_HEADERS)]
+        layout += [
+            SheetInfo(advisor_sheet_name(name), ACCOUNTS, HEADER_ROW)
+            for name in self._advisor_names(rows)
+        ]
+        return [*layout, SheetInfo(ARCHIVE_SHEET, ARCHIVE, HEADER_ROW)]
+
     def _title_rows(self, sheet: Worksheet, second_line: str) -> None:
         sheet["A1"] = f"{self.firm_name} - Book of Business"
         sheet["A1"].font = Font(bold=True, size=14)
@@ -228,7 +243,7 @@ class BookOfBusinessExporter:
 
     def _write_summary(self, sheet: Worksheet, totals: list[tuple[str, int, Decimal]]) -> None:
         self._title_rows(sheet, "Summary by advisor")
-        for index, header in enumerate(("Advisor", "Households", "Total Balance"), start=1):
+        for index, header in enumerate(SUMMARY_HEADERS, start=1):
             cell = sheet.cell(row=HEADER_ROW, column=index, value=header)
             cell.font = Font(bold=True)
         for offset, (advisor, count, total) in enumerate(totals):

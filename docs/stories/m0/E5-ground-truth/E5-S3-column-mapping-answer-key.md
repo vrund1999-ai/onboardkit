@@ -60,12 +60,12 @@ Header text is never altered by M0 mess types, so the key is static per source l
 
 ## Acceptance criteria
 
-- [ ] Every column in every exported file and sheet has exactly one row in the key.
-- [ ] Every non-`none` concept exists in `concepts.yaml`.
-- [ ] `Acct #`, `account_number`, and `AcctNo` all map to `account.number`.
-- [ ] Owner columns map to `account.owner_names` with slices `0` and `1`.
-- [ ] Re-reading the files confirms headers and positions match the key exactly.
-- [ ] Output is byte-identical across runs and the same for any seed (layouts are static).
+- [x] Every column in every exported file and sheet has exactly one row in the key.
+- [x] Every non-`none` concept exists in `concepts.yaml`.
+- [x] `Acct #`, `account_number`, and `AcctNo` all map to `account.number`.
+- [x] Owner columns map to `account.owner_names` with slices `0` and `1`.
+- [x] Re-reading the files confirms headers and positions match the key exactly.
+- [x] Output is byte-identical across runs and the same for any seed (layouts are static).
 
 ## Test plan
 
@@ -77,3 +77,13 @@ Header text is never altered by M0 mess types, so the key is static per source l
 
 - Because this key does not depend on the seed, it can be cached; still generate it per dataset so every dataset is self-describing.
 - If a column is added to an exporter without a concept id, profile validation (E2-S1) fails first, which is intended.
+
+## Notes
+
+- `answer_keys/column_mappings.py` has `build_column_mappings`, `write_column_mappings` (opt-in until E5-S5 registers the defaults) and `verify_column_mappings`.
+- The workbook's header row (5) and its sheet list are not in the workbook profile (its table says `header_line` 1, and advisor sheets are created per advisor). The workbook exporter now describes its own sheets through `sheets(rows)` (a `SheetInfo` per sheet, and a `HasSheets` protocol in `sources/base.py`), and `AnswerKeyContext` gained `exporters` so a key writer can ask. The summary sheet's own headers are declared there too and are mapped to `none` with a note.
+- The key has no header-row column (the story's field list has none), so `verify_column_mappings` finds the header row by looking for the row whose cells equal the key's headers in position order. It also reports a file or sheet that the key does not mention, gaps in positions, and unknown concepts.
+- `value_format` is the formatter name plus its options (`date:%m/%d/%Y`, `money:commas`, `name_last_first:index=0,upper=True`); mapping tables are shown as `map:codes=6` since value-level mapping is out of scope.
+- Rows are written in numeric column order (`write_table` gained an optional sort key) so positions read 1, 2, 10 rather than 1, 10, 2.
+- `meta.notes` and `meta.review_date` are real concepts in the catalogue, so only the Summary sheet's three columns map to `none`.
+

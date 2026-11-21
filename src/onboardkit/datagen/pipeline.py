@@ -70,6 +70,7 @@ class AnswerKeyContext:
     locators: dict[str, dict[str, RowLocator]]  # source -> row uid -> where the row landed
     rows: dict[str, list[SourceRow]]  # source -> the rows as exported (after coverage and mess)
     profiles: dict[str, SourceProfile]  # source -> its file layout
+    exporters: dict[str, SourceExporter]  # source -> the exporter that wrote it
     source_id_maps: dict[str, Any]  # source -> its truth-to-source id maps, when it has any
     coverage_events: list[CoverageEvent]
     mess_events: list[MessEvent]
@@ -193,6 +194,7 @@ def generate_dataset(
             locators=locators,
             rows=flatten(built.data),
             profiles={name: built.exporters[name].profile for name in SOURCE_ORDER},
+            exporters=built.exporters,
             source_id_maps={"crm": getattr(built.exporters["crm"], "id_maps", None)},
             coverage_events=built.coverage_events,
             mess_events=built.mess_events,

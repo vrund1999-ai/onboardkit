@@ -23,7 +23,7 @@ MANIFEST_VERSION = 1
 MANIFEST_NAME = "manifest.json"
 DEPENDENCIES = ("faker", "openpyxl", "pydantic")
 
-ProblemKind = Literal["manifest", "missing", "changed", "extra", "locator", "unrecorded"]
+ProblemKind = Literal["manifest", "missing", "changed", "extra", "locator", "unrecorded", "mapping"]
 
 
 @dataclass(frozen=True)
