@@ -78,14 +78,14 @@ Rows are located by `(file, sheet, excel_row_number)`. The writer accounts for t
 
 ## Acceptance criteria
 
-- [ ] Workbook has a `Summary`, one sheet per advisor, and an `Archive` sheet.
-- [ ] Advisor sheets have title rows, a header on row 5, and spacer rows between households.
-- [ ] Household name appears only on the first row of its block.
-- [ ] Balances are rounded and differ from truth by drift; none are zero or negative.
-- [ ] Account numbers are stored as text (leading zeros preserved).
-- [ ] Generating the workbook twice produces byte-identical files.
-- [ ] The README's `AcctNo` header example is present.
-- [ ] Locators return the correct sheet and Excel row.
+- [x] Workbook has a `Summary`, one sheet per advisor, and an `Archive` sheet.
+- [x] Advisor sheets have title rows, a header on row 5, and spacer rows between households.
+- [x] Household name appears only on the first row of its block.
+- [x] Balances are rounded and differ from truth by drift; none are zero or negative.
+- [x] Account numbers are stored as text (leading zeros preserved).
+- [x] Generating the workbook twice produces byte-identical files.
+- [x] The README's `AcctNo` header example is present.
+- [x] Locators return the correct sheet and Excel row.
 
 ## Test plan
 
@@ -98,3 +98,14 @@ Rows are located by `(file, sheet, excel_row_number)`. The writer accounts for t
 
 - Byte determinism can regress when `openpyxl` is upgraded; the E4-S5 guard catches it.
 - Merged cells would complicate downstream reading; avoid them in M0.
+
+## Notes
+
+- Real account numbers are `MC` plus six digits, so "leading zeros preserved" is met by storing them as text cells (`@` format); the check is that the cell type is a string.
+- The `book_of_business` settings (`inherent_drift`, `round_to`) are a new section of the dataset config, so they are part of the config hash. The pinned hash for clean/default/seed 42 changed from `79dbff01d7b7` to `3071254c8d10`; the clean preset sets drift `0` and `round_to` `0.01`.
+- One advisor sheet exists for every advisor in the firm profile even when a small sample gives that advisor no households. The Archive sheet holds closed accounts only; a household whose accounts are all closed therefore appears only there.
+- Household labels are `Last, First & Spouse` (the spouse's surname is added when it differs).
+- Locators count the title rows and spacer rows; the Summary sheet has no row locators because it holds no source rows.
+- Added `excel_date` formatter (keeps a real date) and `format_row_native`; CSV behavior is unchanged. `openpyxl` has no type information, so mypy ignores its imports.
+- `save_deterministic` writes through `ExcelWriter` directly because `Workbook.save` resets the modified time to now.
+

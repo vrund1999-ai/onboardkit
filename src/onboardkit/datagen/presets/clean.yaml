@@ -10,6 +10,9 @@ coverage:
     households: 1.0
     accounts: 1.0
     stale_extra_rate: 0.0
+book_of_business:
+  inherent_drift: 0.0
+  round_to: 0.01
 mess:
   names: { enabled: false, intensity: 0.0 }
   households: { enabled: false, intensity: 0.0 }

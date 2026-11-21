@@ -14,7 +14,7 @@ from decimal import ROUND_HALF_EVEN, Decimal
 from typing import Any
 
 Options = Mapping[str, Any]
-Formatted = str | Decimal
+Formatted = str | Decimal | date
 Formatter = Callable[[Any, Options], Formatted]
 
 _CENT = Decimal("0.01")
@@ -37,6 +37,15 @@ def format_date(value: Any, options: Options) -> Formatted:
     if not isinstance(value, date):
         raise TypeError(f"date formatter needs a date, got {type(value).__name__}")
     return value.strftime(str(options.get("pattern", "%Y-%m-%d")))
+
+
+def format_excel_date(value: Any, options: Options) -> Formatted:
+    """Keep a real date so a spreadsheet cell can hold a date value; blank when missing."""
+    if value is None:
+        return ""
+    if not isinstance(value, date):
+        raise TypeError(f"excel_date formatter needs a date, got {type(value).__name__}")
+    return value
 
 
 def format_money(value: Any, options: Options) -> Formatted:
@@ -160,6 +169,7 @@ def format_passthrough(value: Any, options: Options) -> Formatted:
 
 FORMATTERS: dict[str, Formatter] = {
     "date": format_date,
+    "excel_date": format_excel_date,
     "money": format_money,
     "name_first_last": format_name_first_last,
     "name_last_first": format_name_last_first,

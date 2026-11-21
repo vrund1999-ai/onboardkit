@@ -144,8 +144,8 @@ def test_preset_label_is_not_part_of_the_hash() -> None:
 def test_hash_is_pinned() -> None:
     # Guards accidental changes to the canonical form: every dataset id depends on it.
     config = resolve_config("clean", "default", 42)
-    assert canonical_json(config).startswith('{"as_of_date":"2025-12-31","coverage":')
-    assert config_hash(config) == "79dbff01d7b7"
+    assert canonical_json(config).startswith('{"as_of_date":"2025-12-31","book_of_business":')
+    assert config_hash(config) == "3071254c8d10"
 
 
 def test_dataset_id_shape() -> None:
