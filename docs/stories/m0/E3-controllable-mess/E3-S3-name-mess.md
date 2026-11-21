@@ -30,7 +30,7 @@ The README names this problem directly. The same client appears with nicknames, 
 
 ### Mess type
 
-`name = "names"`, `touches = {"person.full_name", "person.first_name", "person.last_name", "person.suffix", "account.owner_names", "account.registration", "household.name"}`, `structural = False`, `max_rate = 0.35`.
+`name = "names"`, `touches = {"person.first_name", "person.last_name", "person.suffix", "account.owner_names", "account.registration", "household.name"}`, `structural = False`, `max_rate = 0.35`.
 
 Eligible rows: any row containing a touched concept. A row is selected with probability `rate`; one subtype is then chosen by weight.
 

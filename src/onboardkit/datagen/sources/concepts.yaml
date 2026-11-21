@@ -12,9 +12,6 @@ concepts:
 - id: person.source_id
   description: The source's own person key
   value_type: string
-- id: person.full_name
-  description: Whole name as written
-  value_type: string
 - id: person.first_name
   description: Given name
   value_type: string
@@ -37,7 +34,7 @@ concepts:
   description: Phone number
   value_type: string
 - id: person.address_line1
-  description: First line of the address
+  description: Street address (the custodian holds the whole address on one line)
   value_type: string
 - id: person.address_city
   description: City
@@ -77,9 +74,6 @@ concepts:
   value_type: date
 - id: account.owner_names
   description: Owner names as printed on the registration
-  value_type: string
-- id: account.custodian
-  description: Name of the custodian
   value_type: string
 - id: meta.notes
   description: Free text with no structured meaning

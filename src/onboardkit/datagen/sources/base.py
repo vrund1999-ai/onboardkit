@@ -78,10 +78,11 @@ class TableSpec(_Frozen):
 
     @model_validator(mode="after")
     def _unique_columns(self) -> TableSpec:
-        concepts = [c.concept for c in self.columns]
+        # A concept may appear twice only with different options (for example owner 1 and 2).
+        keys = [(c.concept, repr(sorted(c.options.items()))) for c in self.columns]
         headers = [c.header for c in self.columns]
-        if len(set(concepts)) != len(concepts):
-            raise ValueError(f"table {self.name!r} repeats a concept")
+        if len(set(keys)) != len(keys):
+            raise ValueError(f"table {self.name!r} repeats a concept with the same options")
         if len(set(headers)) != len(headers):
             raise ValueError(f"table {self.name!r} repeats a header")
         return self
@@ -98,6 +99,7 @@ class SourceProfile(_Frozen):
     encoding: str = "utf-8"
     delimiter: str = Field(default=",", min_length=1, max_length=1)
     line_ending: Literal["\n", "\r\n"] = "\n"
+    quoting: Literal["minimal", "all"] = "minimal"
     tables: list[TableSpec] = Field(min_length=1)
 
     @model_validator(mode="after")
