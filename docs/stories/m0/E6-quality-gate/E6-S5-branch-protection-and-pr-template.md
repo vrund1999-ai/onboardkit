@@ -73,8 +73,8 @@ After applying, open a pull request with a deliberate failing check and confirm 
 - [ ] A pull request with all checks passing can be merged.
 - [ ] Direct pushes to `main` are rejected.
 - [ ] Force pushes and branch deletion on `main` are disabled.
-- [ ] The template appears automatically on new pull requests.
-- [ ] `docs/repo-settings.md` lets someone else reapply the settings exactly.
+- [x] The template appears automatically on new pull requests.
+- [x] `docs/repo-settings.md` lets someone else reapply the settings exactly.
 
 ## Test plan
 
@@ -85,3 +85,9 @@ After applying, open a pull request with a deliberate failing check and confirm 
 
 - This is a repository setting change that affects everyone with access. Confirm with the maintainer before applying, and apply it only after CI is stable, or merges will block on flaky checks.
 - Required check names are strings; renaming a CI job silently disables its protection until the settings are updated. The CI story notes that job names are stable for this reason.
+
+## Notes
+
+- Not applied yet: the story says to confirm with the maintainer before changing repository settings, so this change adds the pull request template and `docs/repo-settings.md` (with the apply, check, and remove commands) but leaves `main` unprotected. The four unticked criteria depend on the settings being applied; the story stays In progress until then.
+- The secrets job is named `secrets scan` (with a space) in CI, and that is the name used in the required check list.
+
