@@ -81,13 +81,13 @@ Selection: rate applies per eligible value; the subtype list is filtered by the 
 
 ## Acceptance criteria
 
-- [ ] Writers emit `RawText.text` verbatim in CSV and XLSX.
-- [ ] At intensity 0, no values change.
-- [ ] A dataset at high intensity contains at least three different date formats in the CRM date-of-birth column.
-- [ ] README example headers `Acct #`, `account_number`, and `AcctNo` remain unchanged (header mess is not in scope).
-- [ ] `date_day_month_swap` only occurs when the day is 12 or lower and always carries `ambiguity = high`.
-- [ ] Account numbers remain unique within each source.
-- [ ] Majority-format rule holds per column.
+- [x] Writers emit `RawText.text` verbatim in CSV and XLSX.
+- [x] At intensity 0, no values change.
+- [x] A dataset at high intensity contains at least three different date formats in the CRM date-of-birth column.
+- [x] README example headers `Acct #`, `account_number`, and `AcctNo` remain unchanged (header mess is not in scope).
+- [x] `date_day_month_swap` only occurs when the day is 12 or lower and always carries `ambiguity = high`.
+- [x] Account numbers remain unique within each source.
+- [x] Majority-format rule holds per column.
 
 ## Test plan
 
@@ -99,3 +99,15 @@ Selection: rate applies per eligible value; the subtype list is filtered by the 
 
 - `RawText` slightly widens the E2-S1 writer interface; changes there should be minimal and covered by the existing tests.
 - Excel stores real dates as serial numbers; format mess in the workbook is expressed as text cells in the date column, which is realistic.
+
+## Notes
+
+- Dates, account numbers, phones, states and the book-of-business balance are replaced by `RawText`. Writers emit its text verbatim (`format_cell` in `writers.py`, also used by the workbook writer). `RawText.original` holds the typed value, and event `before` is that original as text (ISO for dates, plain decimal for money).
+- The per-column cap is stricter than the story's 0.5 rate cap: a column never has more deviating values than default ones (`(n - 1) // 2`), so very small columns get none.
+- The default date style is known for custodian (`MM/DD/YYYY`) and CRM (ISO); a date variant never equals that style. Spreadsheet dates are real date cells, so any text there is a deviation.
+- `date_day_month_swap` writes `DD/MM/YYYY`; it needs a day of 12 or lower that differs from the month, and always has `ambiguity = high`.
+- `acct_leading_zeros` only applies to numbers whose digit part starts with `0`. The generated numbers are a prefix plus six digits, so it is rare (15 of 2,704 events on 300 households).
+- Account number variants are rejected when their text equals any account number already in the same source, so numbers stay unique.
+- `money_text` uses `$119,500.00`, `119,500.00 ` (trailing space), `~119500`, `$119,500` and, only for whole hundreds, `$119.5k`. It applies to the spreadsheet only.
+- The balance mess (E3-S6) runs after this type and must skip or unwrap `RawText` values.
+

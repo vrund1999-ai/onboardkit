@@ -10,6 +10,8 @@ from pathlib import Path
 from typing import Any, Literal, TextIO
 
 from onboardkit.datagen.sources.base import (
+    ColumnSpec,
+    RawText,
     RowLocator,
     SourceProfile,
     SourceRow,
@@ -19,12 +21,17 @@ from onboardkit.datagen.sources.base import (
 from onboardkit.datagen.sources.formatters import Formatted, apply_formatter
 
 
+def format_cell(column: ColumnSpec, row: SourceRow) -> Formatted:
+    """One cell: ``RawText`` is written verbatim, anything else goes through the formatter."""
+    value = row.values.get(column.concept)
+    if isinstance(value, RawText):
+        return value.text
+    return apply_formatter(column.formatter, value, column.options)
+
+
 def format_row_native(table: TableSpec, row: SourceRow) -> list[Formatted]:
     """Format one row's values in column order, keeping dates and decimals as real values."""
-    return [
-        apply_formatter(column.formatter, row.values.get(column.concept), column.options)
-        for column in table.columns
-    ]
+    return [format_cell(column, row) for column in table.columns]
 
 
 def to_text(value: Formatted) -> str:
