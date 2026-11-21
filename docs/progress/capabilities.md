@@ -9,7 +9,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 | Milestone | Title | Capabilities done | Status | Breakdown |
 |---|---|---|---|---|
 | M0 | Foundation and realistic test data | 6 / 6 | Done | Epics and stories defined |
-| M1 | Ingestion and a single clean data model | 0 / 7 | Not started | Epics defined (E8 to E16); stories written for E8 and E9 |
+| M1 | Ingestion and a single clean data model | 0 / 7 | In progress | Epics defined (E8 to E16); stories written for E8 and E9 |
 | M2 | AI-assisted mapping and entity matching | 0 / 8 | Not started | Not broken down yet |
 | M3 | Human review and audit trail | 0 / 9 | Not started | Not broken down yet |
 | M4 | Reconciliation and exceptions | 0 / 8 | Not started | Not broken down yet |
@@ -37,7 +37,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 |---|---|---|---|
 | Accept CSV and Excel files from multiple sources | [E10](../epics/m1-ingestion-epics.md#e10-file-intake) | Not started |  |
 | Handle real-world file quirks | [E11](../epics/m1-ingestion-epics.md#e11-real-world-file-handling) | Not started |  |
-| Define the common model for clients, households, accounts, holdings, and balances | [E8](../epics/m1-ingestion-epics.md#e8-common-data-model), [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Not started |  |
+| Define the common model for clients, households, accounts, holdings, and balances | [E8](../epics/m1-ingestion-epics.md#e8-common-data-model), [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | In progress | E8-S1 done |
 | Standardize formats | [E12](../epics/m1-ingestion-epics.md#e12-standardized-values) | Not started |  |
 | Preserve lineage | [E13](../epics/m1-ingestion-epics.md#e13-lineage) | Not started |  |
 | Keep each firm's data separate | [E14](../epics/m1-ingestion-epics.md#e14-separate-firms) | Not started |  |

@@ -62,6 +62,7 @@ The boundary is enforced in three ways: code that builds or writes exports canno
 ## Extension points
 
 - **Add a mess type** or **add a source column**: step-by-step recipes are in [CONTRIBUTING.md](../CONTRIBUTING.md).
+- **The common data model** that ingestion converts into is described in [data-model.md](data-model.md).
 - **Later milestones.** Ingestion (M1 onward) consumes `exports/` only. Evaluation consumes `truth/`. Neither reaches into the generator's internals.
 
 ## Decisions
