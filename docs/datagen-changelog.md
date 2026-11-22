@@ -48,8 +48,8 @@ because ids come from the configuration, but every manifest, `column_mappings.cs
   `holding.as_of`, and the value type `decimal`.
 - `column_mappings.csv` and `provenance.csv` list the new file. Position rows carry no account
   reference in the answer key yet (entity matches arrive with E9-S3).
-- Everything else in `exports/` is unchanged byte for byte, and so are the mess and coverage
-  events.
+- Everything else in `exports/` is unchanged byte for byte. The mess and coverage events are the
+  same events, but each `refs` object gains a `holding_id` key (null for these events).
 
 ## 0.2.0
 
