@@ -6,7 +6,7 @@ What each of the three sources of [Lantern Ridge Wealth Partners](fictional-firm
 
 ## Concept ids
 
-Dotted lowercase, `<entity>.<attribute>`, matching `^[a-z_]+\.[a-z0-9_]+$`. Value types are `string`, `date`, `money`, and `enum`.
+Dotted lowercase, `<entity>.<attribute>`, matching `^[a-z_]+\.[a-z0-9_]+$`. Value types are `string`, `date`, `money`, `decimal` (a number that is not money, such as a quantity or a price), and `enum`.
 
 ## Source matrix
 
@@ -39,6 +39,14 @@ Each cell shows the typical header the source uses, or `no` when the source does
 | `account.balance` | Market value of the account | money | `Market Value` | no | `Balance` |
 | `account.balance_as_of` | Date of the market value | date | `Value As Of` | no | no |
 | `account.owner_names` | Owner names as printed on the registration | string | `Owner 1` / `Owner 2` | no | no |
+| `holding.account_number` | Account number a position is held in | string | `Acct #` (positions file) | no | no |
+| `holding.security_symbol` | Symbol or identifier of the security held | string | `Symbol` | no | no |
+| `holding.security_name` | Description of the security held | string | `Security Description` | no | no |
+| `holding.asset_class` | Asset class of the security (equity, fixed income, fund, cash) | enum | `Asset Class` | no | no |
+| `holding.quantity` | Amount of the security held | decimal | `Quantity` | no | no |
+| `holding.price` | Price of one unit of the security | decimal | `Price` | no | no |
+| `holding.value` | Market value of the position | money | `Market Value` (positions file) | no | no |
+| `holding.as_of` | Date of the price and value | date | `Price Date` | no | no |
 | `meta.notes` | Free text with no structured meaning | string | no | no | `Notes` |
 | `meta.review_date` | Date of last internal review | date | no | no | `Last Review` |
 
@@ -52,12 +60,12 @@ These are the clean forms, as specified by the export stories (E2-S2 to E2-S4). 
 
 | Aspect | Convention |
 |---|---|
-| File | One CSV: `custodian_accounts.csv`, one row per account, with two report lines above the header and a `Total records` line below the data |
+| Files | Two CSVs. `custodian_accounts.csv`: one row per account, with two report lines above the header and a `Total records` line below the data. `custodian_positions.csv` (from generator 0.3.0): one row per holding, with the same two report lines (the title says `POSITION REPORT`) and a `Total positions` line |
 | Headers | Title Case with symbols and spaces, for example `Acct #`, `Value As Of` |
-| Dates | `MM/DD/YYYY`, except `Value As Of` which is `YYYYMMDD` |
-| Numbers | Thousands separators and two decimals, no currency symbol, for example `152,340.55` |
+| Dates | `MM/DD/YYYY`, except `Value As Of` and `Price Date`, which are `YYYYMMDD` |
+| Numbers | Thousands separators and two decimals, no currency symbol, for example `152,340.55`; quantities and prices in the positions file have four decimals |
 | Names | Upper case, `LAST, FIRST M`, one owner per column (`Owner 1`, `Owner 2`) |
-| Codes | Account types as codes (`IND`, `JNT`, `TIRA`, `ROTH`, `RIRA`, `529`); statuses in upper case |
+| Codes | Account types as codes (`IND`, `JNT`, `TIRA`, `ROTH`, `RIRA`, `529`); statuses in upper case; asset classes as `EQ`, `FI`, `FUND`, `CASH` |
 | Encoding | UTF-8 with a byte order mark, CRLF line endings, every field quoted |
 | Shape | Flat. No household concept. No email address. The mailing address is one line. |
 | Role | Source of truth for money data: balance, status, registration |

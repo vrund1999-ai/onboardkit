@@ -17,9 +17,10 @@ from onboardkit.datagen.pipeline import (
 )
 from onboardkit.datagen.sources.book_of_business import BookOfBusinessExporter
 
-TRUTH_ID = re.compile(r"(?<![A-Za-z0-9])(?:P-\d{5}|HH-\d{4}|ACCT-\d{6})")
+TRUTH_ID = re.compile(r"(?<![A-Za-z0-9])(?:P-\d{5}|HH-\d{4}|ACCT-\d{6}|HOLD-\d{6}|SEC-\d{3})")
 EXPECTED_FILES = [
     "exports/custodian/custodian_accounts.csv",
+    "exports/custodian/custodian_positions.csv",
     "exports/crm/crm_contacts.csv",
     "exports/crm/crm_linked_accounts.csv",
     "exports/book_of_business/book_of_business.xlsx",
@@ -65,7 +66,8 @@ def book_rows(path: Path) -> int:
 def disk_counts(result: DatasetResult) -> dict[str, int]:
     exports = result.path / "exports"
     return {
-        "rows.custodian": csv_data_rows(exports / "custodian" / "custodian_accounts.csv", "Acct #"),
+        "rows.custodian": csv_data_rows(exports / "custodian" / "custodian_accounts.csv", "Acct #")
+        + csv_data_rows(exports / "custodian" / "custodian_positions.csv", "Acct #"),
         "rows.crm": csv_data_rows(exports / "crm" / "crm_contacts.csv", "contact_id")
         + csv_data_rows(exports / "crm" / "crm_linked_accounts.csv", "contact_id"),
         "rows.book_of_business": book_rows(exports / "book_of_business" / "book_of_business.xlsx"),
@@ -117,7 +119,7 @@ def test_no_export_contains_a_truth_identifier(preset: str, tmp_path: Path) -> N
         for row in sheet.iter_rows(values_only=True):
             for value in row:
                 assert not (isinstance(value, str) and TRUTH_ID.search(value))
-    assert scanned == 3
+    assert scanned == 4
 
 
 def test_a_failure_mid_run_leaves_no_directory(

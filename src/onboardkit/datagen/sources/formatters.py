@@ -74,6 +74,19 @@ def format_money(value: Any, options: Options) -> Formatted:
     raise ValueError(f"unknown money style {style!r}")
 
 
+def format_decimal(value: Any, options: Options) -> Formatted:
+    """A non-money number: ``places`` decimals (default 4) and ``commas`` for thousands."""
+    if value is None:
+        return ""
+    if isinstance(value, float):
+        raise TypeError("decimal must be a Decimal, never a float")
+    if not isinstance(value, Decimal):
+        raise TypeError(f"decimal formatter needs a Decimal, got {type(value).__name__}")
+    places = int(options.get("places", 4))
+    amount = value.quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_EVEN)
+    return f"{amount:,.{places}f}" if options.get("commas") else f"{amount:.{places}f}"
+
+
 def _select(value: Any, options: Options) -> Any:
     """Pick ``options["index"]`` from a list of values (blank when out of range)."""
     if isinstance(value, list | tuple):
@@ -169,6 +182,7 @@ def format_passthrough(value: Any, options: Options) -> Formatted:
 
 FORMATTERS: dict[str, Formatter] = {
     "date": format_date,
+    "decimal": format_decimal,
     "excel_date": format_excel_date,
     "money": format_money,
     "name_first_last": format_name_first_last,

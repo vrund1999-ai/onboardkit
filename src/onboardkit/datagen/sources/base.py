@@ -25,6 +25,9 @@ class TruthRefs:
     person_ids: tuple[str, ...] = ()
     household_id: str | None = None
     account_id: str | None = None
+    # A position row stands for one holding. It carries no account reference on purpose:
+    # it is not a record of the account itself, so it must not join the account's group.
+    holding_id: str | None = None
 
 
 @dataclass(frozen=True)

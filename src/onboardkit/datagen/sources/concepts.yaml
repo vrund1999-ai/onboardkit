@@ -81,3 +81,27 @@ concepts:
 - id: meta.review_date
   description: Date of last internal review
   value_type: date
+- id: holding.account_number
+  description: Account number a position is held in
+  value_type: string
+- id: holding.security_symbol
+  description: Symbol or identifier of the security held
+  value_type: string
+- id: holding.security_name
+  description: Description of the security held
+  value_type: string
+- id: holding.asset_class
+  description: Asset class of the security (equity, fixed income, fund, cash)
+  value_type: enum
+- id: holding.quantity
+  description: Amount of the security held
+  value_type: decimal
+- id: holding.price
+  description: Price of one unit of the security
+  value_type: decimal
+- id: holding.value
+  description: Market value of the position
+  value_type: money
+- id: holding.as_of
+  description: Date of the price and value
+  value_type: date

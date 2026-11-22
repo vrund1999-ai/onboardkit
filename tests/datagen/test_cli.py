@@ -158,8 +158,8 @@ def test_show_prints_the_manifest_summary(tmp_path: Path) -> None:
     assert lines["generator version"] == GENERATOR_VERSION
     assert lines["events.mess"] == str(result.mess_events)
     assert lines["events.coverage"] == str(result.coverage_events)
-    assert lines["files"] == "16"
-    assert lines["exports (what a firm delivers)"] == "4 files"
+    assert lines["files"] == "17"
+    assert lines["exports (what a firm delivers)"] == "5 files"
     assert lines["truth (INTERNAL, never part of a delivery)"] == "12 files"
 
 

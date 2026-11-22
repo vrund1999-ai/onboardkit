@@ -32,6 +32,25 @@ Linux and Windows in CI. When that test fails:
 Datasets made by different versions are not comparable: a result quoted against a dataset should
 name its `dataset_id` and `generator_version`.
 
+## 0.3.0
+
+Holdings arrive (milestone M1, epic E9). The sample and demo datasets keep their dataset ids,
+because ids come from the configuration, but every manifest, `column_mappings.csv` and
+`provenance.csv` changes, and there is one new export file.
+
+- New export `exports/custodian/custodian_positions.csv`: one row per holding, in the custodian's
+  style (preamble, upper case, `EQ`/`FI`/`FUND`/`CASH` codes, quantities and prices to four
+  decimals, a `Total positions` trailer). The firm's securities and holdings come from the truth
+  firm (E9-S1); positions follow their account, so an account the custodian leaves out has no
+  positions either.
+- New concepts `holding.account_number`, `holding.security_symbol`, `holding.security_name`,
+  `holding.asset_class`, `holding.quantity`, `holding.price`, `holding.value` and
+  `holding.as_of`, and the value type `decimal`.
+- `column_mappings.csv` and `provenance.csv` list the new file. Position rows carry no account
+  reference in the answer key yet (entity matches arrive with E9-S3).
+- Everything else in `exports/` is unchanged byte for byte. The mess and coverage events are the
+  same events, but each `refs` object gains a `holding_id` key (null for these events).
+
 ## 0.2.0
 
 Every dataset now carries its answer keys in `truth/` (E5). Exports are unchanged byte for byte.

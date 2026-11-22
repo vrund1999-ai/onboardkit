@@ -69,6 +69,7 @@ def test_files_are_sorted_listed_with_checksums_and_exclude_the_manifest(
         "exports/crm/crm_contacts.csv",
         "exports/crm/crm_linked_accounts.csv",
         "exports/custodian/custodian_accounts.csv",
+        "exports/custodian/custodian_positions.csv",
     ]
     assert "truth/summary.json" in paths and "truth/discrepancies.csv" in paths
     for entry in files:

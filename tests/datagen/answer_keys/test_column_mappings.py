@@ -45,6 +45,7 @@ def actual_columns(result: DatasetResult) -> dict[tuple[str, str], list[str]]:
         text = path.read_text(encoding="utf-8-sig").splitlines()
         header = {
             "custodian_accounts.csv": 2,  # two preamble lines
+            "custodian_positions.csv": 2,
             "crm_contacts.csv": 0,
             "crm_linked_accounts.csv": 0,
         }[path.name]
@@ -95,7 +96,11 @@ def test_every_concept_exists_in_the_catalogue_or_is_none(sample: DatasetResult)
 
 
 def test_account_number_columns_all_map_to_account_number(sample: DatasetResult) -> None:
-    by_header = {r["header"]: r["concept"] for r in key(sample)}
+    by_header = {
+        r["header"]: r["concept"]
+        for r in key(sample)
+        if r["file"] != "custodian/custodian_positions.csv"
+    }
     assert by_header["Acct #"] == "account.number"
     assert by_header["account_number"] == "account.number"
     assert by_header["AcctNo"] == "account.number"
@@ -168,8 +173,9 @@ def test_the_key_is_the_same_for_every_preset(tmp_path: Path) -> None:
 
 
 def test_rows_are_ordered_by_numeric_position(sample: DatasetResult) -> None:
-    custodian = [int(r["column_position"]) for r in key(sample) if r["source"] == "custodian"]
-    assert custodian == sorted(custodian)
+    for name in ("custodian/custodian_accounts.csv", "custodian/custodian_positions.csv"):
+        positions = [int(r["column_position"]) for r in key(sample) if r["file"] == name]
+        assert positions == sorted(positions)
 
 
 def test_re_reading_the_files_confirms_the_key(sample: DatasetResult) -> None:
