@@ -2,7 +2,7 @@
 
 A guided tour of the generated data: what each file holds, where the mess is, and how the answer key relates to the exports. About 15 minutes. All data is synthetic.
 
-Examples below come from the `sample` dataset (preset `typical`, seed 42, generator 0.2.0). A test regenerates it and checks that every quoted line still exists, so if the generator changes, the build tells you to update this page. Set up first with the [getting started guide](getting-started.md).
+Examples below come from the `sample` dataset (preset `typical`, seed 42, generator 0.3.0). A test regenerates it and checks that every quoted line still exists, so if the generator changes, the build tells you to update this page. Set up first with the [getting started guide](getting-started.md).
 
 ## 1. Generate the datasets
 

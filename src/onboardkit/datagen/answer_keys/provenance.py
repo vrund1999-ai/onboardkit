@@ -42,6 +42,7 @@ KEY_ENTITIES = {
     "person.source_id": "person",
     "household.source_id": "household",
     "account.number": "account",
+    "holding.account_number": "account",  # a position row carries no account reference
 }
 ORIGINS = ("projected", "duplicate", "split", "stale_extra")
 

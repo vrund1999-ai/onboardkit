@@ -68,6 +68,7 @@ def test_records_are_sorted_and_one_per_row_in_every_file(nightmare: DatasetResu
     files = {r["file"] for r in records}
     assert files == {
         "custodian/custodian_accounts.csv",
+        "custodian/custodian_positions.csv",
         "crm/crm_contacts.csv",
         "crm/crm_linked_accounts.csv",
         "book_of_business/book_of_business.xlsx",
@@ -106,7 +107,10 @@ def test_household_mess_rows_and_stale_extras_carry_their_origin() -> None:
 def test_projected_account_rows_carry_truth_refs(tmp_path: Path) -> None:
     records = provenance(make(tmp_path, "clean"))
     custodian = [r for r in records if r["source"] == "custodian"]
-    assert all(r["account_id"].startswith("ACCT-") for r in custodian)
+    accounts = [r for r in custodian if r["table"] == "accounts"]
+    assert all(r["account_id"].startswith("ACCT-") for r in accounts)
+    # A position row stands for a holding, not for the account itself.
+    assert all(r["account_id"] == "" for r in custodian if r["table"] == "positions")
     assert all(r["origin"] == "projected" for r in records)
     assert all(r["source_keys"].startswith("Acct #=") for r in custodian)
     contact = next(r for r in records if r["table"] == "contacts")

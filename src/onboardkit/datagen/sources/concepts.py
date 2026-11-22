@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 CONCEPTS_PATH = Path(__file__).with_name("concepts.yaml")
 
-ValueType = Literal["string", "date", "money", "enum"]
+ValueType = Literal["string", "date", "money", "decimal", "enum"]
 
 
 class Concept(BaseModel):

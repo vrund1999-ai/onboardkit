@@ -21,7 +21,8 @@ def written(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, CustodianEx
     rows = exporter.project(FIRM)
     result = exporter.write(rows, out)
     assert len(result.locators) == len(rows)
-    return result.files[0], exporter, len(rows)
+    accounts = sum(r.table == "accounts" for r in rows)
+    return result.files[0], exporter, accounts
 
 
 def _lines(path: Path) -> list[str]:
@@ -61,7 +62,8 @@ def test_preamble_header_and_trailer(written: tuple[Path, CustodianExporter, int
 
 
 def test_every_account_appears_exactly_once() -> None:
-    rows = CustodianExporter.for_firm(FIRM).project(FIRM)
+    projected = CustodianExporter.for_firm(FIRM).project(FIRM)
+    rows = [r for r in projected if r.table == "accounts"]
     assert Counter(r.refs.account_id for r in rows) == Counter(a.account_id for a in FIRM.accounts)
     assert len({r.row_uid for r in rows}) == len(rows)
 
@@ -112,7 +114,7 @@ def test_locators_point_to_the_right_lines(written: tuple[Path, CustodianExporte
     rows = exporter.project(FIRM)
     result = exporter.write(rows, path.parent / "again")
     lines = _lines(result.files[0])
-    for row in rows:
+    for row in (r for r in rows if r.table == "accounts"):
         locator = result.locators[row.row_uid]
         assert locator.file == "custodian_accounts.csv"
         assert locator.sheet is None

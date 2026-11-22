@@ -104,12 +104,33 @@ def project_sources(
     return {source: exporters[source].project(firm) for source in SOURCE_ORDER}
 
 
+def _split_positions(
+    projected: dict[str, list[SourceRow]],
+) -> tuple[dict[str, list[SourceRow]], list[SourceRow]]:
+    """Positions follow their account instead of being covered on their own."""
+    positions = [r for r in projected["custodian"] if r.table == "positions"]
+    rest = {source: list(rows) for source, rows in projected.items()}
+    rest["custodian"] = [r for r in rest["custodian"] if r.table != "positions"]
+    return rest, positions
+
+
+def _positions_of_exported_accounts(
+    firm: TruthFirm, custodian_rows: list[SourceRow], positions: list[SourceRow]
+) -> list[SourceRow]:
+    """Keep the positions of the accounts the custodian still exports."""
+    exported = {r.refs.account_id for r in custodian_rows if r.table == "accounts"}
+    account_of = {h.holding_id: h.account_id for h in firm.holdings}
+    return [r for r in positions if account_of[str(r.refs.holding_id)] in exported]
+
+
 def build_rows(config: DatasetConfig) -> BuiltRows:
     """Truth, projection, coverage, and mess for one configuration, without touching the disk."""
     firm = build_firm(load_profile(), config.size.households, config.seed, config.as_of_date)
     exporters = make_exporters(firm, config)
     projected = project_sources(firm, exporters)
-    kept, coverage_events = apply_coverage(projected, firm, config.coverage, config.seed)
+    coverable, positions = _split_positions(projected)
+    kept, coverage_events = apply_coverage(coverable, firm, config.coverage, config.seed)
+    kept["custodian"] += _positions_of_exported_accounts(firm, kept["custodian"], positions)
     data = group_by_table(copy.deepcopy(kept))
     mess_events = run_mess(
         data,

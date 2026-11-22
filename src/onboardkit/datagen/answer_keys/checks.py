@@ -60,7 +60,7 @@ REQUIRED = (
     COVERAGE_EVENTS_FILE,
     *CSV_FILES,
 )
-TRUTH_ID = re.compile(r"(?<![A-Za-z0-9])(?:P-\d{5,}|HH-\d{4,}|ACCT-\d{6,})")
+TRUTH_ID = re.compile(r"(?<![A-Za-z0-9])(?:P-\d{5,}|HH-\d{4,}|ACCT-\d{6,}|HOLD-\d{6,}|SEC-\d{3,})")
 ENTITY_TYPES = ("person", "household", "account")
 
 

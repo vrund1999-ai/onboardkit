@@ -17,6 +17,7 @@ from onboardkit.datagen.sources.base import (
     TruthRefs,
     WriteResult,
 )
+from onboardkit.datagen.sources.custodian_positions import positions_table, project_positions
 from onboardkit.datagen.sources.formatters import NameParts
 from onboardkit.datagen.sources.writers import write_csv_tables
 from onboardkit.datagen.truth.model import TruthFirm, TruthPerson
@@ -84,8 +85,10 @@ def _columns() -> list[ColumnSpec]:
     ]
 
 
-def build_profile(custodian_name: str, as_of_date: date, record_count: int = 0) -> SourceProfile:
-    """The custodian's file conventions. ``record_count`` fills the trailer line."""
+def build_profile(
+    custodian_name: str, as_of_date: date, record_count: int = 0, position_count: int = 0
+) -> SourceProfile:
+    """The custodian's file conventions. The counts fill the trailer lines."""
     table = TableSpec(
         name=TABLE,
         file_name=FILE_NAME,
@@ -103,7 +106,7 @@ def build_profile(custodian_name: str, as_of_date: date, record_count: int = 0) 
         delimiter=",",
         line_ending="\r\n",
         quoting="all",
-        tables=[table],
+        tables=[table, positions_table(custodian_name, as_of_date, position_count)],
     )
 
 
@@ -136,7 +139,8 @@ class CustodianExporter:
         return cls(firm.profile.firm.custodian, firm.as_of_date)
 
     def project(self, firm: TruthFirm) -> list[SourceRow]:
-        """One row per truth account. Mailing address and tax id come from the first owner."""
+        """One row per truth account (mailing address and tax id come from the first owner),
+        then one row per truth holding. Coverage treats the positions separately."""
         people = firm.people_by_id()
         rows: list[SourceRow] = []
         for account in firm.accounts:
@@ -166,9 +170,15 @@ class CustodianExporter:
                     ),
                 )
             )
-        return rows
+        return [*rows, *project_positions(firm)]
 
     def write(self, rows: list[SourceRow], out_dir: Path) -> WriteResult:
-        """Write the file; the trailer counts the rows actually written."""
-        profile = build_profile(self.custodian_name, self.as_of_date, record_count=len(rows))
+        """Write both files; each trailer counts the rows actually written."""
+        accounts = sum(row.table == TABLE for row in rows)
+        profile = build_profile(
+            self.custodian_name,
+            self.as_of_date,
+            record_count=accounts,
+            position_count=len(rows) - accounts,
+        )
         return write_csv_tables(profile, rows, out_dir)

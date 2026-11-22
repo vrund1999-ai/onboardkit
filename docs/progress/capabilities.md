@@ -37,7 +37,7 @@ Status of every capability in the [roadmap](../../ROADMAP.md), rolled up into mi
 |---|---|---|---|
 | Accept CSV and Excel files from multiple sources | [E10](../epics/m1-ingestion-epics.md#e10-file-intake) | Not started |  |
 | Handle real-world file quirks | [E11](../epics/m1-ingestion-epics.md#e11-real-world-file-handling) | Not started |  |
-| Define the common model for clients, households, accounts, holdings, and balances | [E8](../epics/m1-ingestion-epics.md#e8-common-data-model), [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | In progress | E8-S1 and E9-S1 done |
+| Define the common model for clients, households, accounts, holdings, and balances | [E8](../epics/m1-ingestion-epics.md#e8-common-data-model), [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | In progress | E8-S1, E9-S1 and E9-S2 done |
 | Standardize formats | [E12](../epics/m1-ingestion-epics.md#e12-standardized-values) | Not started |  |
 | Preserve lineage | [E13](../epics/m1-ingestion-epics.md#e13-lineage) | Not started |  |
 | Keep each firm's data separate | [E14](../epics/m1-ingestion-epics.md#e14-separate-firms) | Not started |  |

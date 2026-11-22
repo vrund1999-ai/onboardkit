@@ -84,13 +84,13 @@ Bump `GENERATOR_VERSION` to `0.3.0`, add the changelog entry (new file, new conc
 
 ## Acceptance criteria
 
-- [ ] `exports/custodian/custodian_positions.csv` exists in a generated dataset with the preamble, header, and trailer above, and the trailer count equals the data rows.
-- [ ] Position values for each account sum to that account's balance in the custodian account master (before mess).
-- [ ] Quantities, prices, values, and dates appear in the formats in the table.
-- [ ] Every column's concept is in the catalogue and documented in `docs/source-systems.md`.
-- [ ] Removing an account from the custodian removes its positions.
-- [ ] The generator version is 0.3.0, the changelog entry exists, and the standard dataset checksum test passes.
-- [ ] `onboardkit-gen check` passes on a generated dataset.
+- [x] `exports/custodian/custodian_positions.csv` exists in a generated dataset with the preamble, header, and trailer above, and the trailer count equals the data rows.
+- [x] Position values for each account sum to that account's balance in the custodian account master (before mess).
+- [x] Quantities, prices, values, and dates appear in the formats in the table.
+- [x] Every column's concept is in the catalogue and documented in `docs/source-systems.md`.
+- [x] Removing an account from the custodian removes its positions.
+- [x] The generator version is 0.3.0, the changelog entry exists, and the standard dataset checksum test passes.
+- [x] `onboardkit-gen check` passes on a generated dataset.
 
 ## Test plan
 
@@ -103,3 +103,5 @@ Bump `GENERATOR_VERSION` to `0.3.0`, add the changelog entry (new file, new conc
 
 - The positions file changes every dataset id and checksum; update every doc that quotes an id (a test names stale ids).
 - Account number mess (E9-S3) must not break the join; the answer key must record the account each row belongs to.
+- Implementation note: the dataset id comes from the configuration hash, so it did not change; the manifest, `column_mappings.csv`, `provenance.csv`, `summary.json` and the event logs did. Position rows carry a holding reference but no account reference, so they stay out of account entity groups until E9-S3.
+- Position rows are excluded from coverage and follow their account, so coverage and mess event counts did not change.
