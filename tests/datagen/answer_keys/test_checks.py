@@ -82,6 +82,8 @@ def test_summary_counts_equal_independent_counts_from_the_files(base: DatasetRes
         "persons": len(firm["people"]),
         "households": len(firm["households"]),
         "accounts": len(firm["accounts"]),
+        "securities": len(firm["securities"]),
+        "holdings": len(firm["holdings"]),
     }
     provenance = read_table(truth / "provenance.csv")
     for source, count in summary["rows"].items():
@@ -155,6 +157,36 @@ def test_removing_a_provenance_row_is_detected(copy: Path) -> None:
     gone = rows.pop(0)
     rewrite(path, rows, list(gone))
     assert gone["row_uid"] in details(check_truth(copy))
+
+
+def test_removing_a_position_rows_provenance_is_detected(copy: Path) -> None:
+    path = copy / "truth" / "provenance.csv"
+    rows = read_table(path)
+    index = next(i for i, r in enumerate(rows) if r["table"] == "positions")
+    gone = rows.pop(index)
+    rewrite(path, rows, list(gone))
+    assert gone["row_uid"] in details(check_truth(copy))
+
+
+def test_removing_a_holding_match_is_detected(copy: Path) -> None:
+    path = copy / "truth" / "entity_matches.csv"
+    rows = read_table(path)
+    index = next(i for i, r in enumerate(rows) if r["entity_type"] == "holding")
+    gone = rows.pop(index)
+    rewrite(path, rows, list(gone))
+    assert f"position row {gone['row_uid']} has no holding match" in details(check_truth(copy))
+
+
+def test_an_unexplained_missing_holding_is_detected(copy: Path) -> None:
+    path = copy / "truth" / "entities_not_exported.csv"
+    rows = read_table(path)
+    held = next(
+        r for r in read_table(copy / "truth" / "entity_groups.csv") if r["entity_type"] == "holding"
+    )
+    rows.append({"entity_type": "holding", "truth_id": held["truth_id"]})
+    rows.sort(key=lambda r: list(r.values()))
+    rewrite(path, rows, ["entity_type", "truth_id"])
+    assert "no coverage event says why" in details(check_truth(copy))
 
 
 def test_altering_a_truth_id_is_detected(copy: Path) -> None:

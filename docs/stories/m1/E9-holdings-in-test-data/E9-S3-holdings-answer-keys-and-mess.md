@@ -46,12 +46,12 @@ Everything the generator exports has a record in the answer key (where each row 
 
 ## Acceptance criteria
 
-- [ ] Every row of `custodian_positions.csv` has a provenance row, an entity match, and column mapping entries.
-- [ ] `entity_groups.csv` has groups of kind `holding` and `security`.
-- [ ] At the `nightmare` preset at least one mess event touches a holdings concept; at `clean`, none do.
-- [ ] `onboardkit-gen check` passes, and fails when a position row's provenance is removed (tampering test).
-- [ ] No truth identifier of the new kinds appears in any export.
-- [ ] The mess catalogue and checksums are regenerated and the guards pass.
+- [x] Every row of `custodian_positions.csv` has a provenance row, an entity match, and column mapping entries.
+- [x] `entity_groups.csv` has groups of kind `holding` and `security`.
+- [x] At the `nightmare` preset at least one mess event touches a holdings concept; at `clean`, none do.
+- [x] `onboardkit-gen check` passes, and fails when a position row's provenance is removed (tampering test).
+- [x] No truth identifier of the new kinds appears in any export.
+- [x] The mess catalogue and checksums are regenerated and the guards pass.
 
 ## Test plan
 
@@ -64,3 +64,6 @@ Everything the generator exports has a record in the answer key (where each row 
 
 - Mess on the account number column of the positions file must produce the same variant forms as the account master, or reconciliation between the two files becomes artificially hard. Reuse the same formatting functions.
 - Keep the 0.3.0 changelog entry honest: it lists everything that changed, across E9-S2 and E9-S3, in one release.
+- Implementation note: quantity and price are not varied by the mess in this story, only account number, price date and market value (the same subtypes as the account master). Varying quantity and price needs a decimal text subtype and is a later enhancement.
+- Position rows keep a blank `account_id` in provenance, so account entity groups and discrepancies are unchanged; the account a holding belongs to is in `firm.json`.
+- `firm.json` and `summary.json` now include securities and holdings, which E9-S1 had left out until this story.

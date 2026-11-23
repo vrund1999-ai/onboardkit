@@ -32,6 +32,9 @@ from onboardkit.datagen.sources.base import RawText, SourceRow
 
 DATES = ("person.date_of_birth", "person.client_since", "account.open_date", "meta.review_date")
 ACCOUNT = "account.number"
+POSITION_ACCOUNT = "holding.account_number"
+POSITION_DATE = "holding.as_of"
+POSITION_VALUE = "holding.value"
 PHONE = "person.phone"
 STATE = "person.address_state"
 BALANCE = "account.balance"
@@ -112,15 +115,15 @@ class Variant:
 
 
 def _kind(concept: str, source: str, table: str) -> str | None:
-    if concept in DATES:
+    if concept in DATES or concept == POSITION_DATE:
         return "date"
-    if concept == ACCOUNT:
+    if concept in (ACCOUNT, POSITION_ACCOUNT):
         return "account"
     if concept == PHONE:
         return "phone"
     if concept == STATE:
         return "state"
-    if concept == BALANCE and source == "book_of_business":
+    if (concept == BALANCE and source == "book_of_business") or concept == POSITION_VALUE:
         return "money"
     return None
 
@@ -212,8 +215,13 @@ def make_variant(
 @register
 class FormatsMess:
     name = "formats"
-    description = "Dates, account numbers, phones, states and balances in a different text form."
-    touches = frozenset({*DATES, ACCOUNT, PHONE, STATE, BALANCE})
+    description = (
+        "Dates, account numbers, phones, states, balances and position values "
+        "in a different text form."
+    )
+    touches = frozenset(
+        {*DATES, ACCOUNT, PHONE, STATE, BALANCE, POSITION_ACCOUNT, POSITION_DATE, POSITION_VALUE}
+    )
     structural = False
     max_rate = 0.40
     subtypes = frozenset(AMBIGUITY)

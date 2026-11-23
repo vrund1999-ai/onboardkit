@@ -38,6 +38,8 @@ def build_summary(context: AnswerKeyContext) -> dict[str, Any]:
             "persons": len(firm.people),
             "households": len(firm.households),
             "accounts": len(firm.accounts),
+            "securities": len(firm.securities),
+            "holdings": len(firm.holdings),
         },
         "rows": {source: len(rows) for source, rows in context.rows.items()},
         "entity_groups": nested(Counter((g[0], g[4]) for g in groups)),

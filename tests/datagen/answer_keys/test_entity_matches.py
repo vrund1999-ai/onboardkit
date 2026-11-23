@@ -107,6 +107,8 @@ def record(uid: str, source: str, row: int, people: str, household: str, account
         "person_ids": people,
         "household_id": household,
         "account_id": account,
+        "holding_id": "",
+        "security_id": "",
         "source_keys": "",
         "origin": "projected",
     }
@@ -236,7 +238,13 @@ def test_files_have_the_documented_columns(nightmare: DatasetResult) -> None:
     assert tuple(matches[0]) == MATCH_HEADER
     assert tuple(groups[0]) == GROUP_HEADER
     assert {m["difficulty"] for m in matches} == {"easy", "moderate", "hard"}
-    assert {g["entity_type"] for g in groups} == {"person", "household", "account"}
+    assert {g["entity_type"] for g in groups} == {
+        "person",
+        "household",
+        "account",
+        "holding",
+        "security",
+    }
     assert (nightmare.path / "truth" / UNSEEN_FILE).is_file()
 
 
@@ -254,6 +262,8 @@ def test_every_referenced_row_appears_for_each_entity_type(nightmare: DatasetRes
         len([p for p in r["person_ids"].split("|") if p])
         + bool(r["household_id"])
         + bool(r["account_id"])
+        + bool(r["holding_id"])
+        + bool(r["security_id"])
         for r in provenance
     )
     assert len(matches) == expected  # no extra and no missing memberships
@@ -310,6 +320,8 @@ def test_seen_plus_not_exported_equals_truth(nightmare: DatasetResult) -> None:
         "person": {p.person_id for p in built.firm.people},
         "household": {h.household_id for h in built.firm.households},
         "account": {a.account_id for a in built.firm.accounts},
+        "holding": {h.holding_id for h in built.firm.holdings},
+        "security": {s.security_id for s in built.firm.securities},
     }
     groups = truth_file(nightmare, ENTITY_GROUPS_FILE)
     unseen = truth_file(nightmare, UNSEEN_FILE)

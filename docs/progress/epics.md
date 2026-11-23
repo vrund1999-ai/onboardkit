@@ -2,7 +2,7 @@
 
 Status of every epic. An epic's status and story counts are derived from its stories; update them whenever a story changes. See [how tracking works](README.md).
 
-**Last updated:** 2026-11-21
+**Last updated:** 2026-11-22
 
 ## M0: Foundation and realistic test data
 
@@ -25,7 +25,7 @@ Stories: [M1 story progress](stories/m1.md). Epic definitions: [M1 epics](../epi
 | Epic | Title | Stories done | Status | Notes |
 |---|---|---|---|---|
 | [E8](../epics/m1-ingestion-epics.md#e8-common-data-model) | Common data model | 1 / 4 | In progress | E8-S1 done |
-| [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Holdings in the test data | 2 / 4 | In progress | E9-S1 and E9-S2 done |
+| [E9](../epics/m1-ingestion-epics.md#e9-holdings-in-the-test-data) | Holdings in the test data | 3 / 4 | In progress | E9-S1 to E9-S3 done |
 | [E10](../epics/m1-ingestion-epics.md#e10-file-intake) | File intake | 0 / 0 | Not started | Stories not written yet |
 | [E11](../epics/m1-ingestion-epics.md#e11-real-world-file-handling) | Real-world file handling | 0 / 0 | Not started | Stories not written yet |
 | [E12](../epics/m1-ingestion-epics.md#e12-standardized-values) | Standardized values | 0 / 0 | Not started | Stories not written yet |

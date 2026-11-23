@@ -40,11 +40,11 @@ Nicknames, initials, suffixes, order, case, typos, and hyphenated surnames.
 
 ## formats
 
-Dates, account numbers, phones, states and balances in a different text form.
+Dates, account numbers, phones, states, balances and position values in a different text form.
 
 - Max rate: 0.4
 - Structural (may add or remove rows): no
-- Touched concepts: `account.balance`, `account.number`, `account.open_date`, `meta.review_date`, `person.address_state`, `person.client_since`, `person.date_of_birth`, `person.phone`
+- Touched concepts: `account.balance`, `account.number`, `account.open_date`, `holding.account_number`, `holding.as_of`, `holding.value`, `meta.review_date`, `person.address_state`, `person.client_since`, `person.date_of_birth`, `person.phone`
 
 | Subtype | Severity, ambiguity | Example |
 |---|---|---|

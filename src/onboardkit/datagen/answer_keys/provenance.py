@@ -33,6 +33,8 @@ PROVENANCE_HEADER = (
     "person_ids",
     "household_id",
     "account_id",
+    "holding_id",
+    "security_id",
     "source_keys",
     "origin",
 )
@@ -43,6 +45,7 @@ KEY_ENTITIES = {
     "household.source_id": "household",
     "account.number": "account",
     "holding.account_number": "account",  # a position row carries no account reference
+    "holding.security_symbol": "security",
 }
 ORIGINS = ("projected", "duplicate", "split", "stale_extra")
 
@@ -77,6 +80,7 @@ def _source_keys(table: TableSpec, row: SourceRow) -> list[tuple[ColumnSpec, str
 def build_provenance(context: AnswerKeyContext) -> tuple[list[list[str]], list[list[str]]]:
     """Provenance records and source-id map rows, as lists of cells (unsorted)."""
     origins = _origins(context)
+    security_of = {h.holding_id: h.security_id for h in context.firm.holdings}
     records: list[list[str]] = []
     mappings: set[tuple[str, str, str, str]] = set()
     for source, rows in context.rows.items():
@@ -87,6 +91,8 @@ def build_provenance(context: AnswerKeyContext) -> tuple[list[list[str]], list[l
             origin = origins.get(row.row_uid, "projected")
             refs = row.refs
             account_id = "" if origin == "stale_extra" else (refs.account_id or "")
+            holding_id = refs.holding_id or ""
+            security_id = security_of.get(holding_id, "")
             records.append(
                 [
                     row.row_uid,
@@ -98,6 +104,8 @@ def build_provenance(context: AnswerKeyContext) -> tuple[list[list[str]], list[l
                     "|".join(refs.person_ids),
                     refs.household_id or "",
                     account_id,
+                    holding_id,
+                    security_id,
                     "|".join(f"{column.header}={value}" for column, value in keys),
                     origin,
                 ]
@@ -106,7 +114,11 @@ def build_provenance(context: AnswerKeyContext) -> tuple[list[list[str]], list[l
                 "person": refs.person_ids[0] if len(refs.person_ids) == 1 else "",
                 "household": refs.household_id or "",
                 "account": account_id,
+                "security": security_id,
             }
+            if holding_id and keys:
+                # A holding is identified by its account number and symbol together.
+                mappings.add((source, "holding", holding_id, "/".join(v for _, v in keys)))
             for column, value in keys:
                 entity = KEY_ENTITIES[column.concept]
                 if truth_ids[entity]:
