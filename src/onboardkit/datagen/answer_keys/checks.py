@@ -61,7 +61,14 @@ REQUIRED = (
     *CSV_FILES,
 )
 TRUTH_ID = re.compile(r"(?<![A-Za-z0-9])(?:P-\d{5,}|HH-\d{4,}|ACCT-\d{6,}|HOLD-\d{6,}|SEC-\d{3,})")
-ENTITY_TYPES = ("person", "household", "account")
+ENTITY_TYPES = ("person", "household", "account", "holding", "security")
+FIRM_KEYS = {
+    "person": "people",
+    "household": "households",
+    "account": "accounts",
+    "holding": "holdings",
+    "security": "securities",
+}
 
 
 def _problem(path: str, detail: str) -> Problem:
@@ -137,7 +144,7 @@ class Truth:
         return records
 
     def ids(self, entity_type: str) -> set[str]:
-        key = {"person": "people", "household": "households", "account": "accounts"}[entity_type]
+        key = FIRM_KEYS[entity_type]
         field = f"{entity_type}_id"
         return {str(r[field]) for r in self.firm.get(key, [])}
 
@@ -169,6 +176,8 @@ def _check_truth_ids(truth: Truth) -> None:
             need(PROVENANCE_FILE, "person", person, row["row_uid"])
         need(PROVENANCE_FILE, "household", row["household_id"], row["row_uid"])
         need(PROVENANCE_FILE, "account", row["account_id"], row["row_uid"])
+        need(PROVENANCE_FILE, "holding", row["holding_id"], row["row_uid"])
+        need(PROVENANCE_FILE, "security", row["security_id"], row["row_uid"])
     for name in (ENTITY_MATCHES_FILE, ENTITY_GROUPS_FILE, UNSEEN_FILE, SOURCE_ID_MAP_FILE):
         for row in truth.tables.get(name, []):
             need(name, row["entity_type"], row["truth_id"], row["truth_id"])
@@ -197,6 +206,39 @@ def _check_coverage_of_entities(truth: Truth) -> None:
                 truth.problems.append(_problem(ENTITY_GROUPS_FILE, f"{truth_id} is {state}"))
 
 
+def _check_holdings(truth: Truth) -> None:
+    """Every position row is matched, and every holding that is not exported is explained."""
+    matched = {
+        r["row_uid"]
+        for r in truth.tables.get(ENTITY_MATCHES_FILE, [])
+        if r["entity_type"] == "holding"
+    }
+    for row in truth.tables.get(PROVENANCE_FILE, []):
+        if row["holding_id"] and row["row_uid"] not in matched:
+            truth.problems.append(
+                _problem(ENTITY_MATCHES_FILE, f"position row {row['row_uid']} has no holding match")
+            )
+        if row["table"] == "positions" and not row["holding_id"]:
+            truth.problems.append(
+                _problem(PROVENANCE_FILE, f"position row {row['row_uid']} names no holding")
+            )
+    omitted = {
+        str(e["refs"].get("account_id"))
+        for e in truth.coverage
+        if e["kind"] == "omitted" and e["source"] == "custodian"
+    }
+    account_of = {
+        str(h["holding_id"]): str(h["account_id"]) for h in truth.firm.get("holdings", [])
+    }
+    for row in truth.tables.get(UNSEEN_FILE, []):
+        if row["entity_type"] == "holding" and account_of.get(row["truth_id"]) not in omitted:
+            truth.problems.append(
+                _problem(
+                    UNSEEN_FILE, f"{row['truth_id']} is not exported and no coverage event says why"
+                )
+            )
+
+
 def _check_summary(truth: Truth) -> None:
     summary = truth.summary
     if not summary or not truth.firm:
@@ -205,6 +247,8 @@ def _check_summary(truth: Truth) -> None:
         "persons": len(truth.firm.get("people", [])),
         "households": len(truth.firm.get("households", [])),
         "accounts": len(truth.firm.get("accounts", [])),
+        "securities": len(truth.firm.get("securities", [])),
+        "holdings": len(truth.firm.get("holdings", [])),
     }
     if summary.get("truth") != expected:
         truth.problems.append(
@@ -332,6 +376,7 @@ def check_truth(dataset_dir: Path) -> list[Problem]:
     _check_sorted(truth)
     _check_truth_ids(truth)
     _check_coverage_of_entities(truth)
+    _check_holdings(truth)
     _check_summary(truth)
     _check_discrepancy_events(truth)
     problems = list(truth.problems)

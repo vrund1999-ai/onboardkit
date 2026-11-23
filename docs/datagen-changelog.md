@@ -46,10 +46,22 @@ because ids come from the configuration, but every manifest, `column_mappings.cs
 - New concepts `holding.account_number`, `holding.security_symbol`, `holding.security_name`,
   `holding.asset_class`, `holding.quantity`, `holding.price`, `holding.value` and
   `holding.as_of`, and the value type `decimal`.
-- `column_mappings.csv` and `provenance.csv` list the new file. Position rows carry no account
-  reference in the answer key yet (entity matches arrive with E9-S3).
-- Everything else in `exports/` is unchanged byte for byte. The mess and coverage events are the
-  same events, but each `refs` object gains a `holding_id` key (null for these events).
+- The answer keys cover holdings. `provenance.csv` gains the columns `holding_id` and
+  `security_id`; `entity_matches.csv` and `entity_groups.csv` gain the entity types `holding`
+  (one row per group) and `security` (one group per security, all rows that hold it);
+  `entities_not_exported.csv` lists holdings and securities no export mentions;
+  `source_id_map.csv` maps each symbol and each account-number/symbol pair; `column_mappings.csv`
+  lists the eight position columns; `firm.json` and `summary.json` now include securities and
+  holdings. Position rows carry no account reference, so account groups are unchanged.
+- The formats mess type also touches `holding.account_number` (same account number variants as the
+  account master), `holding.as_of` (date variants) and `holding.value` (text-formatted amounts).
+  Quantity and price are not varied yet.
+- `onboardkit-gen check` additionally requires every position row to have a holding match, and
+  every holding that is not exported to belong to an account the custodian omitted.
+- Everything else in `exports/` is unchanged byte for byte. Every existing mess and coverage event
+  is unchanged except that its `refs` object gains a `holding_id` key (null for account and
+  contact events); the formats mess type adds new events on the positions file, appended after
+  the existing ones.
 
 ## 0.2.0
 

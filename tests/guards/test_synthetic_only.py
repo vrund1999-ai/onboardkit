@@ -15,6 +15,7 @@ PHONE = re.compile(r"(?<![\w])(?:\+?1[ .-]?)?\(?(\d{3})\)?[ .-]?(\d{3})[ .-]?(\d
 TAX_ID = re.compile(r"(?<![\w])\d{3}-?\d{2}-?\d{4}(?![\w])")
 FICTIONAL_DOMAINS = {"example.com", "example.test"}
 # The exchange 555 with a line number 0100-0199 is reserved for fiction.
+QUANTITY = re.compile(r"\d{6}\.\d{4}")
 FICTIONAL_PHONE = re.compile(r"^555$"), re.compile(r"^01\d\d$")
 ACCOUNT_PREFIX = "MC"  # firm_profile.yaml: account_number.prefix
 
@@ -50,6 +51,8 @@ def synthetic_problems(texts: list[tuple[str, str]], denylist: list[str]) -> lis
             if domain not in FICTIONAL_DOMAINS:
                 found.append(f"{file}: email domain {domain!r} is not example.com or example.test")
         for m in PHONE.finditer(text):
+            if QUANTITY.fullmatch(m.group(0)):
+                continue  # a holding's quantity or price, such as 676445.7700, is not a phone
             exchange, line = m.group(2), m.group(3)
             if not (FICTIONAL_PHONE[0].match(exchange) and FICTIONAL_PHONE[1].match(line)):
                 found.append(

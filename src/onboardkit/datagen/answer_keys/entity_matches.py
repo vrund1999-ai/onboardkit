@@ -44,7 +44,7 @@ MATCH_HEADER = (
     "variant_events",
 )
 GROUP_HEADER = ("entity_type", "truth_id", "row_count", "sources", "max_difficulty")
-ENTITY_TYPES = ("person", "household", "account")
+ENTITY_TYPES = ("person", "household", "account", "holding", "security")
 DIFFICULTIES = ("easy", "moderate", "hard")
 RANK = {name: index for index, name in enumerate(DIFFICULTIES)}
 
@@ -66,9 +66,11 @@ IDENTIFYING = frozenset(
         "household.name",
         "household.source_id",
         "account.number",
+        "holding.account_number",
         "account.owner_names",
     }
 )
+ACCOUNT_NUMBERS = frozenset({"account.number", "holding.account_number"})
 HOUSEHOLD_STRUCTURE = {"split": "hard", "duplicate": "hard", "missing": "moderate"}
 
 
@@ -99,7 +101,7 @@ def event_difficulty(event: MessEvent) -> str | None:
         return "hard"
     if event.effect == "entity_variant" and event.ambiguity in ("low", "medium"):
         return "moderate"
-    if event.effect == "format_variant" and event.concept == "account.number":
+    if event.effect == "format_variant" and event.concept in ACCOUNT_NUMBERS:
         return "moderate"
     return None
 
@@ -148,6 +150,8 @@ def derive_memberships(context: AnswerKeyContext) -> list[Membership]:
         references = {
             "household": [cells[index["household_id"]]],
             "account": [cells[index["account_id"]]],
+            "holding": [cells[index["holding_id"]]],
+            "security": [cells[index["security_id"]]],
         }
         row_events = sorted(by_row.get(uid, []))
         for entity_type in ENTITY_TYPES:
@@ -180,6 +184,8 @@ def unseen_entities(context: AnswerKeyContext, memberships: list[Membership]) ->
         "person": {p.person_id for p in context.firm.people},
         "household": {h.household_id for h in context.firm.households},
         "account": {a.account_id for a in context.firm.accounts},
+        "holding": {h.holding_id for h in context.firm.holdings},
+        "security": {s.security_id for s in context.firm.securities},
     }
     seen: dict[str, set[str]] = defaultdict(set)
     for m in memberships:

@@ -27,14 +27,16 @@ under exports/.
 - Do not read this folder from any code that ingests, maps, matches, or reconciles the exports.
 - Do not include this folder in any "firm delivery" listing, upload, or screenshot of a delivery.
 - Do not copy anything from here into exports/. The checks (onboardkit-gen check) fail if a
-  truth identifier (P-, HH-, ACCT-) appears in an export.
+  truth identifier (P-, HH-, ACCT-, HOLD-, SEC-) appears in an export.
 
 Files:
   summary.json          counts of everything below
-  firm.json             the complete truth firm: people, households, accounts
+  firm.json             the complete truth firm: people, households, accounts,
+                        securities, holdings
   provenance.csv        where every exported row landed and which truth entities it stands for
   source_id_map.csv     truth id to the id each source uses
-  entity_matches.csv    which rows refer to the same person, household or account
+  entity_matches.csv    which rows refer to the same person, household, account,
+                        holding or security
   entity_groups.csv     one line per entity group
   entities_not_exported.csv  truth entities that no export mentions
   column_mappings.csv   the meaning of every column of every exported file and sheet
@@ -59,8 +61,7 @@ def write_readme(context: AnswerKeyContext) -> None:
 
 def firm_record(context: AnswerKeyContext) -> dict[str, Any]:
     firm = context.firm
-    # Securities and holdings are not part of the answer key yet (they are added with E9-S3).
-    dumped = firm.model_dump(mode="json", exclude={"profile", "securities", "holdings"})
+    dumped = firm.model_dump(mode="json", exclude={"profile"})
     return {"firm_name": firm.profile.firm.name, **dumped}
 
 

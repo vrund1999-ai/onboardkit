@@ -52,6 +52,9 @@ def test_registered_with_story_settings() -> None:
         "person.phone",
         "person.address_state",
         "account.balance",
+        "holding.account_number",
+        "holding.as_of",
+        "holding.value",
     }
     assert set(AMBIGUITY) == {s for group in SUBTYPES.values() for s in group}
 
@@ -210,7 +213,8 @@ def test_phone_state_and_money_variants() -> None:
         assert re.sub(r"\D", "", e.after or "")[-10:] == re.sub(r"\D", "", e.before or "")[-10:]
     for e in states:
         assert STATES[e.before or ""] == e.after
-    assert {e.source for e in money} == {"book_of_business"}
+    assert {e.source for e in money} == {"book_of_business", "custodian"}
+    assert {e.concept for e in money if e.source == "custodian"} == {"holding.value"}
     for e in money:
         text = (e.after or "").strip().lstrip("~$").replace(",", "")
         amount = Decimal(text[:-1]) * 1000 if text.endswith("k") else Decimal(text)
